@@ -44,18 +44,18 @@ class Instrucciones extends StatelessWidget{
                   fontSize: 16,
                 ),
               ),
-              Text("\u2022 Llenar el registro de pastillas",
+              Text("\u2022 Presionar el símbolo \"+\" y elige el nombre, la cantidad y la caducidad de las pastillas.",
                 textAlign: TextAlign.start,
                 style: TextStyle(
                   fontSize: 16,
                 ),
               ),
-              Text("\u2022 Presionar el botón \"Registrar\"",
+              Text("\u2022 Presionar el botón \"Registrar\" para confirmar.",
                 textAlign: TextAlign.start,
                 style: TextStyle(
                   fontSize: 16,
                 ),
-              ),
+              )
             ],
           ),
         ),

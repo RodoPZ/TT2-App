@@ -25,7 +25,7 @@ class _TimePickers extends State<TimePickers>{
   Widget build(BuildContext context) => ButtonMain(
     buttonText: getText(),
     callback: () => pickTime(context),
-    color: const Color(0xFF929292),
+    color: Theme.of(context).primaryColor,
   );
 
   Future pickTime(BuildContext context) async{

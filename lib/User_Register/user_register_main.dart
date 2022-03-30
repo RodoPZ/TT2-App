@@ -271,7 +271,7 @@ class _RegisterMain extends State<RegisterMain>{
                         color: Color(0xFF989eb1),
                       ),
                     ),
-                    ButtonText("Ingresar", 0xFFf85f6a,15,(){
+                    ButtonText("Ingresar", Theme.of(context).primaryColor,15,(){
                       _printData();
                       Navigator.push(
                       context,

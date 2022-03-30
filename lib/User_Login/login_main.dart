@@ -61,11 +61,11 @@ class LoginMain extends StatelessWidget{
             ),
 
              Center(
-              child: ButtonText("Recuperar contraseña",0xFF989eb1,20,(){}),
+              child: ButtonText("Recuperar contraseña",Theme.of(context).primaryColor,20,(){}),
             ),
             const SizedBox(height: 20),
             Center(
-              child: ButtonText("¿No tienes cuenta con nosotros?",0xFFf85f6a,20,(){
+              child: ButtonText("¿No tienes cuenta con nosotros?",Theme.of(context).primaryColor,20,(){
                 Navigator.push(
                     context,
                     MaterialPageRoute(builder: (builder) => RegisterMain()),

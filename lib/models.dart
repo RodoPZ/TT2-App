@@ -36,3 +36,20 @@ class Horario{
     required this.horarioRepetir,
   });
 }
+
+class Contacto{
+  final String contactoNombre;
+  final int contactoNumero;
+
+  Contacto({
+    required this.contactoNombre,
+    required this.contactoNumero,
+  });
+}
+
+class Pin{
+  final String pin;
+  Pin({
+    required this.pin
+  });
+}

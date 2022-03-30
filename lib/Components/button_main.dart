@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 
 class ButtonMain extends StatelessWidget{
@@ -10,18 +8,18 @@ class ButtonMain extends StatelessWidget{
 
   ButtonMain({required this.buttonText, required this.callback, this.icono, this.color = const Color(0xFFf85f6a), Key? key}) : super(key: key);
 
-  Widget WidgetIcono(){
+  Widget _widgetIcono(){
     if (icono != null){
       return Row(
         children: [
           Icon(icono,
             size: 25,
           ),
-          SizedBox(width: 20),
+          const SizedBox(width: 20),
         ],
       );
     }else{
-      return SizedBox(width: 0);
+      return const SizedBox(width: 0);
     }
   }
 
@@ -39,7 +37,7 @@ class ButtonMain extends StatelessWidget{
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            WidgetIcono(),
+            _widgetIcono(),
             Text(buttonText,
               style: const TextStyle(
                 fontWeight: FontWeight.bold,

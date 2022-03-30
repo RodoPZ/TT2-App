@@ -20,13 +20,7 @@ class Instrucciones extends StatelessWidget{
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: const [
-              Text("\u2022 Presionar el botón \"Seleccionar hora\" y elegir la hora de la alarma.",
-                textAlign: TextAlign.start,
-                style: TextStyle(
-                  fontSize: 16,
-                ),
-              ),
-              Text("\u2022 Seleccionar los días que se repetría la alarma.",
+              Text("\u2022 Presionar el símbolo \"+\" y elegir la hora y los días que se repetirá la alarma.",
                 textAlign: TextAlign.start,
                 style: TextStyle(
                   fontSize: 16,

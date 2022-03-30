@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class ButtonText extends StatelessWidget{
 
   String buttonText = "Text here";
-  int buttonColor = 0xFFf85f6a;
+  Color buttonColor;
   double textSize = 20;
   VoidCallback callback;
 
@@ -12,7 +12,7 @@ class ButtonText extends StatelessWidget{
   Widget build(BuildContext context) {
     return TextButton(
       style: TextButton.styleFrom(
-        primary: Color(buttonColor),
+        primary: buttonColor,
         textStyle: TextStyle(
             fontSize: textSize),
       ),

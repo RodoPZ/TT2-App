@@ -6,6 +6,8 @@ import 'package:tt2/Registrar/agregar_pastillas/instrucciones.dart';
 import 'package:tt2/models.dart';
 import 'package:tt2/preferences_service.dart';
 
+import '../../Components/button_icon.dart';
+
 class AgregarPastillasMain extends StatefulWidget {
   @override
   State<AgregarPastillasMain> createState() => _AgregarPastillasMainState();
@@ -15,8 +17,14 @@ class _AgregarPastillasMainState extends State<AgregarPastillasMain> {
   final _preferencesService = PreferencesService();
   bool isFull = false;
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  late List items = [];
+  late List<bool> _selected;
+  bool loaded = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+
   late String _pastillaNombre;
   late int _pastillaCantidad;
   late String _pastillaCaducidad;
@@ -90,15 +98,22 @@ class _AgregarPastillasMainState extends State<AgregarPastillasMain> {
   @override
   void initState() {
     super.initState();
-    _showalert();
+    _getItems();
   }
-
-  _showalert() async {
-    final pastillas = await _preferencesService.getPastilla();
-    if (pastillas.length == 10) {
+  _getItems() async {
+    items = await _preferencesService.getPastilla();
+    setState(() {
+      _selected = List.generate(items.length, (index) => false);
+      loaded = true;
+    });
+    if (items.length == 1) {
       _showAlert(context);
       setState(() {
         isFull = true;
+      });
+    }else{
+      setState(() {
+        isFull = false;
       });
     }
   }
@@ -129,6 +144,55 @@ class _AgregarPastillasMainState extends State<AgregarPastillasMain> {
                 ),
               ],
             ));
+  }
+
+  Widget printItems(){
+    if (loaded == true){
+      if (items.isNotEmpty) {
+        return Container(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            children: [
+              Container(
+                height: 200,
+                child: ListView.builder(
+                    itemCount: items.length,
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      return Container(
+                        margin: const EdgeInsets.fromLTRB(0, 2, 0, 2),
+                        child: ListTile(
+                            selected: _selected[index]?true:false,
+                            selectedColor: Theme.of(context).primaryColor,
+                            leading: const Icon(Icons.medication),
+                            title: Text(items[index][0]),
+                            subtitle: Text(items[index][1].toString()),
+                            trailing: ButtonIcon(icon: Icons.delete, callBack: (){
+                              _preferencesService.deletePastilla(index);
+                              _getItems();
+                            })),
+                      );
+                    }),
+              ),
+            ],
+          ),
+        );
+      } else {
+        return Container(
+          margin: EdgeInsets.symmetric(vertical: 20),
+          child: Text("No hay nada que mostrar",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              )),
+        );
+      }
+    }
+    else{
+      return Text("Error");
+    }
+
   }
 
   @override
@@ -179,49 +243,39 @@ class _AgregarPastillasMainState extends State<AgregarPastillasMain> {
                       child: ButtonMain(
                           buttonText: "Abrir compartimento", callback: () {}),
                     ),
-                    Form(
-                        key: _formKey,
-                        child: Column(
-                          children: [
-                            _buildNombre(),
-                            Row(
+                    Card(
+                      elevation: 10,
+                      child: Column(
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.only(
+                              right: 30,
+                              left: 30,
+                            ),
+                            child: Row(
+                              mainAxisAlignment:
+                              MainAxisAlignment.spaceBetween,
                               children: [
-                                Container(
-                                  width: 170,
-                                  child: _buildCantidad(),
+                                const Text(
+                                  "Pastillas",
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                                Spacer(),
-                                Container(
-                                  width: 170,
-                                  child: _buildCaducidad(),
-                                ),
+                                ButtonIcon(
+                                    icon: Icons.add,
+                                    size: 30,
+                                    callBack: () {
+                                      _Form();
+                                    })
                               ],
                             ),
-                            const SizedBox(height: 20),
-                          ],
-                        )),
-                    ButtonMain(
-                        buttonText:
-                            isFull ? "Contenedores llenos" : "Registrar",
-                        color: isFull
-                            ? Colors.grey
-                            : Theme.of(context).primaryColor,
-                        callback: () {
-                          if (!_formKey.currentState!.validate()) {
-                            return;
-                          }
-                          _formKey.currentState!.save();
-                          _registerPastillas();
-                          if (isFull == false) {
-                            const snackBar = SnackBar(
-                              content:
-                                  Text('Información de pastillas guardada!'),
-                            );
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
-                            Navigator.pop(context);
-                          }
-                        }),
+                          ),
+                          printItems(),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -244,6 +298,72 @@ class _AgregarPastillasMainState extends State<AgregarPastillasMain> {
         ],
       ),
     );
+  }
+
+  _Form(){
+    return showDialog(
+        context: context,
+        builder:
+            (BuildContext context) {
+          return AlertDialog(
+            content:
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisSize:MainAxisSize.min,
+                    children: [
+                      const Text("Registrar nuevo contacto",
+                          style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold
+                          )),
+                      Padding(
+                        padding:const EdgeInsets.all(8.0),
+                        child:_buildNombre(),
+                      ),
+                      Padding(padding:const EdgeInsets.all(8.0),
+                        child:_buildCantidad(),
+                      ),
+                      Padding(padding:const EdgeInsets.all(8.0),
+                        child:_buildCaducidad(),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ButtonMain(
+                        buttonText:
+                        isFull ? "Contenedores llenos" : "Registrar",
+                        color: isFull
+                            ? Colors.grey
+                            : Theme.of(context).primaryColor,
+                        callback: () {
+                          if (!_formKey.currentState!.validate()) {
+                            return;
+                          }
+                          _formKey.currentState!.save();
+                          _registerPastillas();
+                          if (isFull == false) {
+                            const snackBar = SnackBar(
+                              content:
+                              Text('Información de pastillas guardada!'),
+                            );
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                            Navigator.pop(context);
+                          }
+                          setState(() {
+                            _getItems();
+                          });
+                        }))
+              ],
+            ),
+          );
+        });
   }
 
   _registerPastillas() {

@@ -7,6 +7,8 @@ import 'package:tt2/Registrar/agregar_horarios/instrucciones.dart';
 import 'package:tt2/models.dart';
 import 'package:tt2/preferences_service.dart';
 
+import '../../Components/button_icon.dart';
+
 class AgregarHorariosMain extends StatefulWidget {
   @override
   _AgregarHorariosMain createState() => _AgregarHorariosMain();
@@ -15,8 +17,14 @@ class AgregarHorariosMain extends StatefulWidget {
 class _AgregarHorariosMain extends State<AgregarHorariosMain> {
   final _preferencesService = PreferencesService();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  late String _horarioHora = "";
-  late String _horarioRepetir = "";
+
+  late List items = [];
+  late List<bool> _selected;
+  bool loaded = false;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  String _horarioHora = "";
+  String _horarioRepetir = "";
   late bool isFull = false;
 
   Widget _buildHora() {
@@ -49,15 +57,22 @@ class _AgregarHorariosMain extends State<AgregarHorariosMain> {
   @override
   void initState() {
     super.initState();
-    _showalert();
+    _getItems();
   }
-
-  _showalert() async {
-    final horarios = await _preferencesService.getHorario();
-    if (horarios.length == 100) {
+  _getItems() async {
+    items = await _preferencesService.getHorario();
+    setState(() {
+      _selected = List.generate(items.length, (index) => false);
+      loaded = true;
+    });
+    if (items.length == 1) {
       _showAlert(context);
       setState(() {
         isFull = true;
+      });
+    }else{
+      setState(() {
+        isFull = false;
       });
     }
   }
@@ -88,6 +103,55 @@ class _AgregarHorariosMain extends State<AgregarHorariosMain> {
                 ),
               ],
             ));
+  }
+
+  Widget printItems(){
+    if (loaded == true){
+      if (items.isNotEmpty) {
+        return Container(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            children: [
+              Container(
+                height: 200,
+                child: ListView.builder(
+                    itemCount: items.length,
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      return Container(
+                        margin: const EdgeInsets.fromLTRB(0, 2, 0, 2),
+                        child: ListTile(
+                            selected: _selected[index]?true:false,
+                            selectedColor: Theme.of(context).primaryColor,
+                            leading: const Icon(Icons.medication),
+                            title: Text(items[index][0]),
+                            subtitle: Text(items[index][1].toString()),
+                            trailing: ButtonIcon(icon: Icons.delete, callBack: (){
+                              _preferencesService.deleteHorario(index);
+                              _getItems();
+
+                            })),
+                      );
+                    }),
+              ),
+            ],
+          ),
+        );
+      } else {
+        return Container(
+          margin: EdgeInsets.symmetric(vertical: 20),
+          child: Text("No hay nada que mostrar",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              )),
+        );
+      }
+    }
+    else{
+      return Text("Error");
+    }
   }
 
   @override
@@ -126,41 +190,43 @@ class _AgregarHorariosMain extends State<AgregarHorariosMain> {
                         )
                       ],
                     ),
+
                     const Divider(thickness: 2),
                     Instrucciones(),
                     const SizedBox(height: 30),
-                    _buildHora(),
-                    const SizedBox(height: 30),
-                    _buildRepetir(),
-                    const SizedBox(height: 30),
-                    ButtonMain(
-                        buttonText: isFull ? "Lista llena" : "Agregar",
-                        color: isFull
-                            ? Colors.grey
-                            : Theme.of(context).primaryColor,
-                        callback: () {
-                          if (_horarioHora != "" && _horarioRepetir != "" && isFull == false) {
-                            _registerHorarios();
-                            const snackBar = SnackBar(
-                              content:
-                                  Text('Horario guardado!'),
-                            );
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
-                            Navigator.pop(context);
-                          } else if(isFull){
-                            return;
-                          } else {
-                            const snackBar = SnackBar(
-                              content: Text('Faltan datos'),
-                            );
-                            ScaffoldMessenger.of(context)
-                                .removeCurrentSnackBar();
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
-                            return;
-                          }
-                        }),
+                    Card(
+                      elevation: 10,
+                      child: Column(
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.only(
+                              right: 30,
+                              left: 30,
+                            ),
+                            child: Row(
+                              mainAxisAlignment:
+                              MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  "Pastillas",
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                ButtonIcon(
+                                    icon: Icons.add,
+                                    size: 30,
+                                    callBack: () {
+                                      _Form();
+                                    })
+                              ],
+                            ),
+                          ),
+                          printItems(),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -184,7 +250,79 @@ class _AgregarHorariosMain extends State<AgregarHorariosMain> {
       ),
     );
   }
+  _Form(){
+    return showDialog(
+        context: context,
+        builder:
+            (BuildContext context) {
+          return AlertDialog(
+            content:
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisSize:MainAxisSize.min,
+                    children: [
+                      const Text("Registrar nuevo contacto",
+                          style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold
+                          )),
+                      Padding(
+                        padding:const EdgeInsets.all(8.0),
+                        child:_buildHora(),
+                      ),
+                      Padding(padding:const EdgeInsets.all(8.0),
+                        child:_buildRepetir(),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ButtonMain(
 
+                        buttonText: isFull ? "Lista llena" : "Agregar",
+                        color: isFull
+                            ? Colors.grey
+                            : Theme.of(context).primaryColor,
+
+                        callback: () {
+                          if (_horarioHora != "" && _horarioRepetir != "" && isFull == false) {
+                            _registerHorarios();
+                            const snackBar = SnackBar(
+                              content:
+                              Text('Horario guardado!'),
+                            );
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                            Navigator.pop(context);
+                            setState(() {
+                              _getItems();
+                              _horarioHora = "";
+                              _horarioRepetir = "";
+                            });
+                          } else if(isFull){
+                            return;
+                          } else {
+                            const snackBar = SnackBar(
+                              content: Text('Faltan datos'),
+                            );
+                            ScaffoldMessenger.of(context)
+                                .removeCurrentSnackBar();
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                            return;
+                          }
+                        }),
+                )
+              ],
+            ),
+          );
+        });
+  }
   _registerHorarios() {
     final newHorario =
         Horario(horarioHora: _horarioHora, horarioRepetir: _horarioRepetir);
