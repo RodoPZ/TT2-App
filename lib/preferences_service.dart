@@ -1,7 +1,5 @@
 
 import 'dart:convert';
-
-import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tt2/models.dart';
 import 'dart:math';
@@ -89,13 +87,14 @@ class PreferencesService{
       await preferences.setString("horariosData",jsonEncode(horariosData));
     }
   }
+
   Future saveContacto(Contacto contacto) async{
     final List <int>_id = [];
     int _newid = 0;
     //Asignar una id única
 
     final preferences = await SharedPreferences.getInstance();
-    preferences.remove("contactosData");
+    //preferences.remove("contactosData");
     if (preferences.containsKey('contactosData')){
       List contactosData = jsonDecode(preferences.getString('contactosData')!);
       if (contactosData.isNotEmpty){
@@ -125,9 +124,49 @@ class PreferencesService{
     }
   }
 
+  Future saveDosis(Dosis dosis) async{
+    final List <int>_id = [];
+    int _newid = 0;
+    //Asignar una id única
+
+    final preferences = await SharedPreferences.getInstance();
+    //preferences.remove("dosisData");
+    if (preferences.containsKey('dosisData')){
+      List dosisData = jsonDecode(preferences.getString('dosisData')!);
+      if (dosisData.isNotEmpty){
+        for (var value in dosisData) {
+          _id.add(value[0]);
+        }
+        for(int i = 0; i <= _id.reduce(max); i++){
+          if(_id.contains(i) == false && _id.last != i){
+            _newid = i;
+            break;
+          }
+          _newid = _id.reduce(max)+1;
+        }
+      }
+      if (dosisData.length < 20){
+        dosisData.add({
+          "id": _newid,
+          "nombre": dosis.dosisNombre,
+          "pastillas": dosis.pastillaData,
+          "horario": dosis.horarioData,
+          "alarmas": dosis.alarmaData,
+          "seguridad": dosis.seguridadData,
+        });
+        print(dosisData);
+        await preferences.setString("dosisData", jsonEncode(dosisData));
+      }
+    }
+    else{
+      List dosisData = [{'id':0,'nombre':dosis.dosisNombre,'pastillas':dosis.pastillaData,'horario':dosis.horarioData,"alarmas": dosis.alarmaData,"seguridad": dosis.seguridadData}];
+      print(dosisData);
+      await preferences.setString("dosisData",jsonEncode(dosisData));
+    }
+  }
+
   Future savePin(Pin pin) async{
     final preferences = await SharedPreferences.getInstance();
-    print(pin.pin);
     await preferences.setString("pinData", pin.pin);
   }
 
@@ -137,18 +176,21 @@ class PreferencesService{
     contactosData.removeAt(index);
     await preferences.setString("contactosData", jsonEncode(contactosData));
   }
+
   Future deletePastilla(int index) async{
     final preferences = await SharedPreferences.getInstance();
     List pastillasData = jsonDecode(preferences.getString('pastillasData')!);
     pastillasData.removeAt(index);
     await preferences.setString("pastillasData", jsonEncode(pastillasData));
   }
+
   Future deleteHorario(int index) async{
     final preferences = await SharedPreferences.getInstance();
     List horariosData = jsonDecode(preferences.getString('horariosData')!);
     horariosData.removeAt(index);
     await preferences.setString("horariosData", jsonEncode(horariosData));
   }
+
   Future deletePin() async{
     final preferences = await SharedPreferences.getInstance();
     preferences.remove("pinData");
@@ -165,6 +207,7 @@ class PreferencesService{
 
     return UserData(nombreUsuario: nombreUsuario!, apellidoUsuario: apellidoUsuario!, correo: correo!, password: password!, esPaciente: esPaciente!);
   }
+
   Future getPastilla() async{
 
     final preferences = await SharedPreferences.getInstance();
@@ -172,6 +215,7 @@ class PreferencesService{
 
     return pastillasData;
   }
+
   Future getHorario() async{
 
     final preferences = await SharedPreferences.getInstance();
@@ -179,15 +223,16 @@ class PreferencesService{
 
     return horariosData;
   }
+
   Future getContacto() async{
     List contactosData = [];
     final preferences = await SharedPreferences.getInstance();
     if(preferences.containsKey('contactosData')){
       contactosData = jsonDecode(preferences.getString('contactosData')!);
     }
-    print(contactosData);
     return contactosData;
   }
+
   Future getPin() async {
     late String pinData = "";
     final preferences = await SharedPreferences.getInstance();

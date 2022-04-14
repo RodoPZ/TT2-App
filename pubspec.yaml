@@ -32,8 +32,6 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   shared_preferences: 2.0.13
-  contacts_service: ^0.6.3
-  permission_handler: 9.2.0
   pin_code_fields: ^7.3.0
 
   # The following adds the Cupertino Icons font to your application.

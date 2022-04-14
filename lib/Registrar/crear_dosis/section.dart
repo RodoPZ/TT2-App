@@ -9,11 +9,10 @@ class Section extends StatefulWidget{
   late String secondColText;
   late String formText;
   final Function(List) selected;
-  final Function(List) data;
   final Future<dynamic> Function() getter;
   late int intSelection;
 
-  Section({required this.data,this.intSelection = 0,required this.getter,required this.formText,required this.selected,required this.sectionName, required this.firstColText ,this.secondColText="",Key? key}) : super(key: key);
+  Section({this.intSelection = 0,required this.getter,required this.formText,required this.selected,required this.sectionName, required this.firstColText ,this.secondColText="",Key? key}) : super(key: key);
 
   @override
   _Section createState() => _Section();
@@ -150,6 +149,7 @@ class _Section extends State<Section>{
                       setState(() {
                         _itemsSelected = elements[0];
                         _itemQuantity = elements[1];
+                        widget.selected(elements);
                       });
                     },
                 ),

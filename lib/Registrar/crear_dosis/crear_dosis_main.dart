@@ -14,8 +14,13 @@ class CrearDosisMain extends StatefulWidget {
 class _CrearDosisMain extends State<CrearDosisMain> {
   bool valuefirst = true;
   bool valuesecond = true;
-  late String _DosisNombre;
   final _preferencesService = PreferencesService();
+
+  late String _dosisNombre;
+  late List _pastillaData;
+  late List _horarioData;
+  late List _alarmaData;
+  late List _seguridadData;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -31,9 +36,22 @@ class _CrearDosisMain extends State<CrearDosisMain> {
         return null;
       },
       myOnSave: (String? value) {
-        _DosisNombre = value!;
+        _dosisNombre = value!;
       },
     );
+  }
+
+  Widget _buildPastillas() {
+    return Section(
+        getter: _preferencesService.getPastilla,
+        intSelection: 0,
+        formText: "Seleccionar pastillas",
+        selected: (items) {
+          print(items);
+        },
+        sectionName: "Pastillas",
+        firstColText: 'Nombre',
+        secondColText: "Cantidad");
   }
 
   @override
@@ -69,39 +87,26 @@ class _CrearDosisMain extends State<CrearDosisMain> {
                     const Divider(thickness: 2),
                     InputText(inputHintText: "Nombre de la dosis"),
                     const SizedBox(height: 20),
-                    Section(
-                        data: (items){
-                          print(items);
-                        },
-                        getter: _preferencesService.getPastilla,
-                        intSelection: 0,
-                        formText: "Seleccionar pastillas",
-                        selected: (items) {},
-                        sectionName: "Pastillas",
-                        firstColText: 'Nombre',
-                        secondColText: "Cantidad"),
-
+                    _buildPastillas(),
                     Divider(thickness: 2),
                     Section(
-                        data: (items){
-                          print(items);
-                        },
                         getter: _preferencesService.getHorario,
                         intSelection: 1,
                         formText: "Seleccionar Horario",
-                        selected: (items) {},
+                        selected: (items) {
+                          print(items);
+                        },
                         sectionName: "Horario",
                         firstColText: 'Hora',
                         secondColText: "Repetir"),
                     Divider(thickness: 2),
                     Section(
-                        data: (items){
-                          print(items);
-                        },
                         getter: _preferencesService.getContacto,
                         intSelection: 1,
                         formText: "Seleccionar Contacto",
-                        selected: (items) {},
+                        selected: (items) {
+                          print("awa: " + items.toString());
+                        },
                         sectionName: "Alarmas",
                         firstColText: 'Contacto',
                         secondColText: "Numero"),
@@ -141,18 +146,19 @@ class _CrearDosisMain extends State<CrearDosisMain> {
                     ),
                     Divider(thickness: 2),
                     Section(
-                      data: (items){
-                        print(items);
-                      },
                         getter: _preferencesService.getContacto,
                         intSelection: 1,
                         formText: "Seleccionar Seguridad",
-                        selected: (items) {},
+                      selected: (items) {
+                        print(items);
+                      },
                         sectionName: "Seguridad",
                         firstColText: 'Seguridad',
                     ),
                     SizedBox(height: 15),
-                    ButtonMain(buttonText: "Registrar", callback: (){})
+                    ButtonMain(buttonText: "Registrar", callback: (){
+
+                    })
                   ],
                 ),
               ),

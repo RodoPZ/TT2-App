@@ -47,6 +47,22 @@ class Contacto{
   });
 }
 
+class Dosis{
+  final String dosisNombre;
+  final List pastillaData;
+  final List horarioData;
+  final List alarmaData;
+  final List seguridadData;
+
+  Dosis({
+    required this.dosisNombre,
+    required this.pastillaData,
+    required this.horarioData,
+    required this.alarmaData,
+    required this.seguridadData,
+  });
+}
+
 class Pin{
   final String pin;
   Pin({
