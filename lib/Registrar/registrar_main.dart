@@ -3,7 +3,7 @@ import 'package:tt2/Components/menu.dart';
 import 'package:tt2/Registrar/button_icon.dart';
 import 'package:tt2/Registrar/agregar_pastillas/agregar_pastillas_main.dart';
 import 'package:tt2/Registrar/agregar_horarios/agregar_horarios_main.dart';
-import 'package:tt2/Registrar/agregar_notificaciones/agregar_notificaciones_main.dart';
+import 'package:tt2/Registrar/agregar_notificaciones/agregar_contactos_main.dart';
 import 'package:tt2/Registrar/agregar_seguridad/agregar_seguridad_main.dart';
 import 'package:tt2/Registrar/crear_dosis/crear_dosis_main.dart';
 
@@ -47,6 +47,7 @@ class RegistrarMain extends StatelessWidget{
                             ButtonIcon(Icons.medical_services_outlined,"Pastillas",(){
                               Navigator.push(
                                 context,
+                                //MaterialPageRoute(builder: (builder) => AgregarPastillasMain()),
                                 MaterialPageRoute(builder: (builder) => AgregarPastillasMain()),
                               );
                             }),
@@ -64,10 +65,10 @@ class RegistrarMain extends StatelessWidget{
                         Row(
                           children: [
                             const Spacer(),
-                            ButtonIcon(Icons.notifications,"Notificaciones",(){
+                            ButtonIcon(Icons.person_add,"Contactos",(){
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (builder) => AgregarNotificacionesMain()),
+                                MaterialPageRoute(builder: (builder) => AgregarContactosMain()),
                               );
                             }),
                             const Spacer(),

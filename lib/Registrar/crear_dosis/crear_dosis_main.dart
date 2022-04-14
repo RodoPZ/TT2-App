@@ -2,23 +2,45 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tt2/Components/button_main.dart';
 import 'package:tt2/Components/menu.dart';
-import 'package:tt2/Components/time_picker.dart';
-import 'package:tt2/Registrar/agregar_horarios/dropdownmenu_horarios.dart';
 import 'package:tt2/Components/input_text.dart';
+import '../../preferences_service.dart';
+import 'section.dart';
 
-class CrearDosisMain extends StatefulWidget{
+class CrearDosisMain extends StatefulWidget {
   @override
   _CrearDosisMain createState() => _CrearDosisMain();
 }
 
-class _CrearDosisMain extends State<CrearDosisMain>{
+class _CrearDosisMain extends State<CrearDosisMain> {
+  bool valuefirst = true;
+  bool valuesecond = true;
+  late String _DosisNombre;
+  final _preferencesService = PreferencesService();
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  Widget _buildDosisNombre() {
+    return InputText(
+      inputHintText: "Nombre de la dosis",
+      inputmax: 20,
+      textSize: 16,
+      myValidator: (value) {
+        if (value == null || value.isEmpty) {
+          return "Se necesita un nombre";
+        }
+        return null;
+      },
+      myOnSave: (String? value) {
+        _DosisNombre = value!;
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      drawer: Menu("Rodo Pinedo",""),
+      drawer: Menu("Rodo Pinedo", ""),
       body: Stack(
         children: <Widget>[
           ListView(
@@ -31,12 +53,12 @@ class _CrearDosisMain extends State<CrearDosisMain>{
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-
                     const SizedBox(height: 20),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: const [
-                        Text("Dosis",
+                        Text(
+                          "Dosis",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 30,
@@ -47,57 +69,93 @@ class _CrearDosisMain extends State<CrearDosisMain>{
                     const Divider(thickness: 2),
                     InputText(inputHintText: "Nombre de la dosis"),
                     const SizedBox(height: 20),
-                    const Text("Para agregar horarios, favor de seguir las siguientes instrucciones:",
-                      textAlign: TextAlign.start,
-                      style: TextStyle(
-                        fontSize: 16,
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(
-                        top: 10,
-                        right: 20,
-                        left: 20,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Text("\u2022 Presionar el botón \"Seleccionar hora\" y elegir la hora de la alarma",
-                            textAlign: TextAlign.start,
-                            style: TextStyle(
-                              fontSize: 16,
-                            ),
-                          ),
-                          Text("\u2022 Seleccionar los días que se repetría la alarma",
-                            textAlign: TextAlign.start,
-                            style: TextStyle(
-                              fontSize: 16,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 30),
-                    SizedBox(height: 30),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text("Repetir: ",
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                            color: Theme.of(context).primaryColor,
-                            fontSize: 20,
-                          ),
+                    Section(
+                        data: (items){
+                          print(items);
+                        },
+                        getter: _preferencesService.getPastilla,
+                        intSelection: 0,
+                        formText: "Seleccionar pastillas",
+                        selected: (items) {},
+                        sectionName: "Pastillas",
+                        firstColText: 'Nombre',
+                        secondColText: "Cantidad"),
+
+                    Divider(thickness: 2),
+                    Section(
+                        data: (items){
+                          print(items);
+                        },
+                        getter: _preferencesService.getHorario,
+                        intSelection: 1,
+                        formText: "Seleccionar Horario",
+                        selected: (items) {},
+                        sectionName: "Horario",
+                        firstColText: 'Hora',
+                        secondColText: "Repetir"),
+                    Divider(thickness: 2),
+                    Section(
+                        data: (items){
+                          print(items);
+                        },
+                        getter: _preferencesService.getContacto,
+                        intSelection: 1,
+                        formText: "Seleccionar Contacto",
+                        selected: (items) {},
+                        sectionName: "Alarmas",
+                        firstColText: 'Contacto',
+                        secondColText: "Numero"),
+                    CheckboxListTile(
+                      controlAffinity: ListTileControlAffinity.trailing,
+                      activeColor: Theme.of(context).primaryColor,
+                      secondary: Icon(Icons.upcoming,color: Theme.of(context).primaryColor),
+                      title: const Text(
+                        '¿Activar alarma de dispensador?',
+                        style: TextStyle(
+                          fontSize: 15,
                         ),
-                        // DropDownMenuHorarios()
-                      ],
+                      ),
+                      value: valuefirst,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          valuefirst = value!;
+                        });
+                      },
                     ),
-                    SizedBox(height: 30),
-                    ButtonMain(buttonText: "Agregar", callback: (){})
+                    CheckboxListTile(
+                      controlAffinity: ListTileControlAffinity.trailing,
+                      activeColor: Theme.of(context).primaryColor,
+                      secondary: Icon(Icons.upcoming,color: Theme.of(context).primaryColor),
+                      title: const Text(
+                        '¿Activar notificaciones del celular?',
+                        style: TextStyle(
+                          fontSize: 14,
+                        ),
+                      ),
+                      value: valuesecond,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          valuesecond = value!;
+                        });
+                      },
+                    ),
+                    Divider(thickness: 2),
+                    Section(
+                      data: (items){
+                        print(items);
+                      },
+                        getter: _preferencesService.getContacto,
+                        intSelection: 1,
+                        formText: "Seleccionar Seguridad",
+                        selected: (items) {},
+                        sectionName: "Seguridad",
+                        firstColText: 'Seguridad',
+                    ),
+                    SizedBox(height: 15),
+                    ButtonMain(buttonText: "Registrar", callback: (){})
                   ],
                 ),
               ),
-
             ],
           ),
           Positioned(
@@ -109,8 +167,7 @@ class _CrearDosisMain extends State<CrearDosisMain>{
               width: 55,
               child: IconButton(
                 icon: Icon(Icons.menu_sharp,
-                    color: Theme.of(context).primaryColor,
-                    size: 40),
+                    color: Theme.of(context).primaryColor, size: 40),
                 onPressed: () => _scaffoldKey.currentState?.openDrawer(),
               ),
             ),

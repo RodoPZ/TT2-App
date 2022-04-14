@@ -1,9 +1,10 @@
+
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tt2/models.dart';
+import 'dart:math';
 
 class PreferencesService{
   Future saveUser(UserData userData) async{
@@ -15,79 +16,118 @@ class PreferencesService{
     await preferences.setString("contraseña", userData.password);
     await preferences.setBool("esPaciente", userData.esPaciente);
   }
+
   Future savePastilla(Pastilla pastilla) async{
-    // List pastillasData = [[pastilla.pastillaNombre,pastilla.pastillaCantidad,pastilla.pastillaCaducidad]];
+    final List <int>_id = [];
+    int _newid = 0;
     final preferences = await SharedPreferences.getInstance();
-    List pastillasData = jsonDecode(preferences.getString('pastillasData')!);
-    if (preferences.containsKey('pastillasData')) {
-      if (pastillasData.length < 10) {
-        pastillasData.add([
-          pastilla.pastillaNombre,
-          pastilla.pastillaCantidad,
-          pastilla.pastillaCaducidad]);
-        await preferences.setString("pastillasData", jsonEncode(pastillasData));
-        print(jsonDecode(preferences.getString("pastillasData")!));
+
+    if (preferences.containsKey('pastillasData')){
+      List pastillasData = jsonDecode(preferences.getString('pastillasData')!);
+
+      if (pastillasData.isNotEmpty){
+        for (var value in pastillasData) {
+          _id.add(value['id']);
+        }
+        for(int i = 0; i <= _id.reduce(max); i++){
+          if(_id.contains(i) == false && _id.last != i){
+            _newid = i;
+            break;
+          }
+          _newid = _id.reduce(max)+1;
+        }
       }
-      else {
-        print("Lista llena");
+      if (pastillasData.length < 10){
+        pastillasData.add({
+          "id":_newid,
+          "nombre":pastilla.pastillaNombre,
+          "cantidad":pastilla.pastillaCantidad,
+          "caducidad":pastilla.pastillaCaducidad,
+        });
+        await preferences.setString("pastillasData", jsonEncode(pastillasData));
       }
     }
     else{
-      List pastillasData = [[pastilla.pastillaNombre,pastilla.pastillaCantidad,pastilla.pastillaCaducidad]];
-
+      List pastillasData = [{'id':0,'nombre':pastilla.pastillaNombre, "cantidad":pastilla.pastillaCantidad,"caducidad":pastilla.pastillaCaducidad,}];
       await preferences.setString("pastillasData",jsonEncode(pastillasData));
     }
   }
+
   Future saveHorario(Horario horario) async{
+    final List <int>_id = [];
+    int _newid = 0;
+
     final preferences = await SharedPreferences.getInstance();
+    //preferences.remove("horariosData");
+    //Asignar una id única
     if (preferences.containsKey('horariosData')){
+      List horariosData = jsonDecode(preferences.getString('horariosData')!);
 
-      List horarioData = jsonDecode(preferences.getString('horariosData')!);
-
-      if (horarioData.length < 1){
-        horarioData.add([
-          horario.horarioHora,
-          horario.horarioRepetir]);
-
-        await preferences.setString("horariosData", jsonEncode(horarioData));
-        print(jsonDecode(preferences.getString("horariosData")!));
+      if (horariosData.isNotEmpty){
+        for (var value in horariosData) {
+          _id.add(value['id']);
+        }
+        for(int i = 0; i <= _id.reduce(max); i++){
+          if(_id.contains(i) == false && _id.last != i){
+            _newid = i;
+            break;
+          }
+          _newid = _id.reduce(max)+1;
+        }
       }
-      else{
-        print("Lista llena");
+      if (horariosData.length < 10){
+        horariosData.add({
+          "id":_newid,
+          "hora":horario.horarioHora,
+          "repetir":horario.horarioRepetir
+        });
+        await preferences.setString("horariosData", jsonEncode(horariosData));
       }
     }
     else{
-      List horarioData = [[horario.horarioHora,horario.horarioRepetir]];
-
-      await preferences.setString("horariosData",jsonEncode(horarioData));
+      List horariosData = [{'id':0,'hora':horario.horarioHora, 'repetir':horario.horarioRepetir}];
+      await preferences.setString("horariosData",jsonEncode(horariosData));
     }
   }
   Future saveContacto(Contacto contacto) async{
+    final List <int>_id = [];
+    int _newid = 0;
+    //Asignar una id única
+
     final preferences = await SharedPreferences.getInstance();
+    preferences.remove("contactosData");
     if (preferences.containsKey('contactosData')){
-
       List contactosData = jsonDecode(preferences.getString('contactosData')!);
-
-      if (contactosData.length < 20){
-        contactosData.add([
-          contacto.contactoNombre,
-          contacto.contactoNumero]);
-
-        await preferences.setString("contactosData", jsonEncode(contactosData));
-        print(jsonDecode(preferences.getString("contactosData")!));
+      if (contactosData.isNotEmpty){
+        for (var value in contactosData) {
+          _id.add(value[0]);
+        }
+        for(int i = 0; i <= _id.reduce(max); i++){
+          if(_id.contains(i) == false && _id.last != i){
+            _newid = i;
+            break;
+          }
+          _newid = _id.reduce(max)+1;
+        }
       }
-      else{
-        print("Lista llena");
+      if (contactosData.length < 20){
+        contactosData.add({
+          "id": _newid,
+          "nombre": contacto.contactoNombre,
+          "numero": contacto.contactoNumero
+        });
+        await preferences.setString("contactosData", jsonEncode(contactosData));
       }
     }
     else{
-      List contactosData = [[contacto.contactoNombre,contacto.contactoNumero]];
+      List contactosData = [{'id':0,'nombre':contacto.contactoNombre,'numero':contacto.contactoNumero}];
       await preferences.setString("contactosData",jsonEncode(contactosData));
     }
   }
 
   Future savePin(Pin pin) async{
     final preferences = await SharedPreferences.getInstance();
+    print(pin.pin);
     await preferences.setString("pinData", pin.pin);
   }
 
@@ -105,9 +145,9 @@ class PreferencesService{
   }
   Future deleteHorario(int index) async{
     final preferences = await SharedPreferences.getInstance();
-    List horarioData = jsonDecode(preferences.getString('horariosData')!);
-    horarioData.removeAt(index);
-    await preferences.setString("horariosData", jsonEncode(horarioData));
+    List horariosData = jsonDecode(preferences.getString('horariosData')!);
+    horariosData.removeAt(index);
+    await preferences.setString("horariosData", jsonEncode(horariosData));
   }
   Future deletePin() async{
     final preferences = await SharedPreferences.getInstance();

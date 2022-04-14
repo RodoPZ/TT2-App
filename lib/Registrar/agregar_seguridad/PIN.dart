@@ -78,7 +78,12 @@ class _PINState extends State<PIN> {
       children: [
         const SizedBox(height: 20),
         const Text("Ya hay un PIN registrado",style: TextStyle(fontSize: 20,fontWeight:FontWeight.bold)),
-        ButtonText("¿Olvidó su PIN?", Theme.of(context).primaryColor, 20, (){})
+        ButtonText("¿Olvidó su PIN?", Theme.of(context).primaryColor, 20, (){}),
+        ButtonText("Cambiar PIN", Theme.of(context).primaryColor, 20, (){
+          setState(() {
+            isConfigured = false;
+          });
+        })
       ],
     );
   }

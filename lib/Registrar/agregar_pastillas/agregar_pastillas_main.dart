@@ -1,3 +1,4 @@
+import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart';
 import 'package:tt2/Components/menu.dart';
 import 'package:tt2/Components/button_main.dart';
@@ -5,6 +6,7 @@ import 'package:tt2/Components/input_text.dart';
 import 'package:tt2/Registrar/agregar_pastillas/instrucciones.dart';
 import 'package:tt2/models.dart';
 import 'package:tt2/preferences_service.dart';
+import 'package:tt2/Components/item_manager.dart';
 
 import '../../Components/button_icon.dart';
 
@@ -15,8 +17,6 @@ class AgregarPastillasMain extends StatefulWidget {
 
 class _AgregarPastillasMainState extends State<AgregarPastillasMain> {
   final _preferencesService = PreferencesService();
-  bool isFull = false;
-
   late List items = [];
   late List<bool> _selected;
   bool loaded = false;
@@ -25,9 +25,9 @@ class _AgregarPastillasMainState extends State<AgregarPastillasMain> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
 
-  late String _pastillaNombre;
-  late int _pastillaCantidad;
-  late String _pastillaCaducidad;
+  late String _pastillaNombre = "";
+  late int _pastillaCantidad = 0;
+  late String _pastillaCaducidad = "";
 
   Widget _buildNombre() {
     return InputText(
@@ -35,7 +35,6 @@ class _AgregarPastillasMainState extends State<AgregarPastillasMain> {
       inputHintText: "Nombre de pastillas",
       inputmax: 20,
       textSize: 16,
-      enabled: !isFull,
       myValidator: (value) {
         if (value == null || value.isEmpty) {
           return "Se necesita un nombre";
@@ -54,7 +53,6 @@ class _AgregarPastillasMainState extends State<AgregarPastillasMain> {
       inputHintText: "Cantidad de pastillas",
       inputType: TextInputType.number,
       textSize: 16,
-      enabled: !isFull,
       myValidator: (value) {
         if (value == null || value.isEmpty) {
           return "Se necesita una cantidad";
@@ -76,7 +74,6 @@ class _AgregarPastillasMainState extends State<AgregarPastillasMain> {
       inputText: "Caducidad: ",
       inputHintText: "dd/mm/aaaa",
       textSize: 16,
-      enabled: !isFull,
       myValidator: (value) {
         RegExp regExp = RegExp(
             r'^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)(\d{4})$');
@@ -95,105 +92,6 @@ class _AgregarPastillasMainState extends State<AgregarPastillasMain> {
     );
   }
 
-  @override
-  void initState() {
-    super.initState();
-    _getItems();
-  }
-  _getItems() async {
-    items = await _preferencesService.getPastilla();
-    setState(() {
-      _selected = List.generate(items.length, (index) => false);
-      loaded = true;
-    });
-    if (items.length == 1) {
-      _showAlert(context);
-      setState(() {
-        isFull = true;
-      });
-    }else{
-      setState(() {
-        isFull = false;
-      });
-    }
-  }
-
-  void _showAlert(BuildContext context) {
-    showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-              title: const Text("Atención!"),
-              content: const Text(
-                "Los contenedores están llenos (10 pastillas registradas), no puede registrar nuevas pastillas hasta que elimine pastillas, pero puede abrir el compartimento.",
-                textAlign: TextAlign.justify,
-              ),
-              actions: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    TextButton(
-                      style: TextButton.styleFrom(
-                        primary: Theme.of(context).primaryColor,
-                      ),
-                      onPressed: () => Navigator.pop(context, 'ok'),
-                      child: const Text('ok',
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold)),
-                    ),
-                  ],
-                ),
-              ],
-            ));
-  }
-
-  Widget printItems(){
-    if (loaded == true){
-      if (items.isNotEmpty) {
-        return Container(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            children: [
-              Container(
-                height: 200,
-                child: ListView.builder(
-                    itemCount: items.length,
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) {
-                      return Container(
-                        margin: const EdgeInsets.fromLTRB(0, 2, 0, 2),
-                        child: ListTile(
-                            selected: _selected[index]?true:false,
-                            selectedColor: Theme.of(context).primaryColor,
-                            leading: const Icon(Icons.medication),
-                            title: Text(items[index][0]),
-                            subtitle: Text(items[index][1].toString()),
-                            trailing: ButtonIcon(icon: Icons.delete, callBack: (){
-                              _preferencesService.deletePastilla(index);
-                              _getItems();
-                            })),
-                      );
-                    }),
-              ),
-            ],
-          ),
-        );
-      } else {
-        return Container(
-          margin: EdgeInsets.symmetric(vertical: 20),
-          child: Text("No hay nada que mostrar",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-              )),
-        );
-      }
-    }
-    else{
-      return Text("Error");
-    }
-
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -206,6 +104,7 @@ class _AgregarPastillasMainState extends State<AgregarPastillasMain> {
             children: [
               Container(
                 margin: const EdgeInsets.only(
+                  top: 15,
                   right: 20,
                   left: 20,
                 ),
@@ -220,12 +119,12 @@ class _AgregarPastillasMainState extends State<AgregarPastillasMain> {
                           size: 80,
                           color: Theme.of(context).primaryColor,
                         ),
-                        const SizedBox(width: 20),
+                        const SizedBox(width: 30),
                         const Text(
-                          "Agregar pastillas",
+                          "Pastillas",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 25,
+                            fontSize: 30,
                           ),
                         )
                       ],
@@ -243,39 +142,27 @@ class _AgregarPastillasMainState extends State<AgregarPastillasMain> {
                       child: ButtonMain(
                           buttonText: "Abrir compartimento", callback: () {}),
                     ),
-                    Card(
-                      elevation: 10,
-                      child: Column(
-                        children: [
-                          Container(
-                            margin: const EdgeInsets.only(
-                              right: 30,
-                              left: 30,
-                            ),
-                            child: Row(
-                              mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  "Pastillas",
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                ButtonIcon(
-                                    icon: Icons.add,
-                                    size: 30,
-                                    callBack: () {
-                                      _Form();
-                                    })
-                              ],
-                            ),
-                          ),
-                          printItems(),
-                        ],
-                      ),
-                    ),
+
+                    ItemManager(
+                      deleter:_preferencesService.deletePastilla,
+                        getter: _preferencesService.getPastilla,
+                        formTitle: "Registrar pastillas",
+                        title: "Pastillas",
+                        icono: Icons.medication,
+                        form_items: formItems,
+                        register: _registerPastillas,
+                        callback: (){
+                          _registerPastillas();
+                          const snackBar = SnackBar(
+                            content:
+                            Text('Información de pastillas guardada!'),
+                          );
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(snackBar);
+                          Navigator.pop(context);
+                        },
+                    )
+
                   ],
                 ),
               ),
@@ -300,70 +187,14 @@ class _AgregarPastillasMainState extends State<AgregarPastillasMain> {
     );
   }
 
-  _Form(){
-    return showDialog(
-        context: context,
-        builder:
-            (BuildContext context) {
-          return AlertDialog(
-            content:
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Form(
-                  key: _formKey,
-                  child: Column(
-                    mainAxisSize:MainAxisSize.min,
-                    children: [
-                      const Text("Registrar nuevo contacto",
-                          style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold
-                          )),
-                      Padding(
-                        padding:const EdgeInsets.all(8.0),
-                        child:_buildNombre(),
-                      ),
-                      Padding(padding:const EdgeInsets.all(8.0),
-                        child:_buildCantidad(),
-                      ),
-                      Padding(padding:const EdgeInsets.all(8.0),
-                        child:_buildCaducidad(),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ButtonMain(
-                        buttonText:
-                        isFull ? "Contenedores llenos" : "Registrar",
-                        color: isFull
-                            ? Colors.grey
-                            : Theme.of(context).primaryColor,
-                        callback: () {
-                          if (!_formKey.currentState!.validate()) {
-                            return;
-                          }
-                          _formKey.currentState!.save();
-                          _registerPastillas();
-                          if (isFull == false) {
-                            const snackBar = SnackBar(
-                              content:
-                              Text('Información de pastillas guardada!'),
-                            );
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
-                            Navigator.pop(context);
-                          }
-                          setState(() {
-                            _getItems();
-                          });
-                        }))
-              ],
-            ),
-          );
-        });
+  Widget formItems(){
+    return Column(
+      children: [
+        _buildNombre(),
+        _buildCantidad(),
+        _buildCaducidad(),
+      ],
+    );
   }
 
   _registerPastillas() {
