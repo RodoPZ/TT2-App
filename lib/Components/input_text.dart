@@ -60,6 +60,7 @@ class _InputTextState extends State<InputText> {
         TextFormField(
           focusNode: myFocusNode,
           inputFormatters: widget.inputFormatters,
+          autofocus: false,
           keyboardType: widget.inputType,
           maxLength: widget.inputmax,
             decoration: InputDecoration(
@@ -76,8 +77,6 @@ class _InputTextState extends State<InputText> {
           enableSuggestions: widget.isPassword,
           autocorrect: widget.isPassword,
           enabled: widget.enabled,
-
-
           ),
       ],
     );

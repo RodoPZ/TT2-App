@@ -121,31 +121,24 @@ class _LoadItems extends State<LoadItems> {
         ButtonMain(
             buttonText: "Seleccionar",
             callback: () {
-              List _id = [];
-              List _subtitle = [];
-              List _itemQuantity= [];
+              List _data = [];
 
               if(widget.intSelection == 0){              //Selector de pastillas
                 for (int i = 0; i < _count.length; i++) {
                   if (_count[i] != 0) {
-                    _id.add(items[i]["id"]);
-                    _itemQuantity.add(_count[i]);
+                    _data.add([items[i]["id"],_count[i]]);
                   }
                 }
-                setState(() {
-                  widget.getData([_id,_itemQuantity]);
-                });
               } else if(widget.intSelection == 1) {              //Selector al hacer clic
                 for (int i = 0; i < _selected.length; i++) {
                   if(_selected[i] == true){
-                    _id.add(items[i]["id"]);
-                    _subtitle.add(items[i].values.elementAt(2));
+                    _data.add([items[i]["id"],items[i].values.elementAt(2)]);
                   }
                 }
-                setState(() {
-                  widget.getData([_id,_subtitle]);
-                });
               }
+              setState(() {
+                widget.getData(_data);
+              });
 
               _getItems();
               Navigator.pop(context);

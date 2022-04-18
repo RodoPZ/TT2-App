@@ -97,9 +97,10 @@ class PreferencesService{
     //preferences.remove("contactosData");
     if (preferences.containsKey('contactosData')){
       List contactosData = jsonDecode(preferences.getString('contactosData')!);
+      print(contactosData);
       if (contactosData.isNotEmpty){
         for (var value in contactosData) {
-          _id.add(value[0]);
+          _id.add(value['id']);
         }
         for(int i = 0; i <= _id.reduce(max); i++){
           if(_id.contains(i) == false && _id.last != i){
@@ -135,7 +136,7 @@ class PreferencesService{
       List dosisData = jsonDecode(preferences.getString('dosisData')!);
       if (dosisData.isNotEmpty){
         for (var value in dosisData) {
-          _id.add(value[0]);
+          _id.add(value['id']);
         }
         for(int i = 0; i <= _id.reduce(max); i++){
           if(_id.contains(i) == false && _id.last != i){

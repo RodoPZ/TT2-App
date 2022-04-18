@@ -32,6 +32,7 @@ class _Section extends State<Section>{
   _getItems() async{
     items = await widget.getter();
   }
+
   Widget getElementsByID(index){
     List elements = [];
     for (var id in _itemsSelected) {
@@ -88,44 +89,44 @@ class _Section extends State<Section>{
   Widget build(BuildContext context) {
     return IntrinsicHeight(
       child: Row(
-        children: [
-          Text(widget.sectionName,
-            style:  TextStyle(
-              color: Theme.of(context).primaryColor,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const VerticalDivider(thickness: 2),
-          Column(
             children: [
-              Text(widget.firstColText,
-                style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey
+              Text(widget.sectionName,
+                style:  TextStyle(
+                  color: Theme.of(context).primaryColor,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-              printItemsName(),
-            ],
-          ),
-          const Spacer(),
-          Column(
-            children: [
-              Text(widget.secondColText,
-                style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey
-                ),
+              const VerticalDivider(thickness: 2),
+              Column(
+                children: [
+                  Text(widget.firstColText,
+                    style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.grey
+                    ),
+                  ),
+                  printItemsName(),
+                ],
               ),
-              printPastillasCantidad(),
+              const Spacer(),
+              Column(
+                children: [
+                  Text(widget.secondColText,
+                    style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.grey
+                    ),
+                  ),
+                  printPastillasCantidad(),
+                ],
+              ),
+              const Spacer(),
+              ButtonIcon(icon: Icons.add, size: 30,color: Theme.of(context).primaryColor, callBack: (){
+                form();
+              }),
             ],
           ),
-          const Spacer(),
-          ButtonIcon(icon: Icons.add, size: 30,color: Theme.of(context).primaryColor, callBack: (){
-            form();
-          }),
-        ],
-      ),
     );
   }
 
@@ -147,8 +148,13 @@ class _Section extends State<Section>{
                     getter: widget.getter,
                     getData: (elements){
                       setState(() {
-                        _itemsSelected = elements[0];
-                        _itemQuantity = elements[1];
+                        _itemsSelected.clear();
+                        _itemQuantity.clear();
+
+                        for (var element in elements) {
+                          _itemsSelected.add(element[0]);
+                          _itemQuantity.add(element[1]);
+                        }
                         widget.selected(elements);
                       });
                     },
