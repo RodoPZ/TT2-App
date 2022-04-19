@@ -1,4 +1,4 @@
-# tt2
+# TT2 APP
 
 A flutter App made for my graduation project.
 
