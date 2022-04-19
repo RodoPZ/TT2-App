@@ -52,7 +52,6 @@ class _LoadItems extends State<LoadItems> {
      return Row(
        children: [
          ButtonIcon( icon: Icons.add,
-             size: 25,
              color: Theme.of(context).primaryColor,
              callBack: () {
                if(_count[index]<_quantity[index]){
@@ -63,8 +62,8 @@ class _LoadItems extends State<LoadItems> {
              }
          ),
          Text(_count[index].toString()),
-         ButtonIcon( icon: Icons.remove,
-             size: 25,
+         ButtonIcon(
+             icon: Icons.remove,
              color: Theme.of(context).primaryColor,
              callBack: () {
                if(_count[index]>0){

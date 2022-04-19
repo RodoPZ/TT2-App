@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tt2/Components/menu.dart';
-import 'package:tt2/Registrar/button_icon.dart';
+import 'package:tt2/Components/button_icon.dart';
 import 'package:tt2/Registrar/agregar_pastillas/agregar_pastillas_main.dart';
 import 'package:tt2/Registrar/agregar_horarios/agregar_horarios_main.dart';
 import 'package:tt2/Registrar/agregar_notificaciones/agregar_contactos_main.dart';
@@ -44,20 +44,35 @@ class RegistrarMain extends StatelessWidget{
                         Row(
                           children: [
                             const Spacer(),
-                            ButtonIcon(Icons.medical_services_outlined,"Pastillas",(){
-                              Navigator.push(
-                                context,
-                                //MaterialPageRoute(builder: (builder) => AgregarPastillasMain()),
-                                MaterialPageRoute(builder: (builder) => AgregarPastillasMain()),
-                              );
-                            }),
+                            ButtonIcon(
+                              iconSize:100,
+                                size: 130,
+                                icon: Icons.medical_services_outlined,
+                                buttonText: "Pastillas",
+                                color: Theme.of(context).primaryColor,
+                                callBack: (){
+                                  Navigator.push(
+                                    context,
+                                    //MaterialPageRoute(builder: (builder) => AgregarPastillasMain()),
+                                    MaterialPageRoute(builder: (builder) => AgregarPastillasMain()),
+                                  );
+                                }
+                            ),
                             const Spacer(),
-                            ButtonIcon(Icons.access_alarm,"Horarios",(){
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (builder) => AgregarHorariosMain()),
-                              );
-                            }),
+                            ButtonIcon(
+                                iconSize:100,
+                                size: 130,
+                                icon:Icons.access_alarm,
+                                buttonText: "Horarios",
+                                color: Theme.of(context).primaryColor,
+                                callBack: (){
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (builder) => AgregarHorariosMain()),
+                                  );
+                                }
+
+                            ),
                             const Spacer(),
                           ],
                         ),
@@ -65,19 +80,33 @@ class RegistrarMain extends StatelessWidget{
                         Row(
                           children: [
                             const Spacer(),
-                            ButtonIcon(Icons.person_add,"Contactos",(){
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (builder) => AgregarContactosMain()),
-                              );
-                            }),
+                            ButtonIcon(
+                                iconSize:100,
+                                size: 130,
+                                icon: Icons.person_add,
+                                buttonText: "Contactos",
+                                color: Theme.of(context).primaryColor,
+                                callBack: (){
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (builder) => AgregarContactosMain()),
+                                  );
+                                }
+                            ),
                             const Spacer(),
-                            ButtonIcon(Icons.security,"Seguridad",(){
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (builder) => AgregarSeguridadMain()),
-                              );
-                            }),
+                            ButtonIcon(
+                                iconSize:100,
+                                size: 130,
+                                icon: Icons.security,
+                                buttonText: "Seguridad",
+                                color: Theme.of(context).primaryColor,
+                                callBack: (){
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (builder) => AgregarSeguridadMain()),
+                                  );
+                                }
+                            ),
                             const Spacer(),
                           ],
                         ),
@@ -92,12 +121,19 @@ class RegistrarMain extends StatelessWidget{
                       )),
                   const Divider(thickness: 2),
                   const SizedBox(height: 10),
-                  ButtonIcon(Icons.paste,"Dosis",(){
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (builder) => CrearDosisMain()),
-                    );
-                  }),
+                  ButtonIcon(
+                      iconSize:100,
+                      size: 130,
+                      icon: Icons.paste,
+                      buttonText: "Dosis",
+                      color: Theme.of(context).primaryColor,
+                      callBack: (){
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (builder) => CrearDosisMain()),
+                        );
+                      }
+                  ),
                 ],
               ),
             ],

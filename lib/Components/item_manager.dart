@@ -85,7 +85,6 @@ class _ItemManagerState extends State<ItemManager> {
                         ? Colors.grey
                         : Theme.of(context).primaryColor,
                     icon: Icons.add,
-                    size: 30,
                     callBack: () {
                       if(isFull == false){
                         form();
@@ -153,7 +152,6 @@ class _ItemManagerState extends State<ItemManager> {
                             subtitle: Text(_printSubtitleDetails(index)),
                             trailing: ButtonIcon(
                                 color: Theme.of(context).primaryColor,
-                                size: 40,
                                 icon: Icons.delete,
                                 callBack: () {
                                   widget.deleter(index);

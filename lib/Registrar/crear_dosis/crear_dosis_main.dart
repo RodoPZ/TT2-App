@@ -189,7 +189,6 @@ class _CrearDosisMain extends State<CrearDosisMain> {
       intSelection: 1,
       formText: "Seleccionar Seguridad",
       selected: (items) {
-        print(items);
       },
       sectionName: "Seguridad",
       firstColText: 'Seguridad',
@@ -270,17 +269,15 @@ class _CrearDosisMain extends State<CrearDosisMain> {
                               }
                               _formKey.currentState!.save();
                               if (_isEmpty.every((element) => element == false)) {
-                                print([
-                                  _dosisNombre,
-                                  _pastillaData,
-                                  _horarioData,
-                                  _alarmaData,
-                                  _seguridadData
-                                ]);
-                                print("Se registra");
+                                _registerDosis();
+                                const snackBar = SnackBar(
+                                  content:
+                                  Text('Información de Dosis guardada!'),
+                                );
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
+                                Navigator.pop(context);
                               } else {
-                                print("hay errores");
-                                print(_isEmpty);
                                 return;
                               }
                             }),
@@ -308,8 +305,6 @@ class _CrearDosisMain extends State<CrearDosisMain> {
           ),
         ),
     );
-
-
   }
 
   _registerDosis() {

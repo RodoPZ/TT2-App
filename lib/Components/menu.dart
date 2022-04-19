@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tt2/Registrar/registrar_main.dart';
 import 'package:tt2/homepage/homepage_main.dart';
+import 'package:tt2/Dosis_registradas/dosis_registradas_main.dart';
 
 class Menu extends StatefulWidget{
   String userName = "UserName";
@@ -104,7 +105,7 @@ class _Menu extends State<Menu>{
                         .of(context)
                         .primaryColor),
                     const SizedBox(width: 10),
-                    const Text("Alarmas registradas",
+                    const Text("Dosis registradas",
                         style: TextStyle(
                             fontSize: 20,
                             color: Color(0xFF35424a)
@@ -114,10 +115,13 @@ class _Menu extends State<Menu>{
                   ],
                 ),
                 onTap: () {
-                  // Update the state of the app
-                  // ...
-                  // Then close the drawer
                   Navigator.pop(context);
+                  if ( widget.currentSection != "Dosis registradas" ){
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (builder) => DosisRegistradasMain())
+                    );
+                  }
                 },
               ),
               ListTile(

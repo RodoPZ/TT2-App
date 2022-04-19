@@ -114,7 +114,6 @@ class _AgregarHorariosMain extends State<AgregarHorariosMain> {
                               _horarioRepetir = "";
                             });
                           }else{
-                            print("aw");
                             return;
                           }
                         },

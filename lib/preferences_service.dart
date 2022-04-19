@@ -7,7 +7,6 @@ import 'dart:math';
 class PreferencesService{
   Future saveUser(UserData userData) async{
     final preferences = await SharedPreferences.getInstance();
-
     await preferences.setString("nombreUsuario", userData.nombreUsuario);
     await preferences.setString("apellidoUsuario", userData.apellidoUsuario);
     await preferences.setString("correo", userData.correo);
@@ -97,7 +96,6 @@ class PreferencesService{
     //preferences.remove("contactosData");
     if (preferences.containsKey('contactosData')){
       List contactosData = jsonDecode(preferences.getString('contactosData')!);
-      print(contactosData);
       if (contactosData.isNotEmpty){
         for (var value in contactosData) {
           _id.add(value['id']);
@@ -155,13 +153,11 @@ class PreferencesService{
           "alarmas": dosis.alarmaData,
           "seguridad": dosis.seguridadData,
         });
-        print(dosisData);
         await preferences.setString("dosisData", jsonEncode(dosisData));
       }
     }
     else{
       List dosisData = [{'id':0,'nombre':dosis.dosisNombre,'pastillas':dosis.pastillaData,'horario':dosis.horarioData,"alarmas": dosis.alarmaData,"seguridad": dosis.seguridadData}];
-      print(dosisData);
       await preferences.setString("dosisData",jsonEncode(dosisData));
     }
   }
@@ -232,6 +228,15 @@ class PreferencesService{
       contactosData = jsonDecode(preferences.getString('contactosData')!);
     }
     return contactosData;
+  }
+
+  Future getDosis() async{
+    List dosisData = [];
+    final preferences = await SharedPreferences.getInstance();
+    if(preferences.containsKey('dosisData')){
+      dosisData = jsonDecode(preferences.getString('dosisData')!);
+    }
+    return dosisData;
   }
 
   Future getPin() async {

@@ -130,7 +130,6 @@ class _PINState extends State<PIN> {
                   _registerPin();
                   _changeWidget();
                 }else{
-                  print(items);
                 }
               })
             ],

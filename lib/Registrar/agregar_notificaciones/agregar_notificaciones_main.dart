@@ -142,7 +142,11 @@ class _AgregarNotificacionesMain extends State<AgregarNotificacionesMain>
                             leading: const Icon(Icons.person),
                             title: Text(items[index][0]),
                             subtitle: Text(items[index][1].toString()),
-                            trailing: ButtonIcon(color: Theme.of(context).primaryColor,icon: Icons.delete, callBack: (){
+                            trailing: ButtonIcon(
+                                iconSize: 10,
+                                color: Theme.of(context).primaryColor,
+                                icon: Icons.delete,
+                                callBack: (){
                               _preferencesService.deleteContacto(index);
                               _getItems();
                             })),
@@ -255,6 +259,7 @@ class _AgregarNotificacionesMain extends State<AgregarNotificacionesMain>
                                         ),
                                       ),
                                       ButtonIcon(
+                                          iconSize: 10,
                                           color: Theme.of(context).primaryColor,
                                           icon: Icons.add,
                                           size: 30,

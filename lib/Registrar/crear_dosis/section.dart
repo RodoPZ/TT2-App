@@ -122,7 +122,8 @@ class _Section extends State<Section>{
                 ],
               ),
               const Spacer(),
-              ButtonIcon(icon: Icons.add, size: 30,color: Theme.of(context).primaryColor, callBack: (){
+              ButtonIcon(
+                  icon: Icons.add,color: Theme.of(context).primaryColor, callBack: (){
                 form();
               }),
             ],
