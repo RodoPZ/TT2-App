@@ -68,6 +68,7 @@ class _CrearDosisMain extends State<CrearDosisMain> {
             selected: (items) {
               setState(() => _isEmpty[1] = false);
               _pastillaData = items;
+              print(items);
             },
             sectionName: "Pastillas",
             firstColText: 'Nombre',
@@ -78,6 +79,7 @@ class _CrearDosisMain extends State<CrearDosisMain> {
   }
 
   Widget _buildHorario() {
+
     Widget _errorText() {
       if (_isEmpty[2] == true) {
         return const Text(
@@ -100,8 +102,14 @@ class _CrearDosisMain extends State<CrearDosisMain> {
             intSelection: 1,
             formText: "Seleccionar Horario",
             selected: (items) {
+              List _ids = [];
               setState(() => _isEmpty[2] = false);
-              _horarioData = items;
+              for (var element in items) {
+                _ids.add(element[0]);
+              }
+
+              _horarioData = _ids;
+              print(_horarioData);
             },
             sectionName: "Horario",
             firstColText: 'Hora',
@@ -134,10 +142,15 @@ class _CrearDosisMain extends State<CrearDosisMain> {
             intSelection: 1,
             formText: "Seleccionar Contacto",
             selected: (items) {
+              List _ids = [];
               setState(() => _isEmpty[3] = false);
-              items.insert(0, valuesecond);
-              items.insert(0, valuefirst);
-              _alarmaData = items;
+              for (var element in items) {
+                _ids.add(element[0]);
+              }
+              _ids.insert(0, valuesecond);
+              _ids.insert(0, valuefirst);
+              print(_ids);
+              _alarmaData = _ids;
             },
             sectionName: "Alarmas",
             firstColText: 'Contacto',
@@ -241,12 +254,14 @@ class _CrearDosisMain extends State<CrearDosisMain> {
                         ButtonMain(
                             buttonText: "Registrar",
                             callback: () {
+
                               if (!_formKey.currentState!.validate()) {
                                 setState(() => _isEmpty[0] = true);
                               } else {
                                 setState(() => _isEmpty[0] = false);
                               }
-
+                              _formKey.currentState!.save();
+                              print([_dosisNombre,_pastillaData,_horarioData,_alarmaData,_seguridadData]);
                               if (_pastillaData.isEmpty) {
                                 setState(() => _isEmpty[1] = true);
                               } else {
@@ -264,10 +279,11 @@ class _CrearDosisMain extends State<CrearDosisMain> {
                                 setState(() => _isEmpty[3] = true);
                               } else {
                                 setState(() => _isEmpty[3] = false);
+                                print(_alarmaData);
                                 _alarmaData[0] = valuefirst;
                                 _alarmaData[1] = valuesecond;
                               }
-                              _formKey.currentState!.save();
+
                               if (_isEmpty.every((element) => element == false)) {
                                 _registerDosis();
                                 const snackBar = SnackBar(

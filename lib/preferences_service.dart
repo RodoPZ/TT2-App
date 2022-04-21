@@ -129,7 +129,7 @@ class PreferencesService{
     //Asignar una id única
 
     final preferences = await SharedPreferences.getInstance();
-    //preferences.remove("dosisData");
+    // preferences.remove("dosisData");
     if (preferences.containsKey('dosisData')){
       List dosisData = jsonDecode(preferences.getString('dosisData')!);
       if (dosisData.isNotEmpty){
@@ -186,6 +186,13 @@ class PreferencesService{
     List horariosData = jsonDecode(preferences.getString('horariosData')!);
     horariosData.removeAt(index);
     await preferences.setString("horariosData", jsonEncode(horariosData));
+  }
+
+  Future deleteDosis(int index) async{
+    final preferences = await SharedPreferences.getInstance();
+    List dosisData = jsonDecode(preferences.getString('dosisData')!);
+    dosisData.removeAt(index);
+    await preferences.setString("dosisData", jsonEncode(dosisData));
   }
 
   Future deletePin() async{

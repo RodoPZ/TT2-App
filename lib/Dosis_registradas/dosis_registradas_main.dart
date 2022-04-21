@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../Components/menu.dart';
+import 'createDataTable.dart';
 
 class DosisRegistradasMain extends StatefulWidget {
   @override
@@ -18,35 +19,31 @@ class _DosisRegistradasMainState extends State<DosisRegistradasMain> {
         children: <Widget>[
           ListView(
             children: [
-              Container(
-                margin: const EdgeInsets.only(
-                  top: 15,
-                  right: 20,
-                  left: 20,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.medical_services,
-                          size: 60,
-                          color: Theme.of(context).primaryColor,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.paste,
+                        size: 60,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                      const SizedBox(width: 10),
+                      const Text(
+                        "Dosis registradas",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 25,
                         ),
-                        const SizedBox(width: 10),
-                        const Text(
-                          "Dosis registradas",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 25,
-                          ),
-                        )
-                      ],
-                    ),
-                  ],
-                ),
+                      )
+                    ],
+                  ),
+                  Divider(thickness: 2),
+                  CreateDataTable(),
+
+                ],
               ),
             ],
           ),
@@ -68,5 +65,4 @@ class _DosisRegistradasMainState extends State<DosisRegistradasMain> {
       ),
     );
   }
-
 }
