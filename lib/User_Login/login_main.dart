@@ -4,6 +4,7 @@ import 'package:tt2/Components/button_main.dart';
 import 'package:tt2/Components/button_text.dart';
 import 'package:tt2/User_Register/user_register_main.dart';
 import 'package:tt2/homepage/homepage_main.dart';
+import 'package:tt2/notificationPlugin.dart';
 class LoginMain extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
@@ -61,7 +62,13 @@ class LoginMain extends StatelessWidget{
             ),
 
              Center(
-              child: ButtonText("Recuperar contraseña",Theme.of(context).primaryColor,20,(){}),
+              child: ButtonText("Recuperar contraseña",Theme.of(context).primaryColor,20,(){
+                NotificationPlugin.showNotification(
+                  title: 'Es la hora de su medicina',
+                  body: "Es la hora de su medicina",
+                  payload: 'awa.abs'
+                );
+              }),
             ),
             const SizedBox(height: 20),
             Center(
