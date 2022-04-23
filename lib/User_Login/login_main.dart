@@ -4,8 +4,30 @@ import 'package:tt2/Components/button_main.dart';
 import 'package:tt2/Components/button_text.dart';
 import 'package:tt2/User_Register/user_register_main.dart';
 import 'package:tt2/homepage/homepage_main.dart';
-import 'package:tt2/notificationPlugin.dart';
-class LoginMain extends StatelessWidget{
+import 'package:tt2/Notifications/notificationPlugin.dart';
+import 'package:tt2/Notifications/onclickNotificaciones.dart';
+
+class LoginMain extends StatefulWidget{
+  @override
+  State<LoginMain> createState() => _LoginMainState();
+}
+
+class _LoginMainState extends State<LoginMain> {
+  @override
+  void initState() {
+    super.initState();
+
+    NotificationPlugin.init();
+    listenNotifications();
+  }
+
+  void listenNotifications() =>
+      NotificationPlugin.onNotifications.stream.listen(onClickedNotification);
+
+  void onClickedNotification(String? payload) =>
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => OnClickNotificaciones(payload: payload),
+      ));
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,10 +85,11 @@ class LoginMain extends StatelessWidget{
 
              Center(
               child: ButtonText("Recuperar contraseña",Theme.of(context).primaryColor,20,(){
-                NotificationPlugin.showNotification(
+                NotificationPlugin.showScheduleNotification(
                   title: 'Es la hora de su medicina',
                   body: "Es la hora de su medicina",
-                  payload: 'awa.abs'
+                  payload: 'awa.abs',
+                  scheduledDate: DateTime.now().add(Duration(seconds: 10)),
                 );
               }),
             ),
