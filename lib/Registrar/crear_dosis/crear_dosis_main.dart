@@ -3,6 +3,7 @@ import 'package:tt2/Components/button_main.dart';
 import 'package:tt2/Components/menu.dart';
 import 'package:tt2/Components/input_text.dart';
 import 'package:tt2/models.dart';
+import '../../Notifications/notificationPlugin.dart';
 import '../../preferences_service.dart';
 import 'section.dart';
 
@@ -18,6 +19,7 @@ class _CrearDosisMain extends State<CrearDosisMain> {
 
   final List<bool> _isEmpty = [true, true, true, false];
   late String _dosisNombre;
+  List _horarioList = [];
   List _pastillaData = [];
   List _horarioData = [];
   List _alarmaData = [true, true];
@@ -25,6 +27,18 @@ class _CrearDosisMain extends State<CrearDosisMain> {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+
+    super.initState();
+    _getItems();
+
+  }
+  _getItems() async {
+    _horarioList = await _preferencesService.getHorario();
+
+  }
 
   Widget _buildDosisNombre() {
     return InputText(
@@ -68,7 +82,6 @@ class _CrearDosisMain extends State<CrearDosisMain> {
             selected: (items) {
               setState(() => _isEmpty[1] = false);
               _pastillaData = items;
-              print(items);
             },
             sectionName: "Pastillas",
             firstColText: 'Nombre',
@@ -109,7 +122,6 @@ class _CrearDosisMain extends State<CrearDosisMain> {
               }
 
               _horarioData = _ids;
-              print(_horarioData);
             },
             sectionName: "Horario",
             firstColText: 'Hora',
@@ -149,7 +161,6 @@ class _CrearDosisMain extends State<CrearDosisMain> {
               }
               _ids.insert(0, valuesecond);
               _ids.insert(0, valuefirst);
-              print(_ids);
               _alarmaData = _ids;
             },
             sectionName: "Alarmas",
@@ -254,14 +265,13 @@ class _CrearDosisMain extends State<CrearDosisMain> {
                         ButtonMain(
                             buttonText: "Registrar",
                             callback: () {
-
+                              NotificationPlugin.RetrieveNotifications();
                               if (!_formKey.currentState!.validate()) {
                                 setState(() => _isEmpty[0] = true);
                               } else {
                                 setState(() => _isEmpty[0] = false);
                               }
                               _formKey.currentState!.save();
-                              print([_dosisNombre,_pastillaData,_horarioData,_alarmaData,_seguridadData]);
                               if (_pastillaData.isEmpty) {
                                 setState(() => _isEmpty[1] = true);
                               } else {
@@ -279,13 +289,16 @@ class _CrearDosisMain extends State<CrearDosisMain> {
                                 setState(() => _isEmpty[3] = true);
                               } else {
                                 setState(() => _isEmpty[3] = false);
-                                print(_alarmaData);
+
                                 _alarmaData[0] = valuefirst;
                                 _alarmaData[1] = valuesecond;
                               }
 
                               if (_isEmpty.every((element) => element == false)) {
                                 _registerDosis();
+
+
+
                                 const snackBar = SnackBar(
                                   content:
                                   Text('Información de Dosis guardada!'),
@@ -330,6 +343,61 @@ class _CrearDosisMain extends State<CrearDosisMain> {
         horarioData: _horarioData,
         alarmaData: _alarmaData,
         seguridadData: _seguridadData);
-    _preferencesService.saveDosis(newDosis);
+    _preferencesService.saveDosis(newDosis,(id){
+      for(var horario in _horarioData){
+        _createAlarm(horario,id);
+      }
+    });
+  }
+
+  _createAlarm(data, int _dosisId){
+
+    for(var horario in _horarioList){
+      if (horario['id'] == data){
+        List time = horario['hora'].split(':');
+        _dosisId = _dosisId*100+(horario['id'] as int)*10;
+        String title = "Es la hora de la Dosis: " + _dosisNombre;
+        String body = "Su Dosis de las " + horario["hora"] + " que se repite: " + horario["repetir"] + " esta lista";
+
+        if(horario['repetir'] == "Una vez"){
+          NotificationPlugin.showNotification(
+            id: _dosisId,
+            title: title,
+            body: body,
+            payload: "awa",
+           scheduledDate: DateTime(
+               DateTime.now().year,
+               DateTime.now().month,
+               DateTime.now().day,
+               int.parse(time[0]),
+               int.parse(time[1]),
+           ),
+          );
+        }
+
+        if(horario['repetir'] == "Diariamente"){
+          NotificationPlugin.showDailyNotification(
+              id: _dosisId,
+              title: title,
+              body: body,
+              payload: "awa",
+              horas: int.parse(time[0]),
+              minutos: int.parse(time[1]),
+          );
+        }
+
+        if(horario['repetir'] == "Lun a Vie"){
+          NotificationPlugin.showWeeklyNotification(
+            id: _dosisId,
+            title: title,
+            body: body,
+            payload: "awa",
+            horas: int.parse(time[0]),
+            minutos: int.parse(time[1]),
+            days: [1,2,3,4,5],
+          );
+        }
+      }
+    }
   }
 }

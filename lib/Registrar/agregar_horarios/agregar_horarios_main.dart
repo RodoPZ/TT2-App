@@ -44,7 +44,9 @@ class _AgregarHorariosMain extends State<AgregarHorariosMain> {
           ),
         ),
         DropDownMenuHorarios((value) {
-          _horarioRepetir = value!;
+          if(value!= "Seleccionar" && value!= "Personalizado" ){
+            _horarioRepetir = value.toString();
+          }
         }),
       ],
     );
@@ -152,6 +154,7 @@ class _AgregarHorariosMain extends State<AgregarHorariosMain> {
   }
 
   _registerHorarios() {
+    print(_horarioRepetir);
     final newHorario =
         Horario(horarioHora: _horarioHora, horarioRepetir: _horarioRepetir);
     _preferencesService.saveHorario(newHorario);

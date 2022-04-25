@@ -3,15 +3,22 @@ import 'User_Login/login_main.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 main() async{
+
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
   statusBarColor: Colors.transparent,
   ));
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
 
+class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
 
   @override
@@ -31,6 +38,7 @@ class MyApp extends StatelessWidget {
           fontFamily: 'Asap'
       ),
       home: LoginMain(),
+
 
     );
   }

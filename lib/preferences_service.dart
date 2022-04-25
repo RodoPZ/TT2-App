@@ -1,5 +1,6 @@
 
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tt2/models.dart';
 import 'dart:math';
@@ -123,7 +124,7 @@ class PreferencesService{
     }
   }
 
-  Future saveDosis(Dosis dosis) async{
+  Future saveDosis(Dosis dosis, Function(int) callback) async{
     final List <int>_id = [];
     int _newid = 0;
     //Asignar una id única
@@ -155,11 +156,14 @@ class PreferencesService{
         });
         await preferences.setString("dosisData", jsonEncode(dosisData));
       }
+      callback(_newid);
     }
     else{
       List dosisData = [{'id':0,'nombre':dosis.dosisNombre,'pastillas':dosis.pastillaData,'horario':dosis.horarioData,"alarmas": dosis.alarmaData,"seguridad": dosis.seguridadData}];
       await preferences.setString("dosisData",jsonEncode(dosisData));
+      callback(0);
     }
+
   }
 
   Future savePin(Pin pin) async{

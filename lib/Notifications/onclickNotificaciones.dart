@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 class OnClickNotificaciones extends StatelessWidget {
   final String? payload;
-
   const OnClickNotificaciones({Key? key, required this.payload}) : super(key: key);
 
   @override
@@ -14,6 +13,7 @@ class OnClickNotificaciones extends StatelessWidget {
             Text(payload ?? ""),
         ],
       ),
-    ),);
+    ),
+    );
   }
 }

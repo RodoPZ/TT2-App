@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:tt2/Registrar/agregar_horarios/popup_days.dart';
 
 class DropDownMenuHorarios extends StatefulWidget {
-  Function(String?)? onChange;
+  Function(dynamic)? onChange;
 
   DropDownMenuHorarios(this.onChange, {Key? key}) : super(key: key);
 
@@ -13,11 +13,11 @@ class DropDownMenuHorarios extends StatefulWidget {
 
 class _DropDownMenuHorarios extends State<DropDownMenuHorarios> {
   // Initial Selected Value
-  String dropdownvalue = 'Una vez';
-  String lastSelection = "";
+  String dropdownvalue = 'Seleccionar';
 
   // List of items in our dropdown menu
   var items = [
+    'Seleccionar',
     'Una vez',
     'Diariamente',
     'Lun a Vie',
@@ -36,30 +36,36 @@ class _DropDownMenuHorarios extends State<DropDownMenuHorarios> {
         );
       }).toList(),
       onChanged: (String? newValue) {
-        setState(() {
-          dropdownvalue = newValue!;
-        });
-        if (dropdownvalue == "Personalizado") {
+        if (newValue == "Personalizado") {
           showDialog<String>(
             context: context,
-            builder: (BuildContext context) => AlertDialog(
-              title: const Text('Elegir un día'),
-              content: Container(
-                  height: 340,
-                  child: PopUpDays((value) {
+            builder: (BuildContext context) =>
+                AlertDialog(
+                  title: const Text('Elegir un día'),
+                  content: PopUpDays((value) {
                     setState(() {
-                      if (lastSelection != "") {
-                        items.removeLast();
+                      if (value == "Diariamente") {
+                        print(value);
+                        setState(() => dropdownvalue == "Diariamente");
+                        widget.onChange!("Diariamente");
+                      } else if (value == "Una vez") {
+                        print(value);
+                        setState(() => dropdownvalue == "Una vez");
+                        widget.onChange!("Una vez");
+                      } else {
+                        print(value);
+                        widget.onChange!(value);
                       }
-                      items.add(value!);
-                      dropdownvalue = value;
-                      lastSelection = value;
-                      widget.onChange!(dropdownvalue);
                     });
-                  })),
-            ),
+                  }),
+                ),
           );
+        }else{
+          setState(() {
+            dropdownvalue = newValue!;
+          });
         }
+
         widget.onChange!(dropdownvalue);
       },
     );
