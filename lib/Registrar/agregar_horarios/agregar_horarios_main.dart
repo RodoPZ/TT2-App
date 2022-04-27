@@ -21,7 +21,7 @@ class _AgregarHorariosMain extends State<AgregarHorariosMain> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   String _horarioHora = "";
-  String _horarioRepetir = "";
+  var _horarioRepetir;
 
   Widget _buildHora() {
     return TimePickers((value) {
@@ -45,7 +45,7 @@ class _AgregarHorariosMain extends State<AgregarHorariosMain> {
         ),
         DropDownMenuHorarios((value) {
           if(value!= "Seleccionar" && value!= "Personalizado" ){
-            _horarioRepetir = value.toString();
+            _horarioRepetir = value;
           }
         }),
       ],
@@ -154,7 +154,6 @@ class _AgregarHorariosMain extends State<AgregarHorariosMain> {
   }
 
   _registerHorarios() {
-    print(_horarioRepetir);
     final newHorario =
         Horario(horarioHora: _horarioHora, horarioRepetir: _horarioRepetir);
     _preferencesService.saveHorario(newHorario);

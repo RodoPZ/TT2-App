@@ -45,15 +45,12 @@ class _DropDownMenuHorarios extends State<DropDownMenuHorarios> {
                   content: PopUpDays((value) {
                     setState(() {
                       if (value == "Diariamente") {
-                        print(value);
                         setState(() => dropdownvalue == "Diariamente");
                         widget.onChange!("Diariamente");
                       } else if (value == "Una vez") {
-                        print(value);
                         setState(() => dropdownvalue == "Una vez");
                         widget.onChange!("Una vez");
                       } else {
-                        print(value);
                         widget.onChange!(value);
                       }
                     });

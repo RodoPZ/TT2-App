@@ -154,6 +154,7 @@ class PreferencesService{
           "alarmas": dosis.alarmaData,
           "seguridad": dosis.seguridadData,
         });
+        print(dosisData);
         await preferences.setString("dosisData", jsonEncode(dosisData));
       }
       callback(_newid);

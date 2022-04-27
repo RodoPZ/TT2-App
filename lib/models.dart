@@ -29,7 +29,7 @@ class Pastilla{
 
 class Horario{
   final String horarioHora;
-  final String horarioRepetir;
+  var horarioRepetir;
 
   Horario({
     required this.horarioHora,

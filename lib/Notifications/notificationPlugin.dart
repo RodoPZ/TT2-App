@@ -139,20 +139,7 @@ class NotificationPlugin{
       print(notification.id);
       print(notification.title);
       print(notification.body);
-
     }
-
-    // final List<ActiveNotification>? activeNotifications = await _notifications
-    //     .resolvePlatformSpecificImplementation<
-    //         AndroidFlutterLocalNotificationsPlugin>()?.getActiveNotifications();
-    // for (var notification in activeNotifications!){
-    //   print(notification.id);
-    //   print(notification.channelId);
-    //   print(notification.tag);
-    //   print(notification.title);
-    //   print(notification.body);
-    //
-    // }
   }
 
   static Future<void> CancelAllContifications() async {

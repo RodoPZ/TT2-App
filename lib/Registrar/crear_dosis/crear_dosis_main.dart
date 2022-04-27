@@ -351,13 +351,13 @@ class _CrearDosisMain extends State<CrearDosisMain> {
   }
 
   _createAlarm(data, int _dosisId){
-
+    NotificationPlugin.CancelAllContifications();
     for(var horario in _horarioList){
       if (horario['id'] == data){
         List time = horario['hora'].split(':');
         _dosisId = _dosisId*100+(horario['id'] as int)*10;
         String title = "Es la hora de la Dosis: " + _dosisNombre;
-        String body = "Su Dosis de las " + horario["hora"] + " que se repite: " + horario["repetir"] + " esta lista";
+        String body = "Su Dosis de las " + horario["hora"] + " que se repite: " + horario["repetir"].toString() + " esta lista";
 
         if(horario['repetir'] == "Una vez"){
           NotificationPlugin.showNotification(
@@ -375,7 +375,7 @@ class _CrearDosisMain extends State<CrearDosisMain> {
           );
         }
 
-        if(horario['repetir'] == "Diariamente"){
+        else if(horario['repetir'] == "Diariamente"){
           NotificationPlugin.showDailyNotification(
               id: _dosisId,
               title: title,
@@ -386,7 +386,7 @@ class _CrearDosisMain extends State<CrearDosisMain> {
           );
         }
 
-        if(horario['repetir'] == "Lun a Vie"){
+        else if(horario['repetir'] == "Lun a Vie"){
           NotificationPlugin.showWeeklyNotification(
             id: _dosisId,
             title: title,
@@ -395,6 +395,46 @@ class _CrearDosisMain extends State<CrearDosisMain> {
             horas: int.parse(time[0]),
             minutos: int.parse(time[1]),
             days: [1,2,3,4,5],
+          );
+        }
+
+        else{
+
+          List<int> dayarray = [];
+          for(var day in horario['repetir']){
+            switch (day){
+              case 'Lu':
+                dayarray.add(1);
+                break;
+              case 'Ma':
+                dayarray.add(2);
+                break;
+              case 'Mi':
+                dayarray.add(3);
+                break;
+              case 'Ju':
+                dayarray.add(4);
+                break;
+              case 'Vi':
+                dayarray.add(5);
+                break;
+              case 'Sa':
+                dayarray.add(6);
+                break;
+              case 'Do':
+                dayarray.add(7);
+                break;
+            }
+          }
+
+          NotificationPlugin.showWeeklyNotification(
+            id: _dosisId,
+            title: title,
+            body: body,
+            payload: "awa",
+            horas: int.parse(time[0]),
+            minutos: int.parse(time[1]),
+            days: dayarray,
           );
         }
       }
