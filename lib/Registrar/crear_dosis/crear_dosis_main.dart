@@ -6,6 +6,7 @@ import 'package:tt2/models.dart';
 import '../../Notifications/notificationPlugin.dart';
 import '../../preferences_service.dart';
 import 'section.dart';
+import 'package:tt2/firebase_integration.dart';
 
 class CrearDosisMain extends StatefulWidget {
   @override
@@ -16,9 +17,11 @@ class _CrearDosisMain extends State<CrearDosisMain> {
   bool valuefirst = true;
   bool valuesecond = true;
   final _preferencesService = PreferencesService();
+  final _firebase = Firebase();
 
   final List<bool> _isEmpty = [true, true, true, false];
   late String _dosisNombre;
+  List _dosisawa = []; //borrrar
   List _horarioList = [];
   List _pastillaData = [];
   List _horarioData = [];
@@ -37,7 +40,7 @@ class _CrearDosisMain extends State<CrearDosisMain> {
   }
   _getItems() async {
     _horarioList = await _preferencesService.getHorario();
-
+    _dosisawa = await _preferencesService.getDosis();
   }
 
   Widget _buildDosisNombre() {
@@ -265,7 +268,9 @@ class _CrearDosisMain extends State<CrearDosisMain> {
                         ButtonMain(
                             buttonText: "Registrar",
                             callback: () {
+                              print(_dosisawa);
                               NotificationPlugin.RetrieveNotifications();
+                              _firebase.getPastilla();
                               if (!_formKey.currentState!.validate()) {
                                 setState(() => _isEmpty[0] = true);
                               } else {

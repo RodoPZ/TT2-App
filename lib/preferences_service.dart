@@ -218,18 +218,20 @@ class PreferencesService{
   }
 
   Future getPastilla() async{
-
+    List pastillasData = [];
     final preferences = await SharedPreferences.getInstance();
-    List pastillasData = jsonDecode(preferences.getString('pastillasData')!);
-
+    if(preferences.containsKey('pastillasData')){
+      pastillasData = jsonDecode(preferences.getString('pastillasData')!);
+    }
     return pastillasData;
   }
 
   Future getHorario() async{
-
+    List horariosData = [];
     final preferences = await SharedPreferences.getInstance();
-    List horariosData = jsonDecode(preferences.getString('horariosData')!);
-
+    if(preferences.containsKey('horariosData')) {
+      horariosData = jsonDecode(preferences.getString('horariosData')!);
+    }
     return horariosData;
   }
 
@@ -248,6 +250,7 @@ class PreferencesService{
     if(preferences.containsKey('dosisData')){
       dosisData = jsonDecode(preferences.getString('dosisData')!);
     }
+    print("dosisData");
     return dosisData;
   }
 
