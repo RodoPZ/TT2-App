@@ -4,7 +4,7 @@ import 'package:tt2/Components/time_picker.dart';
 import 'package:tt2/Registrar/agregar_horarios/dropdownmenu_horarios.dart';
 import 'package:tt2/Registrar/agregar_horarios/instrucciones.dart';
 import 'package:tt2/models.dart';
-import 'package:tt2/preferences_service.dart';
+import 'package:tt2/SaveRead.dart';
 import 'package:tt2/Components/item_manager.dart';
 
 class AgregarHorariosMain extends StatefulWidget {
@@ -13,7 +13,7 @@ class AgregarHorariosMain extends StatefulWidget {
 }
 
 class _AgregarHorariosMain extends State<AgregarHorariosMain> {
-  final _preferencesService = PreferencesService();
+  final _preferencesService = SaveRead();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   late List items = [];
@@ -93,6 +93,8 @@ class _AgregarHorariosMain extends State<AgregarHorariosMain> {
                     Instrucciones(),
                     const SizedBox(height: 30),
                     ItemManager(
+                      dataSubTitle: const ["repetir"],
+                      dataTitle: "hora",
                         getter: _preferencesService.getHorario,
                         deleter: _preferencesService.deleteHorario,
                         form_items: formItems,
@@ -100,9 +102,9 @@ class _AgregarHorariosMain extends State<AgregarHorariosMain> {
                         icono: Icons.access_alarm,
                         title: "Alarmas",
                         formTitle: "Registrar Alarmas",
-                        callback: (){
+                        callback: () async{
                           if (_horarioHora != "" && _horarioRepetir != "") {
-                            _registerHorarios();
+                            await _registerHorarios();
 
                             const snackBar = SnackBar(
                               content:
@@ -153,9 +155,9 @@ class _AgregarHorariosMain extends State<AgregarHorariosMain> {
     );
   }
 
-  _registerHorarios() {
+  _registerHorarios() async {
     final newHorario =
         Horario(horarioHora: _horarioHora, horarioRepetir: _horarioRepetir);
-    _preferencesService.saveHorario(newHorario);
+   await _preferencesService.saveHorario(newHorario);
   }
 }

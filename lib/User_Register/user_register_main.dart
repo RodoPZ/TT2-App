@@ -7,7 +7,7 @@ import 'package:tt2/Components/button_main.dart';
 import 'package:tt2/Components/button_text.dart';
 import 'package:tt2/User_Login/login_main.dart';
 import 'package:tt2/models.dart';
-import 'package:tt2/preferences_service.dart';
+import 'package:tt2/SaveRead.dart';
 enum Options { paciente, administrador }
 
 class RegisterMain extends StatefulWidget {
@@ -18,7 +18,7 @@ class RegisterMain extends StatefulWidget {
 }
 
 class _RegisterMain extends State<RegisterMain>{
-  final _preferencesService = PreferencesService();
+  final _preferencesService = SaveRead();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late String _nombreUsuario;

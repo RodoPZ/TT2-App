@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:tt2/Components/button_icon.dart';
-import 'package:tt2/preferences_service.dart';
+import 'package:tt2/SaveRead.dart';
 import 'load_items.dart';
 
 class Section extends StatefulWidget{
+  late String dataTitle;
+  late String dataSubTitle;
   late String sectionName;
   late String firstColText;
   late String secondColText;
@@ -12,7 +14,7 @@ class Section extends StatefulWidget{
   final Future<dynamic> Function() getter;
   late int intSelection;
 
-  Section({this.intSelection = 0,required this.getter,required this.formText,required this.selected,required this.sectionName, required this.firstColText ,this.secondColText="",Key? key}) : super(key: key);
+  Section({required this.dataSubTitle,required this.dataTitle,this.intSelection = 0,required this.getter,required this.formText,required this.selected,required this.sectionName, required this.firstColText ,this.secondColText="",Key? key}) : super(key: key);
 
   @override
   _Section createState() => _Section();
@@ -144,6 +146,8 @@ class _Section extends State<Section>{
                         fontSize: 20, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 20),
                 LoadItems(
+                  dataSubTitle: widget.dataSubTitle,
+                  dataTitle: widget.dataTitle,
                   intSelection: widget.intSelection,
                     icono: Icons.medication,
                     getter: widget.getter,

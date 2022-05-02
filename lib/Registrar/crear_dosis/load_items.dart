@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tt2/preferences_service.dart';
+import 'package:tt2/SaveRead.dart';
 
 import '../../Components/button_icon.dart';
 import '../../Components/button_main.dart';
@@ -9,10 +9,13 @@ class LoadItems extends StatefulWidget {
   final IconData icono;
   final Function(List) getData;
   final int intSelection;
+  final String dataTitle;
+  final String dataSubTitle;
 
 
   const LoadItems(
-      {
+      {required this.dataTitle,
+        required this.dataSubTitle,
       this.intSelection = 1,   // 0 = selector de pastillas, 1 = solo clic, 2 = alarmas,
       required this.getter,
       required this.icono,
@@ -38,13 +41,15 @@ class _LoadItems extends State<LoadItems> {
 
   _getItems() async {
     items = await widget.getter();
-    setState(() {
+    if (mounted) {
+      setState(() {
       _selected = List.generate(items.length, (index) => false);
       _count = List.generate(items.length, (index) => 0);
       if(widget.intSelection == 0){
         _quantity = List.generate(items.length, (index) => items[index]["cantidad"]);
       }
     });
+    }
   }
  //En caso de que se tengan que seleccionar cantidad de pastillas
   Widget Selector(index){
@@ -99,10 +104,10 @@ class _LoadItems extends State<LoadItems> {
                         selected: _selected[index] ? true : false,
                         selectedColor: Theme.of(context).primaryColor,
                         title: Text(
-                          items[index].values.elementAt(1),
+                          items[index][widget.dataTitle],
                           style: TextStyle(fontSize: 20),
                         ),
-                        subtitle: Text(items[index].values.elementAt(2).toString(),style: const TextStyle(fontSize: 15)),
+                        subtitle: Text(items[index][widget.dataSubTitle].toString(),style: const TextStyle(fontSize: 15)),
                         onTap: (){
                           if(widget.intSelection == 1){
                             setState(() {
@@ -131,7 +136,7 @@ class _LoadItems extends State<LoadItems> {
               } else if(widget.intSelection == 1) {              //Selector al hacer clic
                 for (int i = 0; i < _selected.length; i++) {
                   if(_selected[i] == true){
-                    _data.add([items[i]["id"],items[i].values.elementAt(2)]);
+                    _data.add([items[i]["id"],items[i][widget.dataSubTitle]]);
                   }
                 }
               }

@@ -32,7 +32,7 @@ class RegistrarMain extends StatelessWidget{
                     fontSize: 30,
                     fontWeight: FontWeight.w600,
                   )),
-                  const Divider(thickness: 2,),
+                  const Divider(thickness: 2),
                   Container(
                     height: 270,
                     margin: const EdgeInsets.only(

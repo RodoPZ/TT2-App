@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../preferences_service.dart';
+import '../SaveRead.dart';
 import 'package:collection/collection.dart';
 import 'package:tt2/Components/button_icon.dart';
 
@@ -15,7 +15,7 @@ class _CreateDataTable extends State<CreateDataTable>{
   List _horariosList = [];
   List _pastillasList = [];
   List _contactosList = [];
-  final _preferencesService = PreferencesService();
+  final _preferencesService = SaveRead();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
   void initState() {

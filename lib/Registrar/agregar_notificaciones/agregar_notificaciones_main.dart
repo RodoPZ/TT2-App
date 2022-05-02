@@ -4,7 +4,7 @@ import 'package:tt2/Components/menu.dart';
 import 'package:tt2/Components/input_text.dart';
 import 'package:tt2/models.dart';
 import 'package:tt2/Components/button_icon.dart';
-import 'package:tt2/preferences_service.dart';
+import 'package:tt2/SaveRead.dart';
 
 class AgregarNotificacionesMain extends StatefulWidget {
   @override
@@ -16,7 +16,7 @@ class _AgregarNotificacionesMain extends State<AgregarNotificacionesMain>
   TabController? _controller;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final _formKey = GlobalKey<FormState>();
-  final _preferencesService = PreferencesService();
+  final _preferencesService = SaveRead();
   bool isFull = false;
   late String _contactoNombre;
   late int _contactoNumero;

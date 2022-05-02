@@ -4,6 +4,8 @@ import 'button_main.dart';
 
 class ItemManager extends StatefulWidget {
   final String title;
+  final String dataTitle;
+  final List<String> dataSubTitle;
   final String formTitle;
   final Widget Function() form_items;
   final Function() register;
@@ -13,6 +15,8 @@ class ItemManager extends StatefulWidget {
   final Function() callback;
 
   const ItemManager({
+    required this.dataSubTitle,
+    required this.dataTitle,
     required this.callback,
     required this.getter,
     required this.deleter,
@@ -42,8 +46,12 @@ class _ItemManagerState extends State<ItemManager> {
   }
 
   _getItems() async {
+    setState(() {
+      loaded = false;
+    });
     items = await widget.getter();
     setState(() {
+      print(items);
       _selected = List.generate(items.length, (index) => false);
       loaded = true;
     });
@@ -148,13 +156,14 @@ class _ItemManagerState extends State<ItemManager> {
                             selected: _selected[index] ? true : false,
                             selectedColor: Theme.of(context).primaryColor,
                             leading: Icon(widget.icono,color: Theme.of(context).primaryColor,size: 40),
-                            title: Text(items[index].values.elementAt(1)),
+                            title: Text(items[index][widget.dataTitle].toString()),
                             subtitle: Text(_printSubtitleDetails(index)),
                             trailing: ButtonIcon(
                                 color: Theme.of(context).primaryColor,
                                 icon: Icons.delete,
-                                callBack: () {
-                                  widget.deleter(index);
+                                callBack: () async {
+                                  setState(() => loaded = false);
+                                  await widget.deleter(index);
                                   _getItems();
                                 }
                                 ),
@@ -177,14 +186,15 @@ class _ItemManagerState extends State<ItemManager> {
         );
       }
     } else {
-      return const Text("Error");
+      return CircularProgressIndicator(color: Theme.of(context).primaryColor,);
     }
   }
 
   _printSubtitleDetails(index){
     late String subtitle = "";
-    for(int i = 2;i<items[index].length;i++){
-      subtitle += items[index].values.elementAt(i).toString() + "  |  ";
+
+    for(var data in widget.dataSubTitle){
+      subtitle += items[index][data].toString() + "  |  ";
     }
     return subtitle;
   }
@@ -216,16 +226,13 @@ class _ItemManagerState extends State<ItemManager> {
                     child: ButtonMain(
                         buttonText: "Registrar",
                         color: Theme.of(context).primaryColor,
-                        callback: () {
+                        callback: () async{
                           if (!_formKey.currentState!.validate()) {
                             return;
                           }
                           _formKey.currentState!.save();
-                          widget.callback();
-                          setState(() {
-                            _getItems();
-                          });
-
+                          await widget.callback();
+                          _getItems();
                         }))
               ],
             ),

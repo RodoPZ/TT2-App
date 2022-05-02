@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:tt2/Components/button_main.dart';
 import 'package:tt2/models.dart';
-import '../../preferences_service.dart';
+import '../../SaveRead.dart';
 import 'package:tt2/Components/button_text.dart';
 
 class PIN extends StatefulWidget{
@@ -12,7 +12,7 @@ class PIN extends StatefulWidget{
 }
 
 class _PINState extends State<PIN> {
-  final _preferencesService = PreferencesService();
+  final _preferencesService = SaveRead();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late String items = "";

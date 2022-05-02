@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tt2/Components/menu.dart';
 import 'package:tt2/Components/input_text.dart';
 import 'package:tt2/models.dart';
-import 'package:tt2/preferences_service.dart';
+import 'package:tt2/SaveRead.dart';
 import 'package:tt2/Components/item_manager.dart';
 import 'instrucciones.dart';
 
@@ -16,7 +16,7 @@ class _AgregarContactosMain extends State<AgregarContactosMain>
   TabController? _controller;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final _formKey = GlobalKey<FormState>();
-  final _preferencesService = PreferencesService();
+  final _preferencesService = SaveRead();
   bool isFull = false;
   late String _contactoNombre;
   late int _contactoNumero;
@@ -106,8 +106,10 @@ class _AgregarContactosMain extends State<AgregarContactosMain>
                     Instrucciones(),
                     const SizedBox(height: 20),
                     ItemManager(
-                        callback: () {
-                          _registerContactos();
+                        dataSubTitle: ["numero"],
+                        dataTitle: "nombre",
+                        callback: () async {
+                          await _registerContactos();
                           const snackBar = SnackBar(
                             content: Text('Información de contactos guardada!'),
                           );
@@ -155,9 +157,9 @@ class _AgregarContactosMain extends State<AgregarContactosMain>
     );
   }
 
-  _registerContactos() {
+  _registerContactos() async{
     final newContacto = Contacto(
         contactoNombre: _contactoNombre, contactoNumero: _contactoNumero);
-    _preferencesService.saveContacto(newContacto);
+    await _preferencesService.saveContacto(newContacto);
   }
 }

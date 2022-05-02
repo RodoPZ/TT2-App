@@ -4,9 +4,8 @@ import 'package:tt2/Components/menu.dart';
 import 'package:tt2/Components/input_text.dart';
 import 'package:tt2/models.dart';
 import '../../Notifications/notificationPlugin.dart';
-import '../../preferences_service.dart';
+import '../../SaveRead.dart';
 import 'section.dart';
-import 'package:tt2/firebase_integration.dart';
 
 class CrearDosisMain extends StatefulWidget {
   @override
@@ -16,8 +15,7 @@ class CrearDosisMain extends StatefulWidget {
 class _CrearDosisMain extends State<CrearDosisMain> {
   bool valuefirst = true;
   bool valuesecond = true;
-  final _preferencesService = PreferencesService();
-  final _firebase = Firebase();
+  final _preferencesService = SaveRead();
 
   final List<bool> _isEmpty = [true, true, true, false];
   late String _dosisNombre;
@@ -79,6 +77,8 @@ class _CrearDosisMain extends State<CrearDosisMain> {
     return Column(
       children: [
         Section(
+          dataTitle: "nombre",
+            dataSubTitle: "cantidad",
             getter: _preferencesService.getPastilla,
             intSelection: 0,
             formText: "Seleccionar pastillas",
@@ -114,6 +114,8 @@ class _CrearDosisMain extends State<CrearDosisMain> {
     return Column(
       children: [
         Section(
+          dataTitle: "hora",
+            dataSubTitle: "repetir",
             getter: _preferencesService.getHorario,
             intSelection: 1,
             formText: "Seleccionar Horario",
@@ -153,6 +155,8 @@ class _CrearDosisMain extends State<CrearDosisMain> {
     return Column(
       children: [
         Section(
+          dataTitle: "nombre",
+            dataSubTitle: "numero",
             getter: _preferencesService.getContacto,
             intSelection: 1,
             formText: "Seleccionar Contacto",
@@ -212,6 +216,8 @@ class _CrearDosisMain extends State<CrearDosisMain> {
 
   Widget _buildSeguridad() {
     return Section(
+      dataSubTitle: "awa",
+      dataTitle: "awa",
       getter: _preferencesService.getContacto,
       intSelection: 1,
       formText: "Seleccionar Seguridad",
@@ -270,7 +276,6 @@ class _CrearDosisMain extends State<CrearDosisMain> {
                             callback: () {
                               print(_dosisawa);
                               NotificationPlugin.RetrieveNotifications();
-                              _firebase.getPastilla();
                               if (!_formKey.currentState!.validate()) {
                                 setState(() => _isEmpty[0] = true);
                               } else {

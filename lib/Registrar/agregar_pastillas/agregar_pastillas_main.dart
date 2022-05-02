@@ -4,9 +4,9 @@ import 'package:tt2/Components/button_main.dart';
 import 'package:tt2/Components/input_text.dart';
 import 'package:tt2/Registrar/agregar_pastillas/instrucciones.dart';
 import 'package:tt2/models.dart';
-import 'package:tt2/preferences_service.dart';
+import 'package:tt2/SaveRead.dart';
 import 'package:tt2/Components/item_manager.dart';
-
+import 'package:http/http.dart' as http;
 import '../../Components/button_icon.dart';
 
 class AgregarPastillasMain extends StatefulWidget {
@@ -15,7 +15,7 @@ class AgregarPastillasMain extends StatefulWidget {
 }
 
 class _AgregarPastillasMainState extends State<AgregarPastillasMain> {
-  final _preferencesService = PreferencesService();
+  final _preferencesService = SaveRead();
   late List items = [];
   late List<bool> _selected;
   bool loaded = false;
@@ -139,10 +139,14 @@ class _AgregarPastillasMainState extends State<AgregarPastillasMain> {
                       ),
                       width: double.infinity,
                       child: ButtonMain(
-                          buttonText: "Abrir compartimento", callback: () {}),
+                          buttonText: "Abrir compartimento", callback: () {
+                          // http.get(Uri.parse("http://192.168.0.11:8080/"));
+                      }),
                     ),
 
                     ItemManager(
+                      dataSubTitle: const ["caducidad","cantidad"],
+                      dataTitle: "nombre",
                       deleter:_preferencesService.deletePastilla,
                         getter: _preferencesService.getPastilla,
                         formTitle: "Registrar pastillas",
@@ -150,8 +154,8 @@ class _AgregarPastillasMainState extends State<AgregarPastillasMain> {
                         icono: Icons.medication,
                         form_items: formItems,
                         register: _registerPastillas,
-                        callback: (){
-                          _registerPastillas();
+                        callback: () async {
+                         await _registerPastillas();
                           const snackBar = SnackBar(
                             content:
                             Text('Información de pastillas guardada!'),
@@ -159,6 +163,7 @@ class _AgregarPastillasMainState extends State<AgregarPastillasMain> {
                           ScaffoldMessenger.of(context)
                               .showSnackBar(snackBar);
                           Navigator.pop(context);
+
                         },
                     )
 
@@ -196,11 +201,11 @@ class _AgregarPastillasMainState extends State<AgregarPastillasMain> {
     );
   }
 
-  _registerPastillas() {
+  _registerPastillas() async{
     final newPastilla = Pastilla(
         pastillaNombre: _pastillaNombre,
         pastillaCantidad: _pastillaCantidad,
         pastillaCaducidad: _pastillaCaducidad);
-    _preferencesService.savePastilla(newPastilla);
+    await _preferencesService.savePastilla(newPastilla);
   }
 }
