@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:tt2/Components/button_main.dart';
 import 'package:tt2/Components/menu.dart';
@@ -19,9 +21,9 @@ class _CrearDosisMain extends State<CrearDosisMain> {
 
   final List<bool> _isEmpty = [true, true, true, false];
   late String _dosisNombre;
-  List _dosisawa = []; //borrrar
+
   List _horarioList = [];
-  List _pastillaData = [];
+  late String _pastillaData;
   List _horarioData = [];
   List _alarmaData = [true, true];
   List _seguridadData = [];
@@ -38,7 +40,6 @@ class _CrearDosisMain extends State<CrearDosisMain> {
   }
   _getItems() async {
     _horarioList = await _preferencesService.getHorario();
-    _dosisawa = await _preferencesService.getDosis();
   }
 
   Widget _buildDosisNombre() {
@@ -84,7 +85,7 @@ class _CrearDosisMain extends State<CrearDosisMain> {
             formText: "Seleccionar pastillas",
             selected: (items) {
               setState(() => _isEmpty[1] = false);
-              _pastillaData = items;
+              _pastillaData = jsonEncode(items);
             },
             sectionName: "Pastillas",
             firstColText: 'Nombre',
@@ -274,7 +275,6 @@ class _CrearDosisMain extends State<CrearDosisMain> {
                         ButtonMain(
                             buttonText: "Registrar",
                             callback: () {
-                              print(_dosisawa);
                               NotificationPlugin.RetrieveNotifications();
                               if (!_formKey.currentState!.validate()) {
                                 setState(() => _isEmpty[0] = true);
@@ -353,19 +353,19 @@ class _CrearDosisMain extends State<CrearDosisMain> {
         horarioData: _horarioData,
         alarmaData: _alarmaData,
         seguridadData: _seguridadData);
-    _preferencesService.saveDosis(newDosis,(id){
-      for(var horario in _horarioData){
-        _createAlarm(horario,id);
+    _preferencesService.saveDosis(newDosis, (id) {
+      for (var horario in _horarioData) {
+        _createAlarm(horario, id);
       }
     });
   }
 
   _createAlarm(data, int _dosisId){
-    NotificationPlugin.CancelAllContifications();
     for(var horario in _horarioList){
       if (horario['id'] == data){
+
         List time = horario['hora'].split(':');
-        _dosisId = _dosisId*100+(horario['id'] as int)*10;
+        _dosisId = _dosisId;
         String title = "Es la hora de la Dosis: " + _dosisNombre;
         String body = "Su Dosis de las " + horario["hora"] + " que se repite: " + horario["repetir"].toString() + " esta lista";
 
@@ -374,7 +374,7 @@ class _CrearDosisMain extends State<CrearDosisMain> {
             id: _dosisId,
             title: title,
             body: body,
-            payload: "awa",
+            payload: _pastillaData,
            scheduledDate: DateTime(
                DateTime.now().year,
                DateTime.now().month,
@@ -390,7 +390,7 @@ class _CrearDosisMain extends State<CrearDosisMain> {
               id: _dosisId,
               title: title,
               body: body,
-              payload: "awa",
+              payload: _pastillaData,
               horas: int.parse(time[0]),
               minutos: int.parse(time[1]),
           );
@@ -401,7 +401,7 @@ class _CrearDosisMain extends State<CrearDosisMain> {
             id: _dosisId,
             title: title,
             body: body,
-            payload: "awa",
+            payload: _pastillaData,
             horas: int.parse(time[0]),
             minutos: int.parse(time[1]),
             days: [1,2,3,4,5],
@@ -441,7 +441,7 @@ class _CrearDosisMain extends State<CrearDosisMain> {
             id: _dosisId,
             title: title,
             body: body,
-            payload: "awa",
+            payload: _pastillaData,
             horas: int.parse(time[0]),
             minutos: int.parse(time[1]),
             days: dayarray,

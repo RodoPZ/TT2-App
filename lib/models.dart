@@ -49,7 +49,7 @@ class Contacto{
 
 class Dosis{
   final String dosisNombre;
-  final List pastillaData;
+  final String pastillaData;
   final List horarioData;
   final List alarmaData;
   final List seguridadData;

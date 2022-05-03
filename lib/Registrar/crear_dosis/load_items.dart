@@ -88,66 +88,76 @@ class _LoadItems extends State<LoadItems> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(
-          width: MediaQuery.of(context).size.width*0.75,
-          height: MediaQuery.of(context).size.height*0.5,
-          child: ListView.builder(
-              itemCount: items.length,
-              shrinkWrap: true,
-              itemBuilder: (context, index) {
-                return Row(
-                  children: [
-                    Flexible(
-                      child: ListTile(
-                        selected: _selected[index] ? true : false,
-                        selectedColor: Theme.of(context).primaryColor,
-                        title: Text(
-                          items[index][widget.dataTitle],
-                          style: TextStyle(fontSize: 20),
+    if(items.isNotEmpty){
+      return Column(
+        children: [
+          SizedBox(
+            width: MediaQuery.of(context).size.width*0.75,
+            height: MediaQuery.of(context).size.height*0.5,
+            child: ListView.builder(
+                itemCount: items.length,
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  return Row(
+                    children: [
+                      Flexible(
+                        child: ListTile(
+                          selected: _selected[index] ? true : false,
+                          selectedColor: Theme.of(context).primaryColor,
+                          title: Text(
+                            items[index][widget.dataTitle],
+                            style: TextStyle(fontSize: 20),
+                          ),
+                          subtitle: Text(items[index][widget.dataSubTitle].toString(),style: const TextStyle(fontSize: 15)),
+                          onTap: (){
+                            if(widget.intSelection == 1){
+                              setState(() {
+                                _selected[index] = !_selected[index];
+                              });
+                            }
+                          },
                         ),
-                        subtitle: Text(items[index][widget.dataSubTitle].toString(),style: const TextStyle(fontSize: 15)),
-                        onTap: (){
-                          if(widget.intSelection == 1){
-                            setState(() {
-                              _selected[index] = !_selected[index];
-                            });
-                          }
-                        },
                       ),
-                    ),
-                    Selector(index),
-                  ],
-                );
-              }),
-        ),
-        ButtonMain(
-            buttonText: "Seleccionar",
-            callback: () {
-              List _data = [];
+                      Selector(index),
+                    ],
+                  );
+                }),
+          ),
+          ButtonMain(
+              buttonText: "Seleccionar",
+              callback: () {
+                List _data = [];
 
-              if(widget.intSelection == 0){              //Selector de pastillas
-                for (int i = 0; i < _count.length; i++) {
-                  if (_count[i] != 0) {
-                    _data.add([items[i]["id"],_count[i]]);
+                if(widget.intSelection == 0){              //Selector de pastillas
+                  for (int i = 0; i < _count.length; i++) {
+                    if (_count[i] != 0) {
+                      _data.add([items[i]["id"],_count[i]]);
+                    }
+                  }
+                } else if(widget.intSelection == 1) {              //Selector al hacer clic
+                  for (int i = 0; i < _selected.length; i++) {
+                    if(_selected[i] == true){
+                      _data.add([items[i]["id"],items[i][widget.dataSubTitle]]);
+                    }
                   }
                 }
-              } else if(widget.intSelection == 1) {              //Selector al hacer clic
-                for (int i = 0; i < _selected.length; i++) {
-                  if(_selected[i] == true){
-                    _data.add([items[i]["id"],items[i][widget.dataSubTitle]]);
-                  }
-                }
-              }
-              setState(() {
-                widget.getData(_data);
-              });
+                setState(() {
+                  widget.getData(_data);
+                });
 
-              _getItems();
-              Navigator.pop(context);
-            })
-      ],
-    );
+                _getItems();
+                Navigator.pop(context);
+              })
+        ],
+      );
+    }else{
+      return Text("¡No hay nada registrado!",
+      style: TextStyle(
+        color: Theme.of(context).primaryColor,
+        fontSize: 20,
+        fontWeight: FontWeight.bold
+      ));
+    }
+
   }
 }

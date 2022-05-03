@@ -6,8 +6,9 @@ import 'package:tt2/Registrar/agregar_pastillas/instrucciones.dart';
 import 'package:tt2/models.dart';
 import 'package:tt2/SaveRead.dart';
 import 'package:tt2/Components/item_manager.dart';
-import 'package:http/http.dart' as http;
-import '../../Components/button_icon.dart';
+import 'package:tt2/Components/httpComunications.dart';
+import 'package:tt2/Notifications/notificationPlugin.dart';
+import 'package:tt2/Notifications/onclickNotificaciones.dart';
 
 class AgregarPastillasMain extends StatefulWidget {
   @override
@@ -16,6 +17,7 @@ class AgregarPastillasMain extends StatefulWidget {
 
 class _AgregarPastillasMainState extends State<AgregarPastillasMain> {
   final _preferencesService = SaveRead();
+  final _http = HTTP();
   late List items = [];
   late List<bool> _selected;
   bool loaded = false;
@@ -140,7 +142,8 @@ class _AgregarPastillasMainState extends State<AgregarPastillasMain> {
                       width: double.infinity,
                       child: ButtonMain(
                           buttonText: "Abrir compartimento", callback: () {
-                          // http.get(Uri.parse("http://192.168.0.11:8080/"));
+                          NotificationPlugin.RetrieveNotifications();
+                          // _http.fetchAlbum();
                       }),
                     ),
 

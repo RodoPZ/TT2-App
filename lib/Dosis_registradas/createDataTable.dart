@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../SaveRead.dart';
@@ -24,6 +26,9 @@ class _CreateDataTable extends State<CreateDataTable>{
   }
 
   _getItems() async{
+    setState(() {
+      loaded = false;
+    });
     _dosisList = await _preferencesService.getDosis();
     _horariosList = await _preferencesService.getHorario();
     _pastillasList = await _preferencesService.getPastilla();
@@ -96,84 +101,94 @@ class _CreateDataTable extends State<CreateDataTable>{
   @override
   Widget build(BuildContext context) {
     if (loaded == true){
-      return DataTable(
-        showCheckboxColumn: false,
-        columnSpacing: 10,
-        columns: const <DataColumn>[
-          DataColumn(
-            label: Text(
-              'Nombre',
-              style: TextStyle(fontWeight: FontWeight.bold),
+      if(_dosisList.isNotEmpty){
+        return DataTable(
+          showCheckboxColumn: false,
+          columnSpacing: 10,
+          columns: const <DataColumn>[
+            DataColumn(
+              label: Text(
+                'Nombre',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
             ),
-          ),
-          DataColumn(
-            label: Text(
-              'Hora',
-              style: TextStyle(fontWeight: FontWeight.bold),
+            DataColumn(
+              label: Text(
+                'Hora',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
             ),
-          ),
-          DataColumn(
-            label: Text(
-              'Repetir',
-              style: TextStyle(fontWeight: FontWeight.bold),
+            DataColumn(
+              label: Text(
+                'Repetir',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
             ),
-          ),
-          DataColumn(
-            label: Text(
-              'Alertas',
-              style: TextStyle(fontWeight: FontWeight.bold),
+            DataColumn(
+              label: Text(
+                'Alertas',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
             ),
-          ),
-          DataColumn(
-            label: Text(
-              'Seguridad',
-              style: TextStyle(fontWeight: FontWeight.bold),
+            DataColumn(
+              label: Text(
+                'Seguridad',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
             ),
-          ),
-          DataColumn(
-            label: Text(
-              '',
-              style: TextStyle(),
+            DataColumn(
+              label: Text(
+                '',
+                style: TextStyle(),
+              ),
             ),
-          ),
-        ],
-        rows: _dosisList.mapIndexed((index,element) => DataRow(
-          onSelectChanged: (bool? selected) {
-            if(selected==true){
-              form(index,element);
-            }
-          },
-          color: MaterialStateColor.resolveWith((states){
-            if(_dosisList[index]['alarmas'][0] == false
-                && _dosisList[index]['alarmas'][1] == false
-                && _dosisList[index]['alarmas'].length == 2){
-              return Colors.red.shade100;
-            }else{
-              return Colors.white;
-            }
-          }),
-          cells: <DataCell>[
-            DataCell(Text(element["nombre"].toString())),
-            DataCell(_displayHora(index)),
-            DataCell(_displayRepetir(index)),
-            DataCell(_displayAlertas(index)),
-            DataCell(Text(element["seguridad"].toString())),
-            DataCell(ButtonIcon(
-              iconSize: 30,
-              icon: Icons.delete,
-              color: Theme.of(context).primaryColor,
-              callBack: () {
-                _preferencesService.deleteDosis(index);
-                _getItems();
-              },
-            )),
           ],
-        )
-        ).toList(),
-      );
+          rows: _dosisList.mapIndexed((index,element) => DataRow(
+            onSelectChanged: (bool? selected) {
+              if(selected==true){
+                form(index,element);
+              }
+            },
+            color: MaterialStateColor.resolveWith((states){
+              if(_dosisList[index]['alarmas'][0] == false
+                  && _dosisList[index]['alarmas'][1] == false
+                  && _dosisList[index]['alarmas'].length == 2){
+                return Colors.red.shade100;
+              }else{
+                return Colors.white;
+              }
+            }),
+            cells: <DataCell>[
+              DataCell(Text(element["nombre"].toString())),
+              DataCell(_displayHora(index)),
+              DataCell(_displayRepetir(index)),
+              DataCell(_displayAlertas(index)),
+              DataCell(Text(element["seguridad"].toString())),
+              DataCell(ButtonIcon(
+                iconSize: 30,
+                icon: Icons.delete,
+                color: Theme.of(context).primaryColor,
+                callBack: () async {
+                  await _preferencesService.deleteDosis(index);
+                  _getItems();
+                },
+              )),
+            ],
+          )
+          ).toList(),
+        );
+      }else{
+        return Text("No hay Dosis guardadas!",
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Theme.of(context).primaryColor),
+        );
+      }
+
     }
     else{
-      return SizedBox();
+      return CircularProgressIndicator(color: Theme.of(context).primaryColor) ;
     }
   }
 
@@ -211,7 +226,7 @@ class _CreateDataTable extends State<CreateDataTable>{
     List _item = [];
     List _cantidad =[];
 
-    for(var ids in _dosisList[index]['pastillas']){
+    for(var ids in jsonDecode(_dosisList[index]['pastillas'])){
       _item.add(ids[0]);
       _cantidad.add(ids[1]);
     }

@@ -40,12 +40,12 @@ class _Section extends State<Section>{
     for (var id in _itemsSelected) {
       for (var map in items) {
         if(map["id"]==id){
-          elements.add(map.values.elementAt(1));
+          elements.add(map[widget.dataTitle]);
         }
       }
     }
 
-    return Text(items[index].values.elementAt(1).toString());
+    return Text(items[index][widget.dataTitle].toString());
   }
   
   Widget printItemsName(){

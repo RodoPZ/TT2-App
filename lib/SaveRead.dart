@@ -54,46 +54,19 @@ class SaveRead{
   }
 
   Future saveDosis(Dosis dosis, Function(int) callback) async{
-    final List <int>_id = [];
-    int _newid = 0;
-    //Asignar una id única
+    var collection = FirebaseFirestore.instance.collection('/Users/2aZ3V4Ik89e9rDSzo4N9/Dosis/');
+    var querySnapshot = await collection.get();
+    int dosisData = querySnapshot.docs.length;
+    if (dosisData < 100){
+      collection.add({
+        "nombre": dosis.dosisNombre,
+        "pastillas": dosis.pastillaData,
+        "horario": dosis.horarioData,
+        "alarmas": dosis.alarmaData,
+        "seguridad": dosis.seguridadData,
+      }).then((value) => callback(value.id.hashCode));
 
-    final preferences = await SharedPreferences.getInstance();
-    // preferences.remove("dosisData");
-    if (preferences.containsKey('dosisData')){
-      List dosisData = jsonDecode(preferences.getString('dosisData')!);
-      if (dosisData.isNotEmpty){
-        for (var value in dosisData) {
-          _id.add(value['id']);
-        }
-        for(int i = 0; i <= _id.reduce(max); i++){
-          if(_id.contains(i) == false && _id.last != i){
-            _newid = i;
-            break;
-          }
-          _newid = _id.reduce(max)+1;
-        }
-      }
-      if (dosisData.length < 20){
-        dosisData.add({
-          "id": _newid,
-          "nombre": dosis.dosisNombre,
-          "pastillas": dosis.pastillaData,
-          "horario": dosis.horarioData,
-          "alarmas": dosis.alarmaData,
-          "seguridad": dosis.seguridadData,
-        });
-        print(dosisData);
-        await preferences.setString("dosisData", jsonEncode(dosisData));
-      }
-      callback(_newid);
     }
-    else{
-      List dosisData = [{'id':0,'nombre':dosis.dosisNombre,'pastillas':dosis.pastillaData,'horario':dosis.horarioData,"alarmas": dosis.alarmaData,"seguridad": dosis.seguridadData}];
-      await preferences.setString("dosisData",jsonEncode(dosisData));
-      callback(0);
-    }
-
   }
 
   Future savePin(Pin pin) async{
@@ -123,10 +96,10 @@ class SaveRead{
   }
 
   Future deleteDosis(int index) async{
-    final preferences = await SharedPreferences.getInstance();
-    List dosisData = jsonDecode(preferences.getString('dosisData')!);
-    dosisData.removeAt(index);
-    preferences.setString("dosisData", jsonEncode(dosisData));
+    var collection = FirebaseFirestore.instance.collection('/Users/2aZ3V4Ik89e9rDSzo4N9/Dosis/');
+    var querySnapshot = await collection.get();
+    String id = querySnapshot.docs[index].reference.id;
+    collection.doc(id).delete().then((value) => print("Deleted"));
   }
 
   Future deletePin() async{
@@ -152,6 +125,7 @@ class SaveRead{
     var querySnapshot = await collection.get();
     for (var queryDocumentSnapshot in querySnapshot.docs) {
       Map<String, dynamic> data = queryDocumentSnapshot.data();
+      data['id'] = queryDocumentSnapshot.reference.id;
       pastillasData.add(data);
     }
     return pastillasData;
@@ -163,6 +137,7 @@ class SaveRead{
     var querySnapshot = await collection.get();
     for (var queryDocumentSnapshot in querySnapshot.docs) {
       Map<String, dynamic> data = queryDocumentSnapshot.data();
+      data['id'] = queryDocumentSnapshot.reference.id;
       horariosData.add(data);
     }
     return horariosData;
@@ -174,6 +149,7 @@ class SaveRead{
     var querySnapshot = await collection.get();
     for (var queryDocumentSnapshot in querySnapshot.docs) {
       Map<String, dynamic> data = queryDocumentSnapshot.data();
+      data['id'] = queryDocumentSnapshot.reference.id;
       contactosData.add(data);
     }
     return contactosData;
@@ -181,9 +157,12 @@ class SaveRead{
 
   Future getDosis() async{
     List dosisData = [];
-    final preferences = await SharedPreferences.getInstance();
-    if(preferences.containsKey('dosisData')){
-      dosisData = jsonDecode(preferences.getString('dosisData')!);
+    var collection = FirebaseFirestore.instance.collection('/Users/2aZ3V4Ik89e9rDSzo4N9/Dosis');
+    var querySnapshot = await collection.get();
+    for (var queryDocumentSnapshot in querySnapshot.docs) {
+      Map<String, dynamic> data = queryDocumentSnapshot.data();
+      data['id'] = queryDocumentSnapshot.reference.id;
+      dosisData.add(data);
     }
     return dosisData;
   }
@@ -195,5 +174,22 @@ class SaveRead{
       pinData = preferences.getString('pinData')!;
     }
     return pinData;
+  }
+
+  Future pillSubstraction(String pastillas) async{
+    List pills = jsonDecode(pastillas);
+    List pastillasData = [];
+    var collection = FirebaseFirestore.instance.collection('/Users/2aZ3V4Ik89e9rDSzo4N9/Pastillas/');
+    var querySnapshot = await collection.get();
+    for (var pill in pills){
+      for (var queryDocumentSnapshot in querySnapshot.docs) {
+        if(pill[0] == queryDocumentSnapshot.reference.id){
+          Map<String, dynamic> data = queryDocumentSnapshot.data();
+          if(data['cantidad']> 0){
+            collection.doc(queryDocumentSnapshot.reference.id).update({'cantidad':data['cantidad']-pill[1]});
+          }
+        }
+      }
+    }
   }
 }
