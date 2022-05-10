@@ -18,7 +18,7 @@ class RegisterMain extends StatefulWidget {
 }
 
 class _RegisterMain extends State<RegisterMain>{
-  final _preferencesService = SaveRead();
+  final _readWrite = SaveRead();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late String _nombreUsuario;
@@ -292,10 +292,10 @@ class _RegisterMain extends State<RegisterMain>{
         password: _password,
         esPaciente: _esPaciente,
     );
-    _preferencesService.saveUser(newUser);
+    // _readWrite.saveUser(newUser);
   }
   void _printData() async {
-    final User = await _preferencesService.getUserData();
+    // final User = await _readWrite.getUserData();
   }
 }
 

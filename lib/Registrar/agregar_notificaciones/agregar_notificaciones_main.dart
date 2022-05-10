@@ -16,7 +16,7 @@ class _AgregarNotificacionesMain extends State<AgregarNotificacionesMain>
   TabController? _controller;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final _formKey = GlobalKey<FormState>();
-  final _preferencesService = SaveRead();
+  final _readWrite = SaveRead();
   bool isFull = false;
   late String _contactoNombre;
   late int _contactoNumero;
@@ -33,7 +33,7 @@ class _AgregarNotificacionesMain extends State<AgregarNotificacionesMain>
     _controller = TabController(length: 2, vsync: this);
   }
   _getItems() async {
-    items = await _preferencesService.getContacto();
+    items = await _readWrite.getContacto();
     setState(() {
       _selected = List.generate(items.length, (index) => false);
       loaded = true;
@@ -147,7 +147,7 @@ class _AgregarNotificacionesMain extends State<AgregarNotificacionesMain>
                                 color: Theme.of(context).primaryColor,
                                 icon: Icons.delete,
                                 callBack: (){
-                              _preferencesService.deleteContacto(index);
+                              _readWrite.deleteContacto(index);
                               _getItems();
                             })),
                       );
@@ -363,6 +363,6 @@ class _AgregarNotificacionesMain extends State<AgregarNotificacionesMain>
     final newContacto = Contacto(
         contactoNombre: _contactoNombre,
         contactoNumero: _contactoNumero);
-    _preferencesService.saveContacto(newContacto);
+    _readWrite.saveContacto(newContacto);
   }
 }

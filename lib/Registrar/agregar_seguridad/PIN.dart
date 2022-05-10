@@ -12,7 +12,7 @@ class PIN extends StatefulWidget{
 }
 
 class _PINState extends State<PIN> {
-  final _preferencesService = SaveRead();
+  final _readWrite = SaveRead();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late String items = "";
@@ -27,7 +27,7 @@ class _PINState extends State<PIN> {
   }
 
   _getItems() async {
-    items = await _preferencesService.getPin();
+    items = await _readWrite.getPin();
     if (items == "" || items.isEmpty){
       setState(() {
         isConfigured = false;
@@ -142,6 +142,6 @@ class _PINState extends State<PIN> {
 
   _registerPin() {
     final newPin = Pin(pin: _pin);
-    _preferencesService.savePin(newPin);
+    _readWrite.savePin(newPin);
   }
 }

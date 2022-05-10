@@ -16,7 +16,7 @@ class AgregarPastillasMain extends StatefulWidget {
 }
 
 class _AgregarPastillasMainState extends State<AgregarPastillasMain> {
-  final _preferencesService = SaveRead();
+  final _readWrite = SaveRead();
   final _http = HTTP();
   late List items = [];
   late List<bool> _selected;
@@ -150,8 +150,8 @@ class _AgregarPastillasMainState extends State<AgregarPastillasMain> {
                     ItemManager(
                       dataSubTitle: const ["caducidad","cantidad"],
                       dataTitle: "nombre",
-                      deleter:_preferencesService.deletePastilla,
-                        getter: _preferencesService.getPastilla,
+                      deleter:_readWrite.deletePastilla,
+                        getter: _readWrite.getPastilla,
                         formTitle: "Registrar pastillas",
                         title: "Pastillas",
                         icono: Icons.medication,
@@ -209,6 +209,6 @@ class _AgregarPastillasMainState extends State<AgregarPastillasMain> {
         pastillaNombre: _pastillaNombre,
         pastillaCantidad: _pastillaCantidad,
         pastillaCaducidad: _pastillaCaducidad);
-    await _preferencesService.savePastilla(newPastilla);
+    await _readWrite.savePastilla(newPastilla);
   }
 }

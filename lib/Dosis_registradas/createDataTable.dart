@@ -17,7 +17,7 @@ class _CreateDataTable extends State<CreateDataTable>{
   List _horariosList = [];
   List _pastillasList = [];
   List _contactosList = [];
-  final _preferencesService = SaveRead();
+  final _readWrite = SaveRead();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
   void initState() {
@@ -29,10 +29,10 @@ class _CreateDataTable extends State<CreateDataTable>{
     setState(() {
       loaded = false;
     });
-    _dosisList = await _preferencesService.getDosis();
-    _horariosList = await _preferencesService.getHorario();
-    _pastillasList = await _preferencesService.getPastilla();
-    _contactosList = await _preferencesService.getContacto();
+    _dosisList = await _readWrite.getDosis();
+    _horariosList = await _readWrite.getHorario();
+    _pastillasList = await _readWrite.getPastilla();
+    _contactosList = await _readWrite.getContacto();
     setState(() {
       loaded = true;
     });
@@ -169,7 +169,7 @@ class _CreateDataTable extends State<CreateDataTable>{
                 icon: Icons.delete,
                 color: Theme.of(context).primaryColor,
                 callBack: () async {
-                  await _preferencesService.deleteDosis(index);
+                  await _readWrite.deleteDosis(index);
                   _getItems();
                 },
               )),

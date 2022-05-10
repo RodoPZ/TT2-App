@@ -17,7 +17,7 @@ class CrearDosisMain extends StatefulWidget {
 class _CrearDosisMain extends State<CrearDosisMain> {
   bool valuefirst = true;
   bool valuesecond = true;
-  final _preferencesService = SaveRead();
+  final _readWrite = SaveRead();
 
   final List<bool> _isEmpty = [true, true, true, false];
   late String _dosisNombre;
@@ -33,13 +33,12 @@ class _CrearDosisMain extends State<CrearDosisMain> {
 
   @override
   void initState() {
-
     super.initState();
     _getItems();
 
   }
   _getItems() async {
-    _horarioList = await _preferencesService.getHorario();
+    _horarioList = await _readWrite.getHorario();
   }
 
   Widget _buildDosisNombre() {
@@ -80,7 +79,7 @@ class _CrearDosisMain extends State<CrearDosisMain> {
         Section(
           dataTitle: "nombre",
             dataSubTitle: "cantidad",
-            getter: _preferencesService.getPastilla,
+            getter: _readWrite.getPastilla,
             intSelection: 0,
             formText: "Seleccionar pastillas",
             selected: (items) {
@@ -117,7 +116,7 @@ class _CrearDosisMain extends State<CrearDosisMain> {
         Section(
           dataTitle: "hora",
             dataSubTitle: "repetir",
-            getter: _preferencesService.getHorario,
+            getter: _readWrite.getHorario,
             intSelection: 1,
             formText: "Seleccionar Horario",
             selected: (items) {
@@ -158,7 +157,7 @@ class _CrearDosisMain extends State<CrearDosisMain> {
         Section(
           dataTitle: "nombre",
             dataSubTitle: "numero",
-            getter: _preferencesService.getContacto,
+            getter: _readWrite.getContacto,
             intSelection: 1,
             formText: "Seleccionar Contacto",
             selected: (items) {
@@ -219,7 +218,7 @@ class _CrearDosisMain extends State<CrearDosisMain> {
     return Section(
       dataSubTitle: "awa",
       dataTitle: "awa",
-      getter: _preferencesService.getContacto,
+      getter: _readWrite.getContacto,
       intSelection: 1,
       formText: "Seleccionar Seguridad",
       selected: (items) {
@@ -353,7 +352,7 @@ class _CrearDosisMain extends State<CrearDosisMain> {
         horarioData: _horarioData,
         alarmaData: _alarmaData,
         seguridadData: _seguridadData);
-    _preferencesService.saveDosis(newDosis, (id) {
+    _readWrite.saveDosis(newDosis, (id) {
       for (var horario in _horarioData) {
         _createAlarm(horario, id);
       }

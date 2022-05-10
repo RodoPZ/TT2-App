@@ -1,7 +1,16 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:tt2/Components/button_main.dart';
+import 'package:tt2/Registrar/agregar_seguridad/camera.dart';
 
-class ReconocimientoFacial extends StatelessWidget{
+class ReconocimientoFacial extends StatefulWidget{
+
+  @override
+  State<ReconocimientoFacial> createState() => _ReconocimientoFacialState();
+}
+
+class _ReconocimientoFacialState extends State<ReconocimientoFacial> {
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -41,7 +50,13 @@ class ReconocimientoFacial extends StatelessWidget{
               ),
             ),
             const SizedBox(height: 30),
-            ButtonMain(buttonText: "Iniciar reconocimiento", icono: Icons.camera_alt , callback: (){})
+            ButtonMain(buttonText: "Iniciar reconocimiento", icono: Icons.camera_alt , callback: () async{
+              final cameras =await availableCameras();
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (builder) => CameraApp(cameras: cameras)),
+              );
+            })
           ],
 
         ),

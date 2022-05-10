@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:tt2/Components/menu.dart';
 import 'package:tt2/Registrar/agregar_seguridad/reconocimiento_facial.dart';
 import 'package:tt2/Registrar/agregar_seguridad/PIN.dart';
+import 'NFC.dart';
 
 class AgregarSeguridadMain extends StatefulWidget{
   @override
@@ -78,13 +79,7 @@ class _AgregarSeguridadMain extends State<AgregarSeguridadMain> with SingleTicke
                         controller: _controller,
                         children: <Widget>[
                           ReconocimientoFacial(),
-                          Card(
-                            child: ListTile(
-                              leading: const Icon(Icons.location_on),
-                              title: Text('Latitude: 48.09342\nLongitude: 11.23403'),
-                              trailing: IconButton(icon: const Icon(Icons.my_location), onPressed: () {}),
-                            ),
-                          ),
+                          NFC(),
                           PIN(),
                         ],
                       ),

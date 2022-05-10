@@ -21,9 +21,6 @@ class _Menu extends State<Menu>{
           // Important: Remove any padding from the ListView.
           children: [
             DrawerHeader(
-              margin: const EdgeInsets.only(
-                  bottom: 100
-              ),
               decoration: const BoxDecoration(
                 color: Colors.transparent,
               ),
@@ -44,7 +41,6 @@ class _Menu extends State<Menu>{
                 ),
               ),
             ),
-            Expanded(child:
             Column(children: [
               ListTile(
                 title: Row(
@@ -72,6 +68,7 @@ class _Menu extends State<Menu>{
                   }
                 }
               ),
+
               ListTile(
                 title: Row(
                   children: [
@@ -147,9 +144,7 @@ class _Menu extends State<Menu>{
                   Navigator.pop(context);
                 },
               ),
-            ])
-            ),
-
+            ]),
             ListTile(
               title: Row(
                 children: [

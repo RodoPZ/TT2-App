@@ -13,7 +13,7 @@ class AgregarHorariosMain extends StatefulWidget {
 }
 
 class _AgregarHorariosMain extends State<AgregarHorariosMain> {
-  final _preferencesService = SaveRead();
+  final _readWrite = SaveRead();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   late List items = [];
@@ -95,8 +95,8 @@ class _AgregarHorariosMain extends State<AgregarHorariosMain> {
                     ItemManager(
                       dataSubTitle: const ["repetir"],
                       dataTitle: "hora",
-                        getter: _preferencesService.getHorario,
-                        deleter: _preferencesService.deleteHorario,
+                        getter: _readWrite.getHorario,
+                        deleter: _readWrite.deleteHorario,
                         form_items: formItems,
                         register: _registerHorarios,
                         icono: Icons.access_alarm,
@@ -158,6 +158,6 @@ class _AgregarHorariosMain extends State<AgregarHorariosMain> {
   _registerHorarios() async {
     final newHorario =
         Horario(horarioHora: _horarioHora, horarioRepetir: _horarioRepetir);
-   await _preferencesService.saveHorario(newHorario);
+   await _readWrite.saveHorario(newHorario);
   }
 }

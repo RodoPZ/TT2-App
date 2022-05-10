@@ -16,7 +16,7 @@ class _AgregarContactosMain extends State<AgregarContactosMain>
   TabController? _controller;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final _formKey = GlobalKey<FormState>();
-  final _preferencesService = SaveRead();
+  final _readWrite = SaveRead();
   bool isFull = false;
   late String _contactoNombre;
   late int _contactoNumero;
@@ -116,8 +116,8 @@ class _AgregarContactosMain extends State<AgregarContactosMain>
                           ScaffoldMessenger.of(context).showSnackBar(snackBar);
                           Navigator.pop(context);
                         },
-                        getter: _preferencesService.getContacto,
-                        deleter: _preferencesService.deleteContacto,
+                        getter: _readWrite.getContacto,
+                        deleter: _readWrite.deleteContacto,
                         form_items: formItems,
                         register: _registerContactos,
                         icono: Icons.person,
@@ -160,6 +160,6 @@ class _AgregarContactosMain extends State<AgregarContactosMain>
   _registerContactos() async{
     final newContacto = Contacto(
         contactoNombre: _contactoNombre, contactoNumero: _contactoNumero);
-    await _preferencesService.saveContacto(newContacto);
+    await _readWrite.saveContacto(newContacto);
   }
 }
