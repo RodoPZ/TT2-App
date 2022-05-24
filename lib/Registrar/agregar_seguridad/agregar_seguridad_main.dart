@@ -74,7 +74,7 @@ class _AgregarSeguridadMain extends State<AgregarSeguridadMain> with SingleTicke
                       ),
                     ),
                     SizedBox(
-                      height: 240.0,
+                      height: 500.0,
                       child: TabBarView(
                         controller: _controller,
                         children: <Widget>[

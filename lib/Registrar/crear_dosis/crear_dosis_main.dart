@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:tt2/Components/button_main.dart';
 import 'package:tt2/Components/menu.dart';
@@ -215,18 +214,29 @@ class _CrearDosisMain extends State<CrearDosisMain> {
   }
 
   Widget _buildSeguridad() {
-    return Section(
-      dataSubTitle: "awa",
-      dataTitle: "awa",
-      getter: _readWrite.getContacto,
-      intSelection: 1,
-      formText: "Seleccionar Seguridad",
-      selected: (items) {
-      },
-      sectionName: "Seguridad",
-      firstColText: 'Seguridad',
+    return Column(
+      children: [
+        Section(
+            dataTitle: "nombre",
+            dataSubTitle: "id",
+            getter: _readWrite.getNfc,
+            intSelection: 1,
+            formText: "Seleccionar Horario",
+            selected: (items) {
+              List _ids = [];
+              for (var element in items) {
+                print(element);
+                _ids.add(element[0]);
+              }
+              _horarioData = _ids;
+            },
+            sectionName: "Horario",
+            firstColText: 'Hora',
+            secondColText: "Repetir"),
+      ],
     );
   }
+
 
   @override
   Widget build(BuildContext context) {

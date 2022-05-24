@@ -121,29 +121,6 @@ class _Menu extends State<Menu>{
                   }
                 },
               ),
-              ListTile(
-                title: Row(
-                  children: [
-                    Icon(Icons.info_outline, color: Theme
-                        .of(context)
-                        .primaryColor),
-                    const SizedBox(width: 10),
-                    const Text("Información",
-                        style: TextStyle(
-                            fontSize: 20,
-                            color: Color(0xFF35424a)
-                        )),
-                    const Spacer(flex: 10),
-                    const Icon(Icons.arrow_forward)
-                  ],
-                ),
-                onTap: () {
-                  // Update the state of the app
-                  // ...
-                  // Then close the drawer
-                  Navigator.pop(context);
-                },
-              ),
             ]),
             ListTile(
               title: Row(

@@ -43,7 +43,7 @@ class _CreateDataTable extends State<CreateDataTable>{
     List _item = _dosisList[index]['horario'];
     for (var i in _horariosList) {
       for(var j in _item){
-        if(i['id'] == j){
+        if(i["serverid"] == j){
           _hora.add(i['hora']);
         }
       }
@@ -61,7 +61,7 @@ class _CreateDataTable extends State<CreateDataTable>{
     List _item = _dosisList[index]['horario'];
     for (var i in _horariosList) {
       for(var j in _item){
-        if(i['id'] == j){
+        if(i["serverid"] == j){
           _repetir.add(i['repetir']);
         }
       }
@@ -169,7 +169,7 @@ class _CreateDataTable extends State<CreateDataTable>{
                 icon: Icons.delete,
                 color: Theme.of(context).primaryColor,
                 callBack: () async {
-                  await _readWrite.deleteDosis(index);
+                  await _readWrite.deleteDosis(_dosisList[index]["serverid"]);
                   _getItems();
                 },
               )),
@@ -198,7 +198,7 @@ class _CreateDataTable extends State<CreateDataTable>{
     List _item = _dosisList[index]['horario'];
     for (var i in _horariosList) {
       for(var j in _item){
-        if(i['id'] == j){
+        if(i["serverid"] == j){
           _hora.add(i['hora']);
           _repetir.add(i['repetir']);
         }
@@ -232,7 +232,7 @@ class _CreateDataTable extends State<CreateDataTable>{
     }
     for (var i in _pastillasList) {
       for(var j in _item){
-        if(i['id'] == j){
+        if(i["serverid"] == j){
           _pastillas.add(i['nombre']);
           _caducidad.add(i['caducidad']);
         }
@@ -261,7 +261,7 @@ class _CreateDataTable extends State<CreateDataTable>{
 
     for (var i in _contactosList) {
       for(int j = 2; j < _item.length; j++ ){
-        if(i['id'] == _item[j]){
+        if(i["serverid"] == _item[j]){
           _contacto.add(i['nombre']);
           _numero.add(i['numero']);
         }

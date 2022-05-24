@@ -3,11 +3,11 @@ import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:tt2/Components/input_text.dart';
 import 'package:tt2/Components/item_manager.dart';
-import 'package:tt2/Components/button_main.dart';
 import 'package:tt2/SaveRead.dart';
 import 'package:tt2/models.dart';
+import 'package:tt2/Components/httpComunications.dart';
 import '../../SaveRead.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 class NFC extends StatefulWidget{
   @override
   State<NFC> createState() => _NFCState();
@@ -16,10 +16,13 @@ class NFC extends StatefulWidget{
 class _NFCState extends State<NFC> {
   final _readWrite = SaveRead();
   bool valuefirst = false;
+  String _response = "False";
+  final _http = HTTP();
   bool _isEmpty = true;
+  bool exists = false;
 
   Widget onAndroid(){
-    return const Text("¡¡¡Solo pueden registrarse tarjetas NFC usando la interfaz del dispensador!!!",
+    return const Text("¡¡¡Solo pueden usar esta función usando la interfaz del dispensador!!!",
       textAlign: TextAlign.center,
       style: TextStyle(
         color: Colors.black,
@@ -31,12 +34,10 @@ class _NFCState extends State<NFC> {
 
   Widget onWeb(){
     late String _nfcNombre;
-    late String _uid = "";
-    late bool _isAdmin = false;
 
     Widget _buildNfcNombre() {
       return InputText(
-        inputHintText: "Nombre de la dosis",
+        inputHintText: "Nombre para NFC",
         inputmax: 20,
         textSize: 16,
         myValidator: (value) {
@@ -74,7 +75,6 @@ class _NFCState extends State<NFC> {
     }
     
     Widget _buildUid(){
-
       Widget _errorText() {
         if (_isEmpty == true) {
           return const Text(
@@ -99,12 +99,6 @@ class _NFCState extends State<NFC> {
             ),
           ),
           const SizedBox(height: 20),
-          ButtonMain(buttonText: "Registrar Tarjeta",
-              callback: (){
-                setState(()=> _isEmpty = false);
-              }
-          ),
-          _errorText(),
         ],
       );
     }
@@ -121,31 +115,46 @@ class _NFCState extends State<NFC> {
     }
     _registerNfc() async {
       final newNfc =
-        Nfc(uid: _uid, isAdmin: _isAdmin, nfcNombre: _nfcNombre);
+        Nfc(uid: _response, isAdmin: valuefirst, nfcNombre: _nfcNombre);
       await _readWrite.saveNfc(newNfc);
     }
 
     return Column(
       children: [
         ItemManager(
-            dataSubTitle: const ["uid"],
+            dataSubTitle: const ["id"],
             dataTitle: "nombre",
             callback: () async {
-              if (_nfcNombre != "" && _uid != "") {
-                await _registerNfc();
-
-                const snackBar = SnackBar(
-                  content:
-                  Text('Información de pastillas guardada!'),
-                );
-                ScaffoldMessenger.of(context)
-                    .showSnackBar(snackBar);
-                setState(() {
-                  _nfcNombre = "";
-                  _uid = "";
-                });
-              }else{
-                return;
+              if (_nfcNombre != "") {
+                _response = await _http.registerNfc();
+                var collection = FirebaseFirestore.instance.collection('/Users/2aZ3V4Ik89e9rDSzo4N9/Seguridad/');
+                var querySnapshot = await collection.get();
+                for (var value in querySnapshot.docs){
+                  if(value["tipo"] == "nfc" ){
+                    print(value["id"]);
+                    if(value["id"] == _response || value["nombre"] == _nfcNombre){
+                      const snackBar = SnackBar(
+                        content: Text('Tarjeta o nombre ya existen!!!'),
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      exists = true;
+                      Navigator.of(context).pop();
+                    }
+                  }
+                }
+                if(!exists){
+                  await _registerNfc();
+                  const snackBar = SnackBar(
+                    content:
+                    Text('Información de pastillas guardada!'),
+                  );
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(snackBar);
+                  setState(() {
+                    _nfcNombre = "";
+                  });
+                  Navigator.of(context).pop();
+                }
               }
             },
             getter: _readWrite.getNfc,
@@ -154,7 +163,9 @@ class _NFCState extends State<NFC> {
             register: _registerNfc,
             icono: Icons.nfc,
             title: "NFC",
-            formTitle: "Registrar NFC"),
+            formTitle: "Registrar NFC",
+            buttonText: "Registrar tarjetas",
+        ),
       ],
     );
   }

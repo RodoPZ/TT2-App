@@ -143,7 +143,6 @@ class _AgregarPastillasMainState extends State<AgregarPastillasMain> {
                       child: ButtonMain(
                           buttonText: "Abrir compartimento", callback: () {
                           NotificationPlugin.RetrieveNotifications();
-                          // _http.fetchAlbum();
                       }),
                     ),
 

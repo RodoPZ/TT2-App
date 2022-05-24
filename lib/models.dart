@@ -65,17 +65,33 @@ class Dosis{
 
 class Pin{
   final String pin;
+  final String tipo;
   Pin({
+    this.tipo = "nfc",
     required this.pin
   });
 }
 class Nfc{
+  final String tipo;
   final String nfcNombre;
   final String uid;
   final bool isAdmin;
   Nfc({
+    this.tipo = "nfc",
     required this.nfcNombre,
     required this.uid,
     required this.isAdmin,
   });
 }
+
+class FaceRecognition{
+  final String tipo;
+  final String faceRName;
+  final bool isAdmin;
+  FaceRecognition({
+    this.tipo = "face",
+    required this.faceRName,
+    required this.isAdmin,
+  });
+}
+

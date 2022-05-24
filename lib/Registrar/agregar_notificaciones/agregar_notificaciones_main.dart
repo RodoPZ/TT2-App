@@ -147,7 +147,7 @@ class _AgregarNotificacionesMain extends State<AgregarNotificacionesMain>
                                 color: Theme.of(context).primaryColor,
                                 icon: Icons.delete,
                                 callBack: (){
-                              _readWrite.deleteContacto(index);
+                              _readWrite.deleteContacto(items[index]["serverid"]);
                               _getItems();
                             })),
                       );

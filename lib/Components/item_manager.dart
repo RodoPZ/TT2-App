@@ -11,10 +11,12 @@ class ItemManager extends StatefulWidget {
   final Function() register;
   final IconData icono;
   final Future<dynamic> Function() getter;
-  final Future<dynamic> Function(int) deleter;
+  final Future<dynamic> Function(String) deleter;
   final Function() callback;
+  final String buttonText;
 
   const ItemManager({
+    this.buttonText = "Registrar",
     required this.dataSubTitle,
     required this.dataTitle,
     required this.callback,
@@ -51,7 +53,6 @@ class _ItemManagerState extends State<ItemManager> {
     });
     items = await widget.getter();
     setState(() {
-      print(items);
       _selected = List.generate(items.length, (index) => false);
       loaded = true;
     });
@@ -163,7 +164,7 @@ class _ItemManagerState extends State<ItemManager> {
                                 icon: Icons.delete,
                                 callBack: () async {
                                   setState(() => loaded = false);
-                                  await widget.deleter(index);
+                                  await widget.deleter(items[index]["serverid"]);
                                   _getItems();
                                 }
                                 ),
@@ -224,7 +225,7 @@ class _ItemManagerState extends State<ItemManager> {
                 Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: ButtonMain(
-                        buttonText: "Registrar",
+                        buttonText: widget.buttonText,
                         color: Theme.of(context).primaryColor,
                         callback: () async{
                           if (!_formKey.currentState!.validate()) {
