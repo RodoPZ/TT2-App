@@ -13,9 +13,9 @@ class PIN extends StatefulWidget{
 
 class _PINState extends State<PIN> {
   final _readWrite = SaveRead();
-
+  late bool isAdmin = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  late String items = "";
+  late Map items;
   late String _pin;
   bool isConfigured = false;
   bool justConfigured = false;
@@ -28,7 +28,7 @@ class _PINState extends State<PIN> {
 
   _getItems() async {
     items = await _readWrite.getPin();
-    if (items == "" || items.isEmpty){
+    if (items.isEmpty){
       setState(() {
         isConfigured = false;
       });
@@ -73,6 +73,35 @@ class _PINState extends State<PIN> {
         onChanged: (String) {});
   }
 
+  Widget _buildAdmin() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Text("¿Pedir PIN para funciones de administrador?",
+          textAlign: TextAlign.justify,
+          style: TextStyle(
+            fontSize: 17,
+          ),
+        ),
+        SizedBox(
+          width: 30,
+          child: CheckboxListTile(
+            activeColor: Theme.of(context).primaryColor,
+            value: isAdmin,
+            onChanged: (value) {
+              setState(() {
+                isAdmin = value!;
+                // _roomController.text = '${item.id}';
+                // print('${_roomController.text}');
+              });
+            },
+            controlAffinity: ListTileControlAffinity.leading,
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _alreadyConfigured() {
     return Column(
       children: [
@@ -87,6 +116,7 @@ class _PINState extends State<PIN> {
       ],
     );
   }
+
   Widget _justConfigured() {
     return Column(
       children: const [
@@ -118,9 +148,16 @@ class _PINState extends State<PIN> {
               const SizedBox(height: 30),
               Form(
                 key: _formKey,
-                child: _buildPin(),
+                child: Column(
+                  children: [
+                    _buildPin(),
+                    SizedBox(height: 30),
+                    _buildAdmin(),
+                    SizedBox(height: 30),
+                  ],
+                )
               ),
-              SizedBox(height: 30),
+
               ButtonMain(buttonText: "Registrar", callback: (){
                 if (!_formKey.currentState!.validate()) {
                   return;
@@ -141,7 +178,10 @@ class _PINState extends State<PIN> {
   }
 
   _registerPin() {
-    final newPin = Pin(pin: _pin);
+    final newPin = Pin(
+        pin: _pin,
+        admin: isAdmin
+    );
     _readWrite.savePin(newPin);
   }
 }

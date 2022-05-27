@@ -6,6 +6,7 @@ import 'package:tt2/Registrar/agregar_horarios/agregar_horarios_main.dart';
 import 'package:tt2/Registrar/agregar_notificaciones/agregar_contactos_main.dart';
 import 'package:tt2/Registrar/agregar_seguridad/agregar_seguridad_main.dart';
 import 'package:tt2/Registrar/crear_dosis/crear_dosis_main.dart';
+import 'package:tt2/Components/requireAdmin.dart';
 
 class RegistrarMain extends StatelessWidget{
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -50,14 +51,21 @@ class RegistrarMain extends StatelessWidget{
                                 icon: Icons.medical_services_outlined,
                                 buttonText: "Pastillas",
                                 color: Theme.of(context).primaryColor,
-                                callBack: (){
-                                  Navigator.push(
-                                    context,
-                                    //MaterialPageRoute(builder: (builder) => AgregarPastillasMain()),
-                                    MaterialPageRoute(builder: (builder) => AgregarPastillasMain()),
-                                  );
-                                }
-                            ),
+                                callBack: () {
+                                  RequireAdmin(context, () {
+                                    Navigator.pop(context);
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (builder) =>
+                                                AgregarPastillasMain()));
+                                  }, () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (builder) => AgregarPastillasMain()));
+                                  });
+                                }),
                             const Spacer(),
                             ButtonIcon(
                                 iconSize:100,
@@ -66,10 +74,17 @@ class RegistrarMain extends StatelessWidget{
                                 buttonText: "Horarios",
                                 color: Theme.of(context).primaryColor,
                                 callBack: (){
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (builder) => AgregarHorariosMain()),
-                                  );
+                                  RequireAdmin(context,(){
+                                    Navigator.pop(context);
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (builder) => AgregarHorariosMain()));
+                                  },() {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (builder) => AgregarHorariosMain()));
+                                  });
                                 }
 
                             ),
@@ -87,10 +102,17 @@ class RegistrarMain extends StatelessWidget{
                                 buttonText: "Contactos",
                                 color: Theme.of(context).primaryColor,
                                 callBack: (){
+                                  RequireAdmin(context,(){
+                                  Navigator.pop(context);
                                   Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (builder) => AgregarContactosMain()),
-                                  );
+                                      context,
+                                      MaterialPageRoute(builder: (builder) => AgregarContactosMain()));
+                                },() {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (builder) => AgregarContactosMain()));
+                                  });
                                 }
                             ),
                             const Spacer(),
@@ -101,10 +123,17 @@ class RegistrarMain extends StatelessWidget{
                                 buttonText: "Seguridad",
                                 color: Theme.of(context).primaryColor,
                                 callBack: (){
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (builder) => AgregarSeguridadMain()),
-                                  );
+                                  RequireAdmin(context,(){
+                                    Navigator.pop(context);
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (builder) => AgregarSeguridadMain()));
+                                  },() {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (builder) => AgregarSeguridadMain()));
+                                  });
                                 }
                             ),
                             const Spacer(),
@@ -128,10 +157,17 @@ class RegistrarMain extends StatelessWidget{
                       buttonText: "Dosis",
                       color: Theme.of(context).primaryColor,
                       callBack: (){
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (builder) => CrearDosisMain()),
-                        );
+                        RequireAdmin(context,(){
+                          Navigator.pop(context);
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (builder) => CrearDosisMain()));
+                        },() {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (builder) => CrearDosisMain()));
+                        });
                       }
                   ),
                 ],

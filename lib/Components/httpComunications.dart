@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:http/http.dart' as http;
 
 class HTTP{
@@ -9,9 +11,16 @@ class HTTP{
     final response = await http.post(Uri.parse('http://localhost:8080/DeleteFace'),body: name);
     return response.body;
   }
-
   Future registerNfc() async{
     final response = await http.post(Uri.parse('http://localhost:8080/RegisterNfc'));
+    return response.body;
+  }
+  Future registerAlarm() async{
+    final response = await http.post(Uri.parse('http://localhost:8080/RegisterAlarm'));
+    return response.body;
+  }
+  Future registerPill(String contenedor) async{
+    final response = await http.post(Uri.parse('http://localhost:8080/MoverMotores'),body: contenedor);
     return response.body;
   }
 }

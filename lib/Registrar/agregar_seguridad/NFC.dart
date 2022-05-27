@@ -122,7 +122,7 @@ class _NFCState extends State<NFC> {
     return Column(
       children: [
         ItemManager(
-            dataSubTitle: const ["id"],
+            dataSubTitle: const ["uid"],
             dataTitle: "nombre",
             callback: () async {
               if (_nfcNombre != "") {
@@ -131,8 +131,8 @@ class _NFCState extends State<NFC> {
                 var querySnapshot = await collection.get();
                 for (var value in querySnapshot.docs){
                   if(value["tipo"] == "nfc" ){
-                    print(value["id"]);
-                    if(value["id"] == _response || value["nombre"] == _nfcNombre){
+                    print(value["uid"]);
+                    if(value["uid"] == _response || value["nombre"] == _nfcNombre){
                       const snackBar = SnackBar(
                         content: Text('Tarjeta o nombre ya existen!!!'),
                       );

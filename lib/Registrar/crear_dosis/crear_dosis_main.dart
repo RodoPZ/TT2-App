@@ -218,10 +218,10 @@ class _CrearDosisMain extends State<CrearDosisMain> {
       children: [
         Section(
             dataTitle: "nombre",
-            dataSubTitle: "id",
-            getter: _readWrite.getNfc,
+            dataSubTitle: "tipo",
+            getter: _readWrite.getSeguridad,
             intSelection: 1,
-            formText: "Seleccionar Horario",
+            formText: "Seleccionar Seguridad",
             selected: (items) {
               List _ids = [];
               for (var element in items) {
@@ -230,9 +230,9 @@ class _CrearDosisMain extends State<CrearDosisMain> {
               }
               _horarioData = _ids;
             },
-            sectionName: "Horario",
-            firstColText: 'Hora',
-            secondColText: "Repetir"),
+            sectionName: "Seguridad",
+            firstColText: 'Seguridad',
+            secondColText: ""),
       ],
     );
   }
@@ -316,8 +316,6 @@ class _CrearDosisMain extends State<CrearDosisMain> {
                               if (_isEmpty.every((element) => element == false)) {
                                 _registerDosis();
 
-
-
                                 const snackBar = SnackBar(
                                   content:
                                   Text('Información de Dosis guardada!'),
@@ -362,6 +360,7 @@ class _CrearDosisMain extends State<CrearDosisMain> {
         horarioData: _horarioData,
         alarmaData: _alarmaData,
         seguridadData: _seguridadData);
+    print(_horarioData);
     _readWrite.saveDosis(newDosis, (id) {
       for (var horario in _horarioData) {
         _createAlarm(horario, id);

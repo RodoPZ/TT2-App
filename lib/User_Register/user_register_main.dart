@@ -25,7 +25,7 @@ class _RegisterMain extends State<RegisterMain>{
   late String _apellidoUsuario;
   late String _correo;
   late String _password;
-  late bool _esPaciente;
+  late String _pin;
   late String _passTemp;
   Options? _tipoDeCuenta;
   String _radioErrorText = "";
@@ -126,61 +126,26 @@ class _RegisterMain extends State<RegisterMain>{
     );
   }
 
-  Widget _buildTipoDeCuenta() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          height: 40,
-          width: double.infinity,
-          child: Row(
-            children: [
-              Flexible(
-                child: RadioListTile<Options>(
-                  contentPadding: const EdgeInsets.only(
-                    right: 0,
-                    left: 0,
-                  ),
-                  title: const Text('Paciente'),
-                  value: Options.paciente,
-                  groupValue: _tipoDeCuenta,
-                  onChanged: (Options? value) {
-                    setState(() {
-                      _tipoDeCuenta = value;
-                    });
-                  },
-                ),
-              ),
-              Flexible(
-                child: RadioListTile<Options>(
-                  contentPadding: const EdgeInsets.only(
-                    right: 0,
-                    left: 0,
-                  ),
-                  title: const Text('Administrador'),
-                  value: Options.administrador,
-                  groupValue: _tipoDeCuenta,
-                  onChanged: (Options? value) {
-                    setState(() {
-                      _tipoDeCuenta = value;
-                    });
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
-        Container(
-          margin: const EdgeInsets.only(left: 30, top: 10),
-          child: Text(_radioErrorText,
-              style: const TextStyle(
-                fontSize: 12,
-                color: Color(0xffd32f2f),
-              )),
-        ),
-      ],
+  Widget _buildPin() {
+    return InputText(
+      inputText: "PIN de acceso:",
+      inputType: TextInputType.number,
+      inputmax: 4,
+      inputHintText: "",
+      textSize: 16,
+      myValidator: (value) {
+        if (value == null || value.isEmpty) {
+          return "Se necesita una PIN";
+        }
+        if (value.length != 4){
+         return "Un pin debe tener 4 digitos";
+        }
+        return null;
+      },
+      myOnSave: (String? value) {
+        _pin = value!;
+      },
     );
-
   }
 
 
@@ -222,7 +187,8 @@ class _RegisterMain extends State<RegisterMain>{
                               _buildPassword(),
                               const SizedBox(height: 20),
                               _buildRepetirPassword(),
-                              _buildTipoDeCuenta(),
+                              const SizedBox(height: 20),
+                              _buildPin(),
                             ],
                           )),
                     ],
@@ -236,17 +202,6 @@ class _RegisterMain extends State<RegisterMain>{
                     right: 20,
                   ),
                   child: ButtonMain(buttonText: "Registrar", callback: (){
-                    if(_tipoDeCuenta == null ){
-                      setState(() {
-                        _radioErrorText = "Seleccionar una tipo de cuenta";
-                      });
-                    }
-                    else{
-                      setState(() {
-                        _radioErrorText = "";
-                        _tipoDeCuenta == Options.paciente ? _esPaciente = true : _esPaciente = false;
-                      });
-                    }
                     if(!_formKey.currentState!.validate()){
                       return;
                     }
@@ -270,7 +225,6 @@ class _RegisterMain extends State<RegisterMain>{
                       ),
                     ),
                     ButtonText("Ingresar", Theme.of(context).primaryColor,15,(){
-                      _printData();
                       Navigator.push(
                       context,
                       MaterialPageRoute(builder: (builder) => LoginMain()),
@@ -290,12 +244,10 @@ class _RegisterMain extends State<RegisterMain>{
         apellidoUsuario: _apellidoUsuario,
         correo: _correo,
         password: _password,
-        esPaciente: _esPaciente,
+        pin: _pin,
     );
+    _readWrite.saveUserData(newUser);
     // _readWrite.saveUser(newUser);
-  }
-  void _printData() async {
-    // final User = await _readWrite.getUserData();
   }
 }
 

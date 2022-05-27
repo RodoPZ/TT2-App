@@ -39,7 +39,7 @@ class _Section extends State<Section>{
     List elements = [];
     for (var id in _itemsSelected) {
       for (var map in items) {
-        if(map["id"]==id){
+        if(map["serverid"]==id){
           elements.add(map[widget.dataTitle]);
         }
       }
@@ -157,6 +157,7 @@ class _Section extends State<Section>{
                         _itemQuantity.clear();
 
                         for (var element in elements) {
+                          print("elemnt" + element.toString());
                           _itemsSelected.add(element[0]);
                           _itemQuantity.add(element[1]);
                         }

@@ -6,21 +6,26 @@ import 'package:tt2/Components/httpComunications.dart';
 
 class SaveRead{
   final _http = HTTP();
-  // Future saveUser(UserData userData) async{
-  //   final preferences = await SharedPreferences.getInstance();
-  //   await preferences.setString("nombreUsuario", userData.nombreUsuario);
-  //   await preferences.setString("apellidoUsuario", userData.apellidoUsuario);
-  //   await preferences.setString("correo", userData.correo);
-  //   await preferences.setString("contraseña", userData.password);
-  //   await preferences.setBool("esPaciente", userData.esPaciente);
-  // }
 
-  savePastilla(Pastilla pastilla) async{
+  Future saveUserData(UserData userData) async{
+    var collection = FirebaseFirestore.instance.collection('/Users/');
+    var querySnapshot = await collection.get();
+    await collection.add({
+    "nombre": userData.nombreUsuario,
+    "apellido": userData.apellidoUsuario,
+    "correo": userData.correo,
+    "contraseña": userData.password,
+    "Pin": userData.pin,
+    }).then((value) => print("User Added"));
+  }
+
+  Future savePastilla(Pastilla pastilla) async{
     var collection = FirebaseFirestore.instance.collection('/Users/2aZ3V4Ik89e9rDSzo4N9/Pastillas/');
     var querySnapshot = await collection.get();
     int pastillasData = querySnapshot.docs.length;
       if (pastillasData < 10){
-        collection.add({
+        await collection.add({
+            "contenedor":pastilla.contenedor,
             "nombre":pastilla.pastillaNombre,
             "cantidad":pastilla.pastillaCantidad,
             "caducidad":pastilla.pastillaCaducidad,
@@ -33,7 +38,7 @@ class SaveRead{
     var querySnapshot = await collection.get();
     int horariosData = querySnapshot.docs.length;
     if (horariosData < 100){
-      collection.add({
+      await collection.add({
         "hora":horario.horarioHora,
         "repetir":horario.horarioRepetir
       }).then((value) => print("User Added"));
@@ -45,7 +50,7 @@ class SaveRead{
     var querySnapshot = await collection.get();
     int contactosData = querySnapshot.docs.length;
     if (contactosData < 100){
-      collection.add({
+      await collection.add({
         "nombre": contacto.contactoNombre,
         "numero": contacto.contactoNumero
       }).then((value) => print("User Added"));
@@ -57,7 +62,7 @@ class SaveRead{
     var querySnapshot = await collection.get();
     int dosisData = querySnapshot.docs.length;
     if (dosisData < 100){
-      collection.add({
+      await collection.add({
         "nombre": dosis.dosisNombre,
         "pastillas": dosis.pastillaData,
         "horario": dosis.horarioData,
@@ -68,27 +73,15 @@ class SaveRead{
     }
   }
 
-  Future savePin(Pin pin) async{
-    var collection = FirebaseFirestore.instance.collection('/Users/2aZ3V4Ik89e9rDSzo4N9/Seguridad/');
-    var querySnapshot = await collection.get();
-    int pinData = querySnapshot.docs.length;
-    if (pinData <= 1) {
-      collection.doc(querySnapshot.docs[0].reference.id).update({
-        "pinData": pin.pin,
-        "tipo": pin.tipo,
-      }).then((value) => print("User Added"));
-    }
-  }
-
   Future saveNfc(Nfc nfc) async{
     var collection = FirebaseFirestore.instance.collection('/Users/2aZ3V4Ik89e9rDSzo4N9/Seguridad/');
     var querySnapshot = await collection.get();
     int nfcData = querySnapshot.docs.length;
     if (nfcData <= 20){
-      collection.add({
+      await collection.add({
         "tipo": nfc.tipo,
         "nombre": nfc.nfcNombre,
-        "id": nfc.uid,
+        "uid": nfc.uid,
         "admin": nfc.isAdmin,
       });
     }
@@ -99,7 +92,7 @@ class SaveRead{
     var querySnapshot = await collection.get();
     int faceData = querySnapshot.docs.length;
     if (faceData <= 20){
-      collection.add({
+      await collection.add({
         "tipo": faceRecognition.tipo,
         "nombre": faceRecognition.faceRName,
         "admin": faceRecognition.isAdmin,
@@ -107,43 +100,69 @@ class SaveRead{
     }
   }
 
+  Future savePin(Pin pin) async {
+    late bool exists = false;
+    var collection = FirebaseFirestore.instance.collection(
+        '/Users/2aZ3V4Ik89e9rDSzo4N9/Seguridad/');
+    var querySnapshot = await collection.get();
+    for (var queryDocumentSnapshot in querySnapshot.docs) {
+      print(queryDocumentSnapshot.data());
+      if (queryDocumentSnapshot.data()["tipo"] == "PIN") {
+        await collection.doc(queryDocumentSnapshot.reference.id).update({
+          "pinData": pin.pin,
+          "admin": pin.admin,
+          "tipo": pin.tipo,
+        }).then((value) => print("User Added"));
+        exists = true;
+        break;
+      }
+    }
+    if(exists == false){
+      await collection.add({
+        "pinData": pin.pin,
+        "tipo": pin.tipo,
+        "admin": pin.admin,
+      });
+    }
+  }
+
 
   Future deleteContacto(String id) async{
     var collection = FirebaseFirestore.instance.collection('/Users/2aZ3V4Ik89e9rDSzo4N9/Contactos/');
-    collection.doc(id).delete().then((value) => print("Deleted"));
+    await collection.doc(id).delete().then((value) => print("Deleted"));
   }
 
   Future deletePastilla(String id) async{
     var collection = FirebaseFirestore.instance.collection('/Users/2aZ3V4Ik89e9rDSzo4N9/Pastillas/');
-    collection.doc(id).delete().then((value) => print("Deleted"));
+    await collection.doc(id).delete().then((value) => print("Deleted"));
   }
 
   Future deleteHorario(String id) async{
     var collection = FirebaseFirestore.instance.collection('/Users/2aZ3V4Ik89e9rDSzo4N9/Horarios/');
-    collection.doc(id).delete().then((value) => print("Deleted"));
+    await collection.doc(id).delete().then((value) => print("Deleted"));
   }
 
   Future deleteDosis(String id) async{
     var collection = FirebaseFirestore.instance.collection('/Users/2aZ3V4Ik89e9rDSzo4N9/Dosis/');
-    collection.doc(id).delete().then((value) => print("Deleted"));
+    await collection.doc(id).delete().then((value) => print("Deleted"));
   }
 
   Future deleteNfc(String id) async{
     var collection = FirebaseFirestore.instance.collection('/Users/2aZ3V4Ik89e9rDSzo4N9/Seguridad/');
-    collection.doc(id).delete().then((value) => print("Deleted"));
+    await collection.doc(id).delete().then((value) => print("Deleted"));
   }
 
 
   Future deletePin(String id) async{
     var collection = FirebaseFirestore.instance.collection('/Users/2aZ3V4Ik89e9rDSzo4N9/Seguridad/');
-    collection.doc(id).delete().then((value) => print("Deleted"));
+    await collection.doc(id).delete().then((value) => print("Deleted"));
   }
 
   Future deleteFace(String id) async{
     var collection = FirebaseFirestore.instance.collection('/Users/2aZ3V4Ik89e9rDSzo4N9/Seguridad/');
     var querySnapshot = await collection.doc(id).get();
     await _http.deleteFace(querySnapshot.data()!["nombre"]);
-    collection.doc(id).delete().then((value) => print("Deleted"));
+    await collection.doc(id).delete().then((value) => print("Deleted"));
   }
 
   // Future getUserData() async{
@@ -206,17 +225,16 @@ class SaveRead{
   }
 
   Future getPin() async {
-    late String pinData = "";
     var collection = FirebaseFirestore.instance.collection('/Users/2aZ3V4Ik89e9rDSzo4N9/Seguridad');
     var querySnapshot = await collection.get();
     for (var queryDocumentSnapshot in querySnapshot.docs) {
-      if(queryDocumentSnapshot.data()["tipo"] == "pin") {
+      if(queryDocumentSnapshot.data()["tipo"] == "PIN") {
         Map<String, dynamic> data = queryDocumentSnapshot.data();
         data["serverid"]=queryDocumentSnapshot.id;
-        pinData = data.toString();
+        return data;
       }
     }
-    return pinData;
+
   }
 
   Future getNfc() async {
@@ -224,7 +242,7 @@ class SaveRead{
     var collection = FirebaseFirestore.instance.collection('/Users/2aZ3V4Ik89e9rDSzo4N9/Seguridad');
     var querySnapshot = await collection.get();
     for (var queryDocumentSnapshot in querySnapshot.docs) {
-      if(queryDocumentSnapshot.data()["tipo"] == "nfc"){
+      if(queryDocumentSnapshot.data()["tipo"] == "NFC"){
         Map<String, dynamic> data = queryDocumentSnapshot.data();
         data["serverid"]=queryDocumentSnapshot.id;
         nfcData.add(data);
@@ -238,7 +256,7 @@ class SaveRead{
     var collection = FirebaseFirestore.instance.collection('/Users/2aZ3V4Ik89e9rDSzo4N9/Seguridad');
     var querySnapshot = await collection.get();
     for (var queryDocumentSnapshot in querySnapshot.docs) {
-      if(queryDocumentSnapshot.data()["tipo"] == "face") {
+      if(queryDocumentSnapshot.data()["tipo"] == "RECONOCIMIENTO FACIAL") {
         Map<String, dynamic> data = queryDocumentSnapshot.data();
         data["serverid"]=queryDocumentSnapshot.id;
         faceData.add(data);
@@ -247,9 +265,20 @@ class SaveRead{
     return faceData;
   }
 
+  Future getSeguridad() async {
+    List seguridad = [];
+    var collection = FirebaseFirestore.instance.collection('/Users/2aZ3V4Ik89e9rDSzo4N9/Seguridad');
+    var querySnapshot = await collection.get();
+    for (var queryDocumentSnapshot in querySnapshot.docs) {
+      Map<String, dynamic> data = queryDocumentSnapshot.data();
+      data["serverid"]=queryDocumentSnapshot.id;
+      seguridad.add(data);
+    }
+    return seguridad;
+  }
+
   Future pillSubstraction(String pastillas) async{
     List pills = jsonDecode(pastillas);
-    List pastillasData = [];
     var collection = FirebaseFirestore.instance.collection('/Users/2aZ3V4Ik89e9rDSzo4N9/Pastillas/');
     var querySnapshot = await collection.get();
     for (var pill in pills){

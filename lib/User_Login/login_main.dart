@@ -14,9 +14,12 @@ class LoginMain extends StatefulWidget{
 
 class _LoginMainState extends State<LoginMain> {
   @override
+
+  late String _correo;
+  late String _password;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   void initState() {
     super.initState();
-
     NotificationPlugin.init(initScheduled: true);
     listenNotifications();
   }
@@ -26,6 +29,42 @@ class _LoginMainState extends State<LoginMain> {
 
   void onClickedNotification(String? payload) => Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => OnClickNotificaciones(payload: payload)));
+
+  Widget _buildEmail(){
+    return InputText(
+      inputText: "Email:",
+      inputHintText: "mail@gmail.com",
+      inputmax: 40,
+      textSize: 16,
+      myValidator: (value) {
+        if (value == null || value.isEmpty) {
+          return "Se necesita un Correo";
+        }
+        return null;
+      },
+      myOnSave: (String? value) {
+        _correo = value!;
+      },
+    );
+  }
+
+  Widget _buildPassword(){
+    return InputText(
+      inputText: "Contraseña:",
+      inputHintText: "********",
+      textSize: 16,
+      myValidator: (value) {
+        if (value == null || value.isEmpty) {
+          return "Se necesita una contraseña";
+        }
+      },
+      myOnSave: (String? value) {
+        _password = value!;
+      },
+      isPassword: true,
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -61,10 +100,16 @@ class _LoginMainState extends State<LoginMain> {
                       fontSize: 20,
                     ),
                   ),
-                  SizedBox(height: 10),
-                  InputText(inputText: "Email", inputHintText: "example@email.com"),
-                  SizedBox(height: 10),
-                  InputText(inputText: "Contraseña", inputHintText: "*******"),
+                  Form(
+                      key: _formKey,
+                      child: Column(
+                        children: [
+                          SizedBox(height: 10),
+                          _buildEmail(),
+                          SizedBox(height: 10),
+                          _buildPassword(),
+                        ],
+                      )),
                 ],
               ),
             ),
@@ -75,6 +120,10 @@ class _LoginMainState extends State<LoginMain> {
                 right: 30
               ),
               child: ButtonMain(buttonText: "Ingresar",callback: (){
+                // if(!_formKey.currentState!.validate()){
+                //   return;
+                // }
+                // _formKey.currentState!.save();
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (builder) => HomePageMain("Rodo")),

@@ -131,13 +131,13 @@ class _LoadItems extends State<LoadItems> {
                 if(widget.intSelection == 0){              //Selector de pastillas
                   for (int i = 0; i < _count.length; i++) {
                     if (_count[i] != 0) {
-                      _data.add([items[i]["id"],_count[i]]);
+                      _data.add([items[i]["serverid"],_count[i]]);
                     }
                   }
                 } else if(widget.intSelection == 1) {              //Selector al hacer clic
                   for (int i = 0; i < _selected.length; i++) {
                     if(_selected[i] == true){
-                      _data.add([items[i]["id"],items[i][widget.dataSubTitle]]);
+                      _data.add([items[i]["serverid"],items[i][widget.dataSubTitle]]);
                     }
                   }
                 }

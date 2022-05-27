@@ -3,14 +3,14 @@ class UserData{
   final String apellidoUsuario;
   final String correo;
   final String password;
-  final bool esPaciente;
+  final String pin;
 
   UserData({
     required this.nombreUsuario,
     required this.apellidoUsuario,
     required this.correo,
     required this.password,
-    required this.esPaciente
+    required this.pin
   });
 
 }
@@ -19,8 +19,10 @@ class Pastilla{
   final String pastillaNombre;
   final int pastillaCantidad;
   final String pastillaCaducidad;
+  final int contenedor;
 
   Pastilla({
+    required this.contenedor,
     required this.pastillaNombre,
     required this.pastillaCantidad,
     required this.pastillaCaducidad,
@@ -64,20 +66,25 @@ class Dosis{
 }
 
 class Pin{
+  final String nombre;
   final String pin;
   final String tipo;
+  final bool admin;
   Pin({
-    this.tipo = "nfc",
+    this.nombre = "Pin",
+    required this.admin,
+    this.tipo = "PIN",
     required this.pin
   });
 }
+
 class Nfc{
   final String tipo;
   final String nfcNombre;
   final String uid;
   final bool isAdmin;
   Nfc({
-    this.tipo = "nfc",
+    this.tipo = "NFC",
     required this.nfcNombre,
     required this.uid,
     required this.isAdmin,
@@ -89,7 +96,7 @@ class FaceRecognition{
   final String faceRName;
   final bool isAdmin;
   FaceRecognition({
-    this.tipo = "face",
+    this.tipo = "RECONOCIMIENTO FACIAL",
     required this.faceRName,
     required this.isAdmin,
   });

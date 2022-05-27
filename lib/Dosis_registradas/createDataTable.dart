@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../SaveRead.dart';
 import 'package:collection/collection.dart';
 import 'package:tt2/Components/button_icon.dart';
+import 'package:tt2/Components/requireAdmin.dart';
 
 class CreateDataTable extends StatefulWidget{
   @override
@@ -169,8 +170,16 @@ class _CreateDataTable extends State<CreateDataTable>{
                 icon: Icons.delete,
                 color: Theme.of(context).primaryColor,
                 callBack: () async {
-                  await _readWrite.deleteDosis(_dosisList[index]["serverid"]);
-                  _getItems();
+                  RequireAdmin(context,  () async {
+                    Navigator.pop(context);
+                    await _readWrite.deleteDosis(_dosisList[index]["serverid"]);
+                    _getItems();
+                  },
+                      () async {
+                        await _readWrite.deleteDosis(_dosisList[index]["serverid"]);
+                        _getItems();
+                      });
+
                 },
               )),
             ],
