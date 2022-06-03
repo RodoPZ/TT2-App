@@ -120,11 +120,12 @@ class _CrearDosisMain extends State<CrearDosisMain> {
             formText: "Seleccionar Horario",
             selected: (items) {
               List _ids = [];
+
               setState(() => _isEmpty[2] = false);
               for (var element in items) {
                 _ids.add(element[0]);
-              }
 
+              }
               _horarioData = _ids;
             },
             sectionName: "Horario",
@@ -225,10 +226,9 @@ class _CrearDosisMain extends State<CrearDosisMain> {
             selected: (items) {
               List _ids = [];
               for (var element in items) {
-                print(element);
                 _ids.add(element[0]);
               }
-              _horarioData = _ids;
+              _alarmaData = _ids;
             },
             sectionName: "Seguridad",
             firstColText: 'Seguridad',
@@ -253,8 +253,8 @@ class _CrearDosisMain extends State<CrearDosisMain> {
                 children: [
                   Container(
                     margin: const EdgeInsets.only(
-                      right: 20,
-                      left: 20,
+                      right: 10,
+                      left: 10,
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -360,7 +360,6 @@ class _CrearDosisMain extends State<CrearDosisMain> {
         horarioData: _horarioData,
         alarmaData: _alarmaData,
         seguridadData: _seguridadData);
-    print(_horarioData);
     _readWrite.saveDosis(newDosis, (id) {
       for (var horario in _horarioData) {
         _createAlarm(horario, id);
@@ -368,10 +367,11 @@ class _CrearDosisMain extends State<CrearDosisMain> {
     });
   }
 
-  _createAlarm(data, int _dosisId){
+  _createAlarm(data, int _dosisId) async{
     for(var horario in _horarioList){
-      if (horario['id'] == data){
 
+      if (horario['serverid'] == data){
+        print(horario['serverid']);
         List time = horario['hora'].split(':');
         _dosisId = _dosisId;
         String title = "Es la hora de la Dosis: " + _dosisNombre;
@@ -457,5 +457,6 @@ class _CrearDosisMain extends State<CrearDosisMain> {
         }
       }
     }
+
   }
 }

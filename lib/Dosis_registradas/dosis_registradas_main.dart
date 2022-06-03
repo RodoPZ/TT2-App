@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../Components/menu.dart';
 import 'createDataTable.dart';
@@ -27,7 +28,7 @@ class _DosisRegistradasMainState extends State<DosisRegistradasMain> {
                     children: [
                       Icon(
                         Icons.paste,
-                        size: 60,
+                        size: 50,
                         color: Theme.of(context).primaryColor,
                       ),
                       const SizedBox(width: 10),
@@ -35,13 +36,15 @@ class _DosisRegistradasMainState extends State<DosisRegistradasMain> {
                         "Dosis registradas",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 25,
+                          fontSize: 20,
                         ),
                       )
                     ],
                   ),
                   Divider(thickness: 2),
-                  CreateDataTable(),
+                  Container(
+                    child: CreateDataTable(),
+                  ),
 
                 ],
               ),

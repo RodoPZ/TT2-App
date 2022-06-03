@@ -80,7 +80,7 @@ class _PINState extends State<PIN> {
         const Text("¿Pedir PIN para funciones de administrador?",
           textAlign: TextAlign.justify,
           style: TextStyle(
-            fontSize: 17,
+            fontSize: 13,
           ),
         ),
         SizedBox(

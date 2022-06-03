@@ -33,7 +33,6 @@ class ButtonMain extends StatelessWidget{
           primary: color,
         ),
         onPressed: callback,
-
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

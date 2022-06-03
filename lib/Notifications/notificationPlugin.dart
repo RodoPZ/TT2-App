@@ -133,12 +133,9 @@ class NotificationPlugin{
   }
 
   static Future<void> RetrieveNotifications() async {
-    print("awa");
     final List<PendingNotificationRequest> pendingNotificationRequests = await _notifications
         .pendingNotificationRequests();
     for (var notification in pendingNotificationRequests){
-      print(notification.id);
-      print(notification.title);
       print(notification.body);
     }
   }

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:tt2/Components/input_text.dart';
 import 'package:tt2/Components/button_main.dart';
@@ -73,19 +74,20 @@ class _LoginMainState extends State<LoginMain> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Center(
-              child: Image(
-                image: NetworkImage("https://www.adaptivewfs.com/wp-content/uploads/2020/07/logo-placeholder-image.png"),
-                width:200,
+            Center(
+              child:  Image.asset('assets/Logo.png',height: MediaQuery.of(context).size.height/3,),
               ),
-            ),
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.only(
+                right: 30,
+                left: 30
+              ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+
                   const Text("Acceso",
                     style: TextStyle(
                       color: Color(0xFF35424a),

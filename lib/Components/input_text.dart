@@ -55,7 +55,7 @@ class _InputTextState extends State<InputText> {
     }
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         TextFormField(
           focusNode: myFocusNode,

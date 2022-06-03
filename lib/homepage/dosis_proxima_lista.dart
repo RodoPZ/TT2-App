@@ -34,8 +34,6 @@ class _DosisProximaListaState extends State<DosisProximaLista> {
       for(var value in item["horario"]){
         var querySnapshot = await FirebaseFirestore.instance.collection('/Users/2aZ3V4Ik89e9rDSzo4N9/Horarios/').doc(value).get();
         showHorarios.add([item["nombre"],querySnapshot.data()!["hora"],querySnapshot.data()!["repetir"]]);
-        print(value);
-        print(showHorarios);
       }
     }
     setState(() {

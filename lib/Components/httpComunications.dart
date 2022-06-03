@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:http/http.dart' as http;
 
 class HTTP{
@@ -21,6 +19,10 @@ class HTTP{
   }
   Future registerPill(String contenedor) async{
     final response = await http.post(Uri.parse('http://localhost:8080/MoverMotores'),body: contenedor);
+    return response.body;
+  }
+  Future registerDosis(Map Dosis) async{
+    final response = await http.post(Uri.parse('http://localhost:8080/RegisterDosis'), body: Dosis.toString());
     return response.body;
   }
 }

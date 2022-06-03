@@ -25,8 +25,6 @@ class _AgregarSeguridadMain extends State<AgregarSeguridadMain> with SingleTicke
       drawer: Menu("Rodo Pinedo",""),
       body: Stack(
         children: <Widget>[
-          ListView(
-            children: [
               Container(
                 margin: const EdgeInsets.only(
                   right: 20,
@@ -40,14 +38,14 @@ class _AgregarSeguridadMain extends State<AgregarSeguridadMain> with SingleTicke
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(Icons.security,
-                          size: 80,
+                          size: 70,
                           color: Theme.of(context).primaryColor,
                         ),
                         SizedBox(width: 10),
                         const Text("Agregar seguridad",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 25,
+                            fontSize: 20,
                           ),
                         )
                       ],
@@ -64,7 +62,7 @@ class _AgregarSeguridadMain extends State<AgregarSeguridadMain> with SingleTicke
                           ),
                           Tab(
                             icon: Icon(Icons.nfc),
-                            text: 'NFC',
+                            text: 'RFID',
                           ),
                           Tab(
                             icon: Icon(Icons.pin),
@@ -74,7 +72,7 @@ class _AgregarSeguridadMain extends State<AgregarSeguridadMain> with SingleTicke
                       ),
                     ),
                     SizedBox(
-                      height: 500.0,
+                      height: 550,
                       child: TabBarView(
                         controller: _controller,
                         children: <Widget>[
@@ -87,9 +85,6 @@ class _AgregarSeguridadMain extends State<AgregarSeguridadMain> with SingleTicke
                   ],
                 ),
               ),
-
-            ],
-          ),
           Positioned(
             left: 10,
             top: 20,

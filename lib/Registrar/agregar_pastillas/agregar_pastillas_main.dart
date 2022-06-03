@@ -8,7 +8,6 @@ import 'package:tt2/Components/item_manager.dart';
 import 'package:tt2/Components/httpComunications.dart';
 import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'dart:math';
 
 class AgregarPastillasMain extends StatefulWidget {
   @override
@@ -20,9 +19,7 @@ class _AgregarPastillasMainState extends State<AgregarPastillasMain> {
   final _http = HTTP();
   late List items = [];
   late List contenedoresList = [1,2,3,4,5,6,7,8,9,10];
-  late List<bool> _selected;
   bool loaded = false;
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -32,14 +29,19 @@ class _AgregarPastillasMainState extends State<AgregarPastillasMain> {
   late String _pastillaCaducidad = "";
 
   Widget onAndroid() {
-    return const Text(
-      "¡¡¡Solo pueden usar esta función usando la interfaz del dispensador!!!",
-      textAlign: TextAlign.center,
-      style: TextStyle(
-        color: Colors.black,
-        fontSize: 19,
-        fontWeight: FontWeight.bold,
-      ),
+    return Column(
+      children: const [
+        SizedBox(height: 100),
+        Text(
+          "¡¡¡Solo pueden usar esta función usando la interfaz del dispensador!!!",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 19,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
     );
   }
 
@@ -148,7 +150,6 @@ class _AgregarPastillasMainState extends State<AgregarPastillasMain> {
                     .of(context)
                     .primaryColor,
               ),
-              const SizedBox(width: 30),
               const Text(
                 "Pastillas",
                 style: TextStyle(
@@ -169,9 +170,8 @@ class _AgregarPastillasMainState extends State<AgregarPastillasMain> {
             ),
             width: double.infinity,
           ),
-
           ItemManager(
-            buttonText: "Abrir Compartimento y registrar",
+            buttonText: "Abrir compartimento y registrar",
             dataSubTitle: const ["caducidad", "cantidad"],
             dataTitle: "nombre",
             deleter: _readWrite.deletePastilla,
@@ -187,8 +187,7 @@ class _AgregarPastillasMainState extends State<AgregarPastillasMain> {
                 contenedoresList.remove(value["contenedor"]);
               }
               setState(() =>_contenedor = contenedoresList[0]);
-              print(_contenedor);
-              // await _http.registerPill(_contenedor.toString());
+              await _http.registerPill(_contenedor.toString());
               await _registerPastillas();
               const snackBar = SnackBar(
                 content:
@@ -215,7 +214,6 @@ class _AgregarPastillasMainState extends State<AgregarPastillasMain> {
         children: <Widget>[
           ListView(
             children: [
-              SizedBox(height: 100),
               if(kIsWeb) onWeb() else if(Platform.isAndroid) onAndroid(),
             ],
           ),

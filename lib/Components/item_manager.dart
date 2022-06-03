@@ -85,7 +85,7 @@ class _ItemManagerState extends State<ItemManager> {
                 Text(
                   widget.title,
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 17,
                     fontWeight: FontWeight.bold,
                   ),
                 ),

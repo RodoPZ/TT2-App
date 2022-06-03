@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:tt2/Components/button_main.dart';
 import 'package:tt2/SaveRead.dart';
@@ -18,12 +16,12 @@ class OnClickNotificaciones extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
             children: [
-            Text("Es la hora de su medicina!!!",
-            style: TextStyle(
-              fontSize: 30,
-              fontWeight: FontWeight.bold,
-              color: Theme.of(context).primaryColor,
-            ),
+            Text("Es la hora de tomar su medicina!!!",
+              style: TextStyle(
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).primaryColor,
+              ),
             ),
               SizedBox(height: 30),
               ButtonMain(buttonText: "Iniciar dispensación", callback: (){

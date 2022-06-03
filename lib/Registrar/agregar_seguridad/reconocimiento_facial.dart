@@ -166,7 +166,6 @@ class _ReconocimientoFacialState extends State<ReconocimientoFacial> {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      SizedBox(height: 50),
       if(kIsWeb) onWeb() else if(Platform.isAndroid) onAndroid(),
     ]);
   }

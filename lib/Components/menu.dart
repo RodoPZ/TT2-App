@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tt2/Registrar/registrar_main.dart';
 import 'package:tt2/homepage/homepage_main.dart';
 import 'package:tt2/Dosis_registradas/dosis_registradas_main.dart';
+import 'package:tt2/Notifications/notificationPlugin.dart';
 
 class Menu extends StatefulWidget{
   String userName = "UserName";
@@ -12,6 +13,7 @@ class Menu extends StatefulWidget{
 }
 
 class _Menu extends State<Menu>{
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -114,6 +116,7 @@ class _Menu extends State<Menu>{
                 onTap: () {
                   Navigator.pop(context);
                   if ( widget.currentSection != "Dosis registradas" ){
+                    NotificationPlugin.RetrieveNotifications();
                     Navigator.push(
                         context,
                         MaterialPageRoute(builder: (builder) => DosisRegistradasMain())

@@ -67,6 +67,7 @@ class _Section extends State<Section>{
       ],
     );
   }
+
   Widget printPastillasCantidad(){
     return Column(
       children: [
@@ -95,7 +96,7 @@ class _Section extends State<Section>{
               Text(widget.sectionName,
                 style:  TextStyle(
                   color: Theme.of(context).primaryColor,
-                  fontSize: 20,
+                  fontSize: 15,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -104,7 +105,7 @@ class _Section extends State<Section>{
                 children: [
                   Text(widget.firstColText,
                     style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 14,
                         color: Colors.grey
                     ),
                   ),
@@ -157,7 +158,6 @@ class _Section extends State<Section>{
                         _itemQuantity.clear();
 
                         for (var element in elements) {
-                          print("elemnt" + element.toString());
                           _itemsSelected.add(element[0]);
                           _itemQuantity.add(element[1]);
                         }

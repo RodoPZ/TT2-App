@@ -62,7 +62,9 @@ class _CreateDataTable extends State<CreateDataTable>{
     List _item = _dosisList[index]['horario'];
     for (var i in _horariosList) {
       for(var j in _item){
+
         if(i["serverid"] == j){
+
           _repetir.add(i['repetir']);
         }
       }
@@ -105,7 +107,7 @@ class _CreateDataTable extends State<CreateDataTable>{
       if(_dosisList.isNotEmpty){
         return DataTable(
           showCheckboxColumn: false,
-          columnSpacing: 10,
+          columnSpacing: 5,
           columns: const <DataColumn>[
             DataColumn(
               label: Text(
@@ -139,8 +141,8 @@ class _CreateDataTable extends State<CreateDataTable>{
             ),
             DataColumn(
               label: Text(
-                '',
-                style: TextStyle(),
+                'Seguridad',
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
           ],

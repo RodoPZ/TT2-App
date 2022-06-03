@@ -3,6 +3,8 @@ import 'package:tt2/models.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'models.dart';
 import 'package:tt2/Components/httpComunications.dart';
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class SaveRead{
   final _http = HTTP();
@@ -62,6 +64,15 @@ class SaveRead{
     var querySnapshot = await collection.get();
     int dosisData = querySnapshot.docs.length;
     if (dosisData < 100){
+      // if(kIsWeb) {
+      //   await _http.registerDosis({
+      //     "nombre": dosis.dosisNombre,
+      //     "pastillas": dosis.pastillaData,
+      //     "horario": dosis.horarioData,
+      //     "alarmas": dosis.alarmaData,
+      //     "seguridad": dosis.seguridadData,
+      //   });
+      // }
       await collection.add({
         "nombre": dosis.dosisNombre,
         "pastillas": dosis.pastillaData,

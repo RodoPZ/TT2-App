@@ -37,7 +37,7 @@ class _NFCState extends State<NFC> {
 
     Widget _buildNfcNombre() {
       return InputText(
-        inputHintText: "Nombre para NFC",
+        inputHintText: "Nombre para RFID",
         inputmax: 20,
         textSize: 16,
         myValidator: (value) {
