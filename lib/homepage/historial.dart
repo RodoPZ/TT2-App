@@ -23,6 +23,7 @@ class Historial extends StatelessWidget{
         },
         child: Row(
           children: [
+
             Text(doseHistoryName),
             Spacer(),
             Text(doseHistoryTime),

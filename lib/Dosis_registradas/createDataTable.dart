@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../SaveRead.dart';
 import 'package:collection/collection.dart';
@@ -18,6 +19,7 @@ class _CreateDataTable extends State<CreateDataTable>{
   List _horariosList = [];
   List _pastillasList = [];
   List _contactosList = [];
+  List _seguridadList = [];
   final _readWrite = SaveRead();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
@@ -34,56 +36,42 @@ class _CreateDataTable extends State<CreateDataTable>{
     _horariosList = await _readWrite.getHorario();
     _pastillasList = await _readWrite.getPastilla();
     _contactosList = await _readWrite.getContacto();
+    _seguridadList = await _readWrite.getSeguridad();
     setState(() {
       loaded = true;
     });
   }
 
   Widget _displayHora(index){
-    List _hora = [];
-    List _item = _dosisList[index]['horario'];
+    String _hora = "";
+    String _item = _dosisList[index]['horario'];
     for (var i in _horariosList) {
-      for(var j in _item){
-        if(i["serverid"] == j){
-          _hora.add(i['hora']);
-        }
+      if(i["serverid"] == _item){
+        _hora = i['hora'];
       }
     }
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        for(var item in _hora) Text(item.toString()),
-      ],
-    );
+    return Text(_hora);
   }
 
   Widget _displayRepetir(index){
-    List _repetir = [];
-    List _item = _dosisList[index]['horario'];
+    String _repetir = "";
+    String _item = _dosisList[index]['horario'];
     for (var i in _horariosList) {
-      for(var j in _item){
-
-        if(i["serverid"] == j){
-
-          _repetir.add(i['repetir']);
-        }
+      if(i["serverid"] == _item){
+        _repetir = i['repetir'].toString();
       }
     }
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        for(var item in _repetir) Text(item.toString()),
-      ],
-    );
+    return Text(_repetir);
   }
 
   Widget _displayAlertas(index){
     List _alertas = [];
     List _item = _dosisList[index]['alarmas'];
+
     if(_item[0] == true){
       _alertas.add(Icons.doorbell);
     }
-    if(_item[1] == true){
+    if(_item.length > 1 && _item[1] == true){
       _alertas.add(Icons.notifications_active);
     }
     if(_item.length > 2){
@@ -100,7 +88,25 @@ class _CreateDataTable extends State<CreateDataTable>{
     );
   }
 
+  Widget _displaySeguridad(index){
+    IconData _seguridad =  Icons.lock_open;
+    String _item = _dosisList[index]['seguridad'];
+    if(_item != "") {
+      for(var i in _seguridadList){
+        if(i["serverid"] == _item){
+          if(i["tipo"] == "RECONOCIMIENTO FACIAL"){
+            _seguridad = Icons.face;
+          }else if(i["tipo"] == "PIN"){
+            _seguridad = Icons.pin;
+          }else{
+            _seguridad = Icons.nfc;
+          }
+        }
+      }
+    }
 
+    return Icon(_seguridad,color: Theme.of(context).primaryColor);
+  }
   @override
   Widget build(BuildContext context) {
     if (loaded == true){
@@ -112,6 +118,7 @@ class _CreateDataTable extends State<CreateDataTable>{
             DataColumn(
               label: Text(
                 'Nombre',
+                textAlign: TextAlign.center,
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
@@ -141,7 +148,7 @@ class _CreateDataTable extends State<CreateDataTable>{
             ),
             DataColumn(
               label: Text(
-                'Seguridad',
+                'Borrar',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
@@ -162,11 +169,15 @@ class _CreateDataTable extends State<CreateDataTable>{
               }
             }),
             cells: <DataCell>[
-              DataCell(Text(element["nombre"].toString())),
+              DataCell(
+                  Container(
+                          width: MediaQuery.of(context).size.width*(1/8),
+                          child: Text(element["nombre"].toString(),overflow: TextOverflow.ellipsis))
+              ),
               DataCell(_displayHora(index)),
               DataCell(_displayRepetir(index)),
               DataCell(_displayAlertas(index)),
-              DataCell(Text(element["seguridad"].toString())),
+              DataCell(_displaySeguridad(index)),
               DataCell(ButtonIcon(
                 iconSize: 30,
                 icon: Icons.delete,
@@ -204,31 +215,16 @@ class _CreateDataTable extends State<CreateDataTable>{
   }
 
   Widget _formHora(index){
-    List _hora = [];
-    List _repetir = [];
-    List _item = _dosisList[index]['horario'];
+    String _hora = "";
+    String _repetir = "";
+    String _item = _dosisList[index]['horario'];
     for (var i in _horariosList) {
-      for(var j in _item){
-        if(i["serverid"] == j){
-          _hora.add(i['hora']);
-          _repetir.add(i['repetir']);
+        if(i["serverid"] == _item){
+          _hora = i['hora'];
+          _repetir = i['repetir'];
         }
-      }
     }
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        for (var i = 0; i < _hora.length; i++) Row(
-          children: [
-            const SizedBox(width: 10),
-            Text(_hora[i].toString()),
-            const SizedBox(width: 10),
-            Text(_repetir[i].toString()),
-          ],
-        ),
-      ],
-    );
+    return Text(_hora + " " + _repetir);
   }
 
   Widget _formPastillas(index){
@@ -296,6 +292,22 @@ class _CreateDataTable extends State<CreateDataTable>{
     );
   }
 
+  Widget _formSeguridad(index){
+    String _item = _dosisList[index]['seguridad'];
+    String _seguridad = "";
+    for (var i in _seguridadList) {
+      if(i["serverid"] == _item){
+        print(i);
+        _seguridad=i["tipo"];
+      }
+    }
+    if(_seguridad.isEmpty){
+      _seguridad="No configurada";
+    }
+    return Text(_seguridad);
+  }
+
+
   form(index,element) {
     return showDialog(
         context: context,
@@ -327,7 +339,7 @@ class _CreateDataTable extends State<CreateDataTable>{
                       Divider(thickness: 2),
                       Row(
                         children: [
-                          Text("Horarios: ",style: TextStyle(color: Theme.of(context).primaryColor)),
+                          Text("Horario: ",style: TextStyle(color: Theme.of(context).primaryColor)),
                           _formHora(index),
                         ],
                       ),
@@ -342,7 +354,7 @@ class _CreateDataTable extends State<CreateDataTable>{
                       Row(
                         children: [
                           Text("Seguridad: ",style: TextStyle(color: Theme.of(context).primaryColor)),
-                          _formAlertas(index),
+                          _formSeguridad(index),
                         ],
                       ),
                     ],

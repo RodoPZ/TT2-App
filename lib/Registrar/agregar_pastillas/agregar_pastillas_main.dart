@@ -50,7 +50,7 @@ class _AgregarPastillasMainState extends State<AgregarPastillasMain> {
       return InputText(
         inputText: "Nombre:",
         inputHintText: "Nombre de pastillas",
-        inputmax: 20,
+        inputmax: 15,
         textSize: 16,
         myValidator: (value) {
           if (value == null || value.isEmpty) {
@@ -187,7 +187,7 @@ class _AgregarPastillasMainState extends State<AgregarPastillasMain> {
                 contenedoresList.remove(value["contenedor"]);
               }
               setState(() =>_contenedor = contenedoresList[0]);
-              await _http.registerPill(_contenedor.toString());
+              //await _http.registerPill(_contenedor.toString());
               await _registerPastillas();
               const snackBar = SnackBar(
                 content:

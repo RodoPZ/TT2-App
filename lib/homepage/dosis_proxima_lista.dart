@@ -31,9 +31,9 @@ class _DosisProximaListaState extends State<DosisProximaLista> {
 
 
     for (var item in items) {
-      for(var value in item["horario"]){
-        var querySnapshot = await FirebaseFirestore.instance.collection('/Users/2aZ3V4Ik89e9rDSzo4N9/Horarios/').doc(value).get();
-        showHorarios.add([item["nombre"],querySnapshot.data()!["hora"],querySnapshot.data()!["repetir"]]);
+      if(item["horario"]!=""){
+        var querySnapshot = await FirebaseFirestore.instance.collection('/Users/2aZ3V4Ik89e9rDSzo4N9/Horarios/').doc(item["horario"]).get();
+        showHorarios.add([item["nombre"],querySnapshot.data()!["hora"],querySnapshot.data()!["repetir"],item["serverid"],item["date"]]);
       }
     }
     setState(() {
@@ -44,12 +44,12 @@ class _DosisProximaListaState extends State<DosisProximaLista> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 100,
+      height: showHorarios.length*55,
       child:  ListView.builder(
         itemCount: showHorarios.length,
         itemBuilder: (context, index) {
           return ListTile(
-            title: DosisProximas(showHorarios[index][0],showHorarios[index][1],showHorarios[index][2].toString()),
+            title: DosisProximas(showHorarios[index][0],showHorarios[index][1],showHorarios[index][2],showHorarios[index][3],showHorarios[index][4]),
           );
         },
       ),

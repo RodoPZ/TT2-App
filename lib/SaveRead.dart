@@ -64,21 +64,14 @@ class SaveRead{
     var querySnapshot = await collection.get();
     int dosisData = querySnapshot.docs.length;
     if (dosisData < 100){
-      // if(kIsWeb) {
-      //   await _http.registerDosis({
-      //     "nombre": dosis.dosisNombre,
-      //     "pastillas": dosis.pastillaData,
-      //     "horario": dosis.horarioData,
-      //     "alarmas": dosis.alarmaData,
-      //     "seguridad": dosis.seguridadData,
-      //   });
-      // }
       await collection.add({
         "nombre": dosis.dosisNombre,
         "pastillas": dosis.pastillaData,
         "horario": dosis.horarioData,
         "alarmas": dosis.alarmaData,
         "seguridad": dosis.seguridadData,
+        "historial": dosis.historial,
+        "date": dosis.uniqueDate,
       }).then((value) => callback(value.id.hashCode));
 
     }

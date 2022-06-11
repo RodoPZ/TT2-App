@@ -16,7 +16,7 @@ class LoadItems extends StatefulWidget {
   const LoadItems(
       {required this.dataTitle,
         required this.dataSubTitle,
-      this.intSelection = 1,   // 0 = selector de pastillas, 1 = solo clic, 2 = alarmas,
+      this.intSelection = 1,   // 0 = selector de pastillas, 1 = solo clic, 2 = solo un item,
       required this.getter,
       required this.icono,
       required this.getData,
@@ -115,6 +115,12 @@ class _LoadItems extends State<LoadItems> {
                                 _selected[index] = !_selected[index];
                               });
                             }
+                            if(widget.intSelection == 2){
+                              setState(() {
+                                _selected = _selected.map<bool>((v) => false).toList();
+                                _selected[index] = true;
+                              });
+                            }
                           },
                         ),
                       ),
@@ -134,7 +140,7 @@ class _LoadItems extends State<LoadItems> {
                       _data.add([items[i]["serverid"],_count[i]]);
                     }
                   }
-                } else if(widget.intSelection == 1) {              //Selector al hacer clic
+                } else {              //Selector al hacer clic
                   for (int i = 0; i < _selected.length; i++) {
                     if(_selected[i] == true){
                       _data.add([items[i]["serverid"],items[i][widget.dataSubTitle]]);

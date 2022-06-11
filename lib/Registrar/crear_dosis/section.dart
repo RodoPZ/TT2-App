@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:tt2/Components/button_icon.dart';
-import 'package:tt2/SaveRead.dart';
 import 'load_items.dart';
 
 class Section extends StatefulWidget{
@@ -44,8 +43,7 @@ class _Section extends State<Section>{
         }
       }
     }
-
-    return Text(items[index][widget.dataTitle].toString());
+    return Text(elements[index].toString());
   }
   
   Widget printItemsName(){

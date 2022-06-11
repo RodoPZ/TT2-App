@@ -73,6 +73,7 @@ class HomePageMain extends StatelessWidget {
                           fontSize: 25,
                           fontWeight: FontWeight.bold,
                         )),
+                    SizedBox(height: 20),
                     HistorialList(),
                   ],
                 ),

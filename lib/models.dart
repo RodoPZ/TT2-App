@@ -52,16 +52,19 @@ class Contacto{
 class Dosis{
   final String dosisNombre;
   final String pastillaData;
-  final List horarioData;
+  final String horarioData;
   final List alarmaData;
-  final List seguridadData;
-
+  final String seguridadData;
+  final Map historial;
+  final String uniqueDate;
   Dosis({
     required this.dosisNombre,
     required this.pastillaData,
     required this.horarioData,
     required this.alarmaData,
     required this.seguridadData,
+    required this.historial,
+    this.uniqueDate = "",
   });
 }
 

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:tt2/Components/button_main.dart';
+import 'package:tt2/Components/datetimeExtension.dart';
 import 'package:tt2/Components/menu.dart';
 import 'package:tt2/Components/input_text.dart';
 import 'package:tt2/models.dart';
@@ -20,12 +21,12 @@ class _CrearDosisMain extends State<CrearDosisMain> {
 
   final List<bool> _isEmpty = [true, true, true, false];
   late String _dosisNombre;
-
+  late String _date = "";
   List _horarioList = [];
   late String _pastillaData;
-  List _horarioData = [];
+  late String _horarioData;
   List _alarmaData = [true, true];
-  List _seguridadData = [];
+  String _seguridadData = "";
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -94,7 +95,6 @@ class _CrearDosisMain extends State<CrearDosisMain> {
   }
 
   Widget _buildHorario() {
-
     Widget _errorText() {
       if (_isEmpty[2] == true) {
         return const Text(
@@ -116,17 +116,11 @@ class _CrearDosisMain extends State<CrearDosisMain> {
           dataTitle: "hora",
             dataSubTitle: "repetir",
             getter: _readWrite.getHorario,
-            intSelection: 1,
+            intSelection: 2,
             formText: "Seleccionar Horario",
             selected: (items) {
-              List _ids = [];
-
               setState(() => _isEmpty[2] = false);
-              for (var element in items) {
-                _ids.add(element[0]);
-
-              }
-              _horarioData = _ids;
+              _horarioData = items[0][0].toString();
             },
             sectionName: "Horario",
             firstColText: 'Hora',
@@ -221,18 +215,15 @@ class _CrearDosisMain extends State<CrearDosisMain> {
             dataTitle: "nombre",
             dataSubTitle: "tipo",
             getter: _readWrite.getSeguridad,
-            intSelection: 1,
+            intSelection: 2,
             formText: "Seleccionar Seguridad",
             selected: (items) {
-              List _ids = [];
-              for (var element in items) {
-                _ids.add(element[0]);
-              }
-              _alarmaData = _ids;
+              print(items);
+              _seguridadData = items[0][0];
             },
             sectionName: "Seguridad",
             firstColText: 'Seguridad',
-            secondColText: ""),
+            secondColText: "Tipo"),
       ],
     );
   }
@@ -302,17 +293,23 @@ class _CrearDosisMain extends State<CrearDosisMain> {
                               } else {
                                 setState(() => _isEmpty[2] = false);
                               }
-
-                              if (_alarmaData.isEmpty &&
-                                  (valuefirst == false && valuesecond == false)) {
+                              if (_alarmaData.isEmpty && (valuefirst == false && valuesecond == false)) {
                                 setState(() => _isEmpty[3] = true);
                               } else {
                                 setState(() => _isEmpty[3] = false);
-
                                 _alarmaData[0] = valuefirst;
-                                _alarmaData[1] = valuesecond;
                               }
-
+                              for(var horario in _horarioList){
+                                if (horario['serverid'] == _horarioData){
+                                  if(horario['repetir'] == "Una vez"){
+                                    final now = DateTime.now();
+                                    var ScheduledToday = DateTime(now.year,now.month,now.day,int.parse(horario["hora"].substring(0,2)),int.parse(horario["hora"].substring(3,5)));
+                                    var alarm_day = ScheduledToday.isBefore(now)?now.weekday+1:now.weekday;
+                                    var time = DateTime(DateTime.now().next(alarm_day).year,DateTime.now().next(alarm_day).month,DateTime.now().next(alarm_day).day,int.parse(horario["hora"].substring(0,2)),int.parse(horario["hora"].substring(3,5))).difference(DateTime.now());
+                                    _date = DateTime.now().add(time).toString();
+                                  }
+                                }
+                              }
                               if (_isEmpty.every((element) => element == false)) {
                                 _registerDosis();
 
@@ -359,17 +356,17 @@ class _CrearDosisMain extends State<CrearDosisMain> {
         pastillaData: _pastillaData,
         horarioData: _horarioData,
         alarmaData: _alarmaData,
-        seguridadData: _seguridadData);
+        seguridadData: _seguridadData,
+        uniqueDate: _date,
+        historial: {},
+    );
     _readWrite.saveDosis(newDosis, (id) {
-      for (var horario in _horarioData) {
-        _createAlarm(horario, id);
-      }
+      _createAlarm(_horarioData, id);
     });
   }
 
   _createAlarm(data, int _dosisId) async{
     for(var horario in _horarioList){
-
       if (horario['serverid'] == data){
         print(horario['serverid']);
         List time = horario['hora'].split(':');

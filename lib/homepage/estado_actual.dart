@@ -1,9 +1,47 @@
 import 'package:flutter/material.dart';
+import 'package:tt2/SaveRead.dart';
 
-class EstadoActual extends StatelessWidget{
+class EstadoActual extends StatefulWidget{
+  EstadoActual( {Key? key}) : super(key: key);
+
+  @override
+  State<EstadoActual> createState() => _EstadoActualState();
+}
+
+class _EstadoActualState extends State<EstadoActual> {
   List<String> pillName = ["Sin pastilla","Sin pastilla","Sin pastilla","Sin pastilla","Sin pastilla","Sin pastilla","Sin pastilla","Sin pastilla","Sin pastilla","Sin pastilla"];
 
-  EstadoActual( {Key? key}) : super(key: key);
+  bool loaded = false;
+  final _readWrite = SaveRead();
+  List _pastillasList = [];
+  @override
+  void initState() {
+    super.initState();
+    _getItems();
+  }
+
+  _getItems() async {
+    setState(() {
+      loaded = false;
+    });
+    _pastillasList = await _readWrite.getPastilla();
+    for (var i in _pastillasList){
+      pillName[i["contenedor"]] = i["nombre"];
+    }
+    setState(() {
+      loaded = true;
+    });
+  }
+  buildPillColor(number){
+    for (var i in _pastillasList){
+      if(i["contenedor"] == number){
+        if(i["cantidad"] > 10) return 0xFF7bff37;
+        else if(i["cantidad"] >= 6 && i["cantidad"] <= 10) return 0xFFffc842;
+        else if(i["cantidad"] <= 6) return 0xFFff0000;
+      }
+    }
+    return 0xFF777777;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -12,6 +50,7 @@ class EstadoActual extends StatelessWidget{
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
+            width: MediaQuery.of(context).size.width/2,
             child:
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -22,12 +61,23 @@ class EstadoActual extends StatelessWidget{
                     color: Color(0xFF0844a4),
                   ),
                 ),
-                SizedBox(height: 76,),
-                Text("1 | "+ pillName[0],style: const TextStyle(fontSize: 16)),
-                Text("2 | "+ pillName[1],style: const TextStyle(fontSize: 16)),
-                Text("3 | "+ pillName[2],style: const TextStyle(fontSize: 16)),
-                Text("4 | "+ pillName[3],style: const TextStyle(fontSize: 16)),
-                Text("5 | "+ pillName[4],style: const TextStyle(fontSize: 16)),
+                for(var i = 0; i<= 9; i++)
+                  Row(
+                    children: [
+                      Text(
+                        "| "+i.toString() + " |",
+                        style: TextStyle(fontSize: 16,
+                          backgroundColor:  Color(buildPillColor(i)),
+                        ),
+                      ),
+                      Text(
+                        " " + pillName[i],
+                        style: const TextStyle(fontSize: 16,
+                        ),
+                      ),
+                    ],
+                  )
+
               ],
             ),
           ),
@@ -37,12 +87,6 @@ class EstadoActual extends StatelessWidget{
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text("Suministro",
-                  style: TextStyle(
-                    fontSize: 25,
-                    color: Color(0xFF0844a4),
-                  ),
-                ),
                 Container(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -57,7 +101,7 @@ class EstadoActual extends StatelessWidget{
                               ),
                             ),
                           ),
-                          Text(" Mayor a 66%",style: const TextStyle(fontSize: 16)),
+                          Text(" Mayor a 10",style: const TextStyle(fontSize: 16)),
                         ],
                       ),
                       Row(
@@ -70,7 +114,7 @@ class EstadoActual extends StatelessWidget{
                               ),
                             ),
                           ),
-                          Text(" Entre 33% y 66%",style: const TextStyle(fontSize: 16)),
+                          Text(" Entre 6 y 10",style: const TextStyle(fontSize: 16)),
                         ],
                       ),
                       Row(
@@ -83,7 +127,7 @@ class EstadoActual extends StatelessWidget{
                               ),
                             ),
                           ),
-                          Text(" Menor a 33%",style: const TextStyle(fontSize: 16)),
+                          Text(" Menor a 6",style: const TextStyle(fontSize: 16)),
                         ],
                       ),
                       Row(
@@ -96,17 +140,12 @@ class EstadoActual extends StatelessWidget{
                               ),
                             ),
                           ),
-                          Text(" Compartimiento vacío",style: const TextStyle(fontSize: 16)),
+                          Text("vacío",style: const TextStyle(fontSize: 16)),
                         ],
                       ),
                     ],
                   ),
                 ),
-                Text("6 | "+ pillName[0],style: const TextStyle(fontSize: 16)),
-                Text("7 | "+ pillName[0],style: const TextStyle(fontSize: 16)),
-                Text("8 | "+ pillName[0],style: const TextStyle(fontSize: 16)),
-                Text("9 | "+ pillName[0],style: const TextStyle(fontSize: 16)),
-                Text("10 | "+ pillName[0],style: const TextStyle(fontSize: 16)),
               ],
             ),
           ),
