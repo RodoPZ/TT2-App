@@ -158,7 +158,8 @@ class _NFCState extends State<NFC> {
               }
             },
             getter: _readWrite.getNfc,
-            deleter: _readWrite.deleteNfc,
+            deleter: _readWrite.deleteAll,
+            deleterName: "Seguridad",
             form_items: formItems,
             register: _registerNfc,
             icono: Icons.nfc,

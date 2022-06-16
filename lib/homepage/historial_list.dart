@@ -24,7 +24,7 @@ class _HistorialListState extends State<HistorialList> {
     dosisList = await _readWrite.getDosis();
     for(var dosis in dosisList){
       dosis["historial"].forEach((key,value){
-        dates.add({"date": key, "dispensado": value,"dosis": dosis["serverid"], "nombre": dosis["nombre"]});
+        dates.add({"date": key,"hour":value, "dispensado": value=="false"?false:true,"dosis": dosis["serverid"], "nombre": dosis["nombre"]});
       });
     }
 
@@ -43,7 +43,7 @@ class _HistorialListState extends State<HistorialList> {
    return Container(
      child: Column(
        children: [
-         for (var item in dates) Historial(item["nombre"], item["date"].substring(0,10), item["date"].substring(11,16), item["dispensado"]=="True"),
+         for (var item in dates) Historial(item["nombre"], item["date"].substring(0,10), item["hour"].toString(), item["dispensado"]),
        ],
      ),
    );

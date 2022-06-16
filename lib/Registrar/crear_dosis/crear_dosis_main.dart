@@ -19,7 +19,7 @@ class _CrearDosisMain extends State<CrearDosisMain> {
   bool valuesecond = true;
   final _readWrite = SaveRead();
 
-  final List<bool> _isEmpty = [true, true, true, false];
+  final List<bool> _isEmpty = [true, true, true];
   late String _dosisNombre;
   late String _date = "";
   List _horarioList = [];
@@ -131,21 +131,6 @@ class _CrearDosisMain extends State<CrearDosisMain> {
   }
 
   Widget _buildAlarmas() {
-    Widget _errorText() {
-      if (_isEmpty[3] == true) {
-        return const Text(
-          "No puede estar vacío",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 17,
-            color: Colors.red,
-          ),
-        );
-      } else {
-        return const SizedBox();
-      }
-    }
-
     return Column(
       children: [
         Section(
@@ -156,7 +141,6 @@ class _CrearDosisMain extends State<CrearDosisMain> {
             formText: "Seleccionar Contacto",
             selected: (items) {
               List _ids = [];
-              setState(() => _isEmpty[3] = false);
               for (var element in items) {
                 _ids.add(element[0]);
               }
@@ -167,43 +151,6 @@ class _CrearDosisMain extends State<CrearDosisMain> {
             sectionName: "Alarmas",
             firstColText: 'Contacto',
             secondColText: "Numero"),
-        CheckboxListTile(
-          controlAffinity: ListTileControlAffinity.trailing,
-          activeColor: Theme.of(context).primaryColor,
-          secondary:
-              Icon(Icons.upcoming, color: Theme.of(context).primaryColor),
-          title: const Text(
-            '¿Activar alarma de dispensador?',
-            style: TextStyle(
-              fontSize: 15,
-            ),
-          ),
-          value: valuefirst,
-          onChanged: (bool? value) {
-            setState(() {
-              valuefirst = value!;
-            });
-          },
-        ),
-        CheckboxListTile(
-          controlAffinity: ListTileControlAffinity.trailing,
-          activeColor: Theme.of(context).primaryColor,
-          secondary:
-              Icon(Icons.upcoming, color: Theme.of(context).primaryColor),
-          title: const Text(
-            '¿Activar notificaciones del celular?',
-            style: TextStyle(
-              fontSize: 14,
-            ),
-          ),
-          value: valuesecond,
-          onChanged: (bool? value) {
-            setState(() {
-              valuesecond = value!;
-            });
-          },
-        ),
-        _errorText(),
       ],
     );
   }
@@ -292,12 +239,6 @@ class _CrearDosisMain extends State<CrearDosisMain> {
                                 setState(() => _isEmpty[2] = true);
                               } else {
                                 setState(() => _isEmpty[2] = false);
-                              }
-                              if (_alarmaData.isEmpty && (valuefirst == false && valuesecond == false)) {
-                                setState(() => _isEmpty[3] = true);
-                              } else {
-                                setState(() => _isEmpty[3] = false);
-                                _alarmaData[0] = valuefirst;
                               }
                               for(var horario in _horarioList){
                                 if (horario['serverid'] == _horarioData){

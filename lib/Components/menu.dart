@@ -125,28 +125,6 @@ class _Menu extends State<Menu>{
                 },
               ),
             ]),
-            ListTile(
-              title: Row(
-                children: [
-                  Icon(Icons.settings, color: Theme
-                      .of(context)
-                      .primaryColor),
-                  const Spacer(),
-                  const Text("Configuración",
-                      style: TextStyle(
-                          fontSize: 20,
-                          color: Color(0xFF35424a)
-                      )),
-                  const Spacer(flex: 10),
-                ],
-              ),
-              onTap: () {
-                // Update the state of the app
-                // ...
-                // Then close the drawer
-                Navigator.pop(context);
-              },
-            ),
           ],
         ),
       ),

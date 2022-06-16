@@ -150,10 +150,11 @@ class _ReconocimientoFacialState extends State<ReconocimientoFacial> {
                   }
                 },
                 getter: _readWrite.getFace,
-                deleter: _readWrite.deleteFace,
+                deleter: _readWrite.deleteAll,
+                deleterName: "Seguridad",
                 form_items: formItems,
                 register: _registerFace,
-                icono: Icons.nfc,
+                icono: Icons.face,
                 title: "Reconocimiento Facial",
                 formTitle: "Registrar Rostro",
                 buttonText: "Registrar Rostro",

@@ -117,7 +117,8 @@ class _AgregarContactosMain extends State<AgregarContactosMain>
                           Navigator.pop(context);
                         },
                         getter: _readWrite.getContacto,
-                        deleter: _readWrite.deleteContacto,
+                        deleter: _readWrite.deleteAll,
+                        deleterName: "Contactos",
                         form_items: formItems,
                         register: _registerContactos,
                         icono: Icons.person,

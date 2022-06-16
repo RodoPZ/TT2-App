@@ -1,17 +1,24 @@
+import 'dart:async';
+import 'dart:convert';
+import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:flutter/material.dart';
 import 'package:date_count_down/date_count_down.dart';
 import 'package:tt2/Components/datetimeExtension.dart';
 import 'package:tt2/SaveRead.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:tt2/models.dart';
+import 'package:tt2/Components/button_main.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:tt2/Components/httpComunications.dart';
+import 'dart:core';
 class DosisProximas extends StatefulWidget{
   late String doseName;
   late String doseTime;
   late var doseDays;
   late var id;
   late var date;
+  late Map historial;
 
-  DosisProximas(this.doseName, this.doseTime, this.doseDays,this.id,this.date, {Key? key}) : super(key: key);
+  DosisProximas(this.doseName, this.doseTime, this.doseDays,this.id,this.date, this.historial, {Key? key}) : super(key: key);
 
   @override
   State<DosisProximas> createState() => _DosisProximasState();
@@ -22,17 +29,49 @@ class _DosisProximasState extends State<DosisProximas> {
   bool loaded = false;
   final _readWrite = SaveRead();
   late List dosisList = [];
+  late Map dosisMap= {};
   late DateTime nextDate;
+  late List contactosList = [];
+  late Map isDispensadoList;
+  late bool isDispensado = false;
+  final _http = HTTP();
   late Duration lastDate = Duration(seconds: 0);
   late List nextDateList;
   late List alarm_day = [];
+  late int endTime;
+  late List httpDosis;
+  late bool unavez = false;
+  late var _contactos;
+
+  Widget onAndroid() {
+    return Column(
+      children: [
+        Text(
+          "Dirígase al dispensador para obtener su dosis",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: Theme.of(context).primaryColor,
+            fontSize: 15,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
+    );
+  }
+
+
   @override
   void initState() {
     super.initState();
     _getItems();
   }
-  _getItems() async {
 
+  _getItems({bool esperar = false}) async {
+    if(esperar==true){
+      setState(() => {
+        isDispensado = true
+      });
+    }
     if(widget.doseDays.toString() == "Diariamente") {
       alarm_day = [1, 2, 3, 4, 5, 6, 7];
     }
@@ -83,51 +122,91 @@ class _DosisProximasState extends State<DosisProximas> {
     }
     nextDate = DateTime.now().add(nextDateList[0]);
 
-    setState(() {
-      loaded = true;
-    });
+    contactosList = await _readWrite.getContacto();
     dosisList = await _readWrite.getDosis();
+
+    for(var dosis in dosisList){
+      if(dosis["serverid"] == widget.id){
+        setState(() => dosisMap = dosis);
+      }
+    }
+    if(widget.historial.containsKey(DateTime.now().toString().substring(0,10))){
+      setState(() => isDispensado = true);
+    }
+
+    setState(() {
+      endTime = DateTime.now().add(nextDateList[0]).millisecondsSinceEpoch + 1000*2;
+       loaded = true;
+    });
   }
 
-  Widget CountDown(){
-    print(alarm_day);
+  Widget onWeb() {
+    _contactos = dosisMap["alarmas"].sublist(2);
+    if(_contactos.isNotEmpty){
+      for(var contacto in contactosList){
+        for(var numero in dosisMap["alarmas"].sublist(2)){
+          if(numero == contacto["serverid"]){
+            _contactos = " " + contacto["numero"].toString();
+          }
+        }
+      }
+    }else{
+      _contactos = "0";
+    }
+    httpDosis=[widget.doseName,dosisMap["pastillas"], widget.doseTime,widget.doseDays,widget.id,dosisMap["seguridad"],_contactos];
+    String encoded = jsonEncode(httpDosis);
+    return Container(
+      height: 30,
+      width: 150,
+      child: ButtonMain(buttonText: "Dispensar", callback: () async {
+        _http.DispensarDosis(encoded);
+
+      }),
+    );
+
+  }
+
+  Widget CountDown() {
     if(widget.doseDays.toString() == "Una vez"){
-      if(DateTime.now().isAfter(DateTime.parse(widget.date)) && DateTime.now().difference(nextDate).inMinutes<=-(24*60-1)){
-        print("caso 1: es de una vez y ha pasado menos de  1 hora");
+      if(unavez == true){
         return SizedBox();
-      }else if(DateTime.now().isAfter(DateTime.parse(widget.date)) && DateTime.now().difference(nextDate).inMinutes>=-(24*60-1)){
-        print("caso 2: es de una vez y pasó 1 hora");
+      }
+      if(isDispensado == false && DateTime.now().isAfter(DateTime.parse(widget.date)) && DateTime.now().difference(nextDate).inMinutes<=-(24*60-1) ){
+        print("caso 1: es de una vez y ha pasado menos de 1 hora y no se ha dispensado");
+        if(kIsWeb) return onWeb(); else return onWeb();
+      }else if( isDispensado == false && DateTime.now().isAfter(DateTime.parse(widget.date)) && DateTime.now().difference(nextDate).inMinutes>=-(24*60-1)){
+        print("caso 2: es de una vez y pasó 1 hora y no se ha dispensado");
+        FirebaseFirestore.instance.collection('/Users/2aZ3V4Ik89e9rDSzo4N9/Dosis/').doc(widget.id).set({"historial" : {DateTime.now().toString().substring(0,10) : "false"}},SetOptions(merge: true));
         FirebaseFirestore.instance.collection('/Users/2aZ3V4Ik89e9rDSzo4N9/Dosis/').doc(widget.id).update({"horario":""});
+        setState(() => unavez = true);
+        _getItems(esperar: true);
         return SizedBox();
       }
       else{
         print("caso 4: falta tiempo");
-        return CountDownText(
-          due: DateTime.parse(DateTime.now().add(nextDateList[0]).toString()),
-          finishedText: "Done",
-          showLabel: true,
-          longDateName: true,
-          daysTextLong: " Días ",
-          hoursTextLong: " Horas ",
-          minutesTextLong: " Minutos ",
-          secondsTextLong: " Segundos ",
+        return CountdownTimer(
+          endTime: endTime,
+          onEnd: (){
+            _getItems();
+          }
         );
       }
     }
-    else if(lastDate.inMinutes>=-60 && lastDate.inMinutes<0){ //En caso de que pase 1 hora despues de la dosis
-      print("caso 3: no es de 1 vez y no han pasado 2 horas ");
+    else if(isDispensado == false && lastDate.inSeconds>=-5 && lastDate.inSeconds<0){ //En caso de que pase 1 hora despues de la dosis
+      print("caso 5: no es de 1 vez y no han pasado 2 horas y no se ha dispensado");
+      if(kIsWeb) return onWeb(); else return onWeb();
+    }
+    else if(isDispensado == false && lastDate.inSeconds<=-5 && lastDate.inSeconds<0){ //En caso de que pase 1 hora despues de la dosis
+      print("caso 6: no es de 1 vez y ya han pasado 2 horas y no se ha dispensado");
+      FirebaseFirestore.instance.collection('/Users/2aZ3V4Ik89e9rDSzo4N9/Dosis/').doc(widget.id).set({"historial" : {DateTime.now().toString().substring(0,10) : "false"}},SetOptions(merge: true));
+      _getItems(esperar: true);
       return SizedBox();
-    }else{
-      print("caso 4: falta tiempo");
-      return CountDownText(
-        due: DateTime.parse(DateTime.now().add(nextDateList[0]).toString()),
-        finishedText: "Done",
-        showLabel: true,
-        longDateName: true,
-        daysTextLong: " Días ",
-        hoursTextLong: " Horas ",
-        minutesTextLong: " Minutos ",
-        secondsTextLong: " Segundos ",
+    }
+    else{
+      print("caso 7: falta tiempo");
+      return CountdownTimer(
+        endTime: endTime,
+        onEnd: ()=> _getItems(),
       );
     }
   }
@@ -163,7 +242,7 @@ class _DosisProximasState extends State<DosisProximas> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                CountDown(),
+                loaded == true? CountDown(): SizedBox()
               ],
             ),
                 SizedBox(height: 5),

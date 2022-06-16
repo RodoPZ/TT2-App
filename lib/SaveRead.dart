@@ -3,8 +3,7 @@ import 'package:tt2/models.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'models.dart';
 import 'package:tt2/Components/httpComunications.dart';
-import 'dart:io' show Platform;
-import 'package:flutter/foundation.dart' show kIsWeb;
+
 
 class SaveRead{
   final _http = HTTP();
@@ -24,8 +23,8 @@ class SaveRead{
   Future savePastilla(Pastilla pastilla) async{
     var collection = FirebaseFirestore.instance.collection('/Users/2aZ3V4Ik89e9rDSzo4N9/Pastillas/');
     var querySnapshot = await collection.get();
-    int pastillasData = querySnapshot.docs.length;
-      if (pastillasData < 10){
+    //await _http.registerPill(pastilla.contenedor.toString());
+      if (querySnapshot.docs.length < 10){
         await collection.add({
             "contenedor":pastilla.contenedor,
             "nombre":pastilla.pastillaNombre,
@@ -130,44 +129,58 @@ class SaveRead{
     }
   }
 
-
-  Future deleteContacto(String id) async{
-    var collection = FirebaseFirestore.instance.collection('/Users/2aZ3V4Ik89e9rDSzo4N9/Contactos/');
-    await collection.doc(id).delete().then((value) => print("Deleted"));
-  }
-
-  Future deletePastilla(String id) async{
-    var collection = FirebaseFirestore.instance.collection('/Users/2aZ3V4Ik89e9rDSzo4N9/Pastillas/');
-    await collection.doc(id).delete().then((value) => print("Deleted"));
-  }
-
-  Future deleteHorario(String id) async{
-    var collection = FirebaseFirestore.instance.collection('/Users/2aZ3V4Ik89e9rDSzo4N9/Horarios/');
-    await collection.doc(id).delete().then((value) => print("Deleted"));
-  }
-
-  Future deleteDosis(String id) async{
-    var collection = FirebaseFirestore.instance.collection('/Users/2aZ3V4Ik89e9rDSzo4N9/Dosis/');
-    await collection.doc(id).delete().then((value) => print("Deleted"));
-  }
-
-  Future deleteNfc(String id) async{
-    var collection = FirebaseFirestore.instance.collection('/Users/2aZ3V4Ik89e9rDSzo4N9/Seguridad/');
-    await collection.doc(id).delete().then((value) => print("Deleted"));
-  }
-
-
-  Future deletePin(String id) async{
-    var collection = FirebaseFirestore.instance.collection('/Users/2aZ3V4Ik89e9rDSzo4N9/Seguridad/');
-    await collection.doc(id).delete().then((value) => print("Deleted"));
-  }
-
-  Future deleteFace(String id) async{
-    var collection = FirebaseFirestore.instance.collection('/Users/2aZ3V4Ik89e9rDSzo4N9/Seguridad/');
+  Future deleteAll(String id, String place) async{
+    var collection = FirebaseFirestore.instance.collection('/Users/2aZ3V4Ik89e9rDSzo4N9/'+place+'/');
     var querySnapshot = await collection.doc(id).get();
-    await _http.deleteFace(querySnapshot.data()!["nombre"]);
+    if(querySnapshot.data()!["tipo"] == "RECONOCIMIENTO FACIAL") {
+      print(querySnapshot.data());
+      await _http.deleteFace(querySnapshot.data()!["nombre"]);
+    }
+    if(place == "Pastillas"){
+      await _http.registerPill(querySnapshot.data()!["contenedor"].toString());
+    }
     await collection.doc(id).delete().then((value) => print("Deleted"));
   }
+
+
+  // Future deleteContacto(String id) async{
+  //   var collection = FirebaseFirestore.instance.collection('/Users/2aZ3V4Ik89e9rDSzo4N9/Contactos/');
+  //   await collection.doc(id).delete().then((value) => print("Deleted"));
+  // }
+
+  // Future deletePastilla(String id) async{
+  //   _http.registerPill(contenedor);
+  //   var collection = FirebaseFirestore.instance.collection('/Users/2aZ3V4Ik89e9rDSzo4N9/Pastillas/');
+  //   await collection.doc(id).delete().then((value) => print("Deleted"));
+  // }
+
+  // Future deleteHorario(String id) async{
+  //   var collection = FirebaseFirestore.instance.collection('/Users/2aZ3V4Ik89e9rDSzo4N9/Horarios/');
+  //   await collection.doc(id).delete().then((value) => print("Deleted"));
+  // }
+
+  // Future deleteDosis(String id) async{
+  //   var collection = FirebaseFirestore.instance.collection('/Users/2aZ3V4Ik89e9rDSzo4N9/Dosis/');
+  //   await collection.doc(id).delete().then((value) => print("Deleted"));
+  // }
+
+  // Future deleteNfc(String id) async{
+  //   var collection = FirebaseFirestore.instance.collection('/Users/2aZ3V4Ik89e9rDSzo4N9/Seguridad/');
+  //   await collection.doc(id).delete().then((value) => print("Deleted"));
+  // }
+
+
+  // Future deletePin(String id) async{
+  //   var collection = FirebaseFirestore.instance.collection('/Users/2aZ3V4Ik89e9rDSzo4N9/Seguridad/');
+  //   await collection.doc(id).delete().then((value) => print("Deleted"));
+  // }
+
+  // Future deleteFace(String id) async{
+  //   var collection = FirebaseFirestore.instance.collection('/Users/2aZ3V4Ik89e9rDSzo4N9/Seguridad/');
+  //   var querySnapshot = await collection.doc(id).get();
+  //   await _http.deleteFace(querySnapshot.data()!["nombre"]);
+  //   await collection.doc(id).delete().then((value) => print("Deleted"));
+  // }
 
   // Future getUserData() async{
   //   final preferences = await SharedPreferences.getInstance();

@@ -174,7 +174,8 @@ class _AgregarPastillasMainState extends State<AgregarPastillasMain> {
             buttonText: "Abrir compartimento y registrar",
             dataSubTitle: const ["caducidad", "cantidad"],
             dataTitle: "nombre",
-            deleter: _readWrite.deletePastilla,
+            deleter: _readWrite.deleteAll,
+            deleterName: "Pastillas",
             getter: _readWrite.getPastilla,
             formTitle: "Registrar pastillas",
             title: "Pastillas",
@@ -187,7 +188,6 @@ class _AgregarPastillasMainState extends State<AgregarPastillasMain> {
                 contenedoresList.remove(value["contenedor"]);
               }
               setState(() =>_contenedor = contenedoresList[0]);
-              //await _http.registerPill(_contenedor.toString());
               await _registerPastillas();
               const snackBar = SnackBar(
                 content:

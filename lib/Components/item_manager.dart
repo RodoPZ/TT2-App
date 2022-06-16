@@ -11,7 +11,8 @@ class ItemManager extends StatefulWidget {
   final Function() register;
   final IconData icono;
   final Future<dynamic> Function() getter;
-  final Future<dynamic> Function(String) deleter;
+  final Future<dynamic> Function(String,String) deleter;
+  final String deleterName;
   final Function() callback;
   final String buttonText;
 
@@ -22,6 +23,7 @@ class ItemManager extends StatefulWidget {
     required this.callback,
     required this.getter,
     required this.deleter,
+    required this.deleterName,
     required this.form_items,
     required this.register,
     required this.icono,
@@ -164,7 +166,7 @@ class _ItemManagerState extends State<ItemManager> {
                                 icon: Icons.delete,
                                 callBack: () async {
                                   setState(() => loaded = false);
-                                  await widget.deleter(items[index]["serverid"]);
+                                  await widget.deleter(items[index]["serverid"],widget.deleterName);
                                   _getItems();
                                 }
                                 ),

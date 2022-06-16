@@ -185,11 +185,11 @@ class _CreateDataTable extends State<CreateDataTable>{
                 callBack: () async {
                   RequireAdmin(context,  () async {
                     Navigator.pop(context);
-                    await _readWrite.deleteDosis(_dosisList[index]["serverid"]);
+                    await _readWrite.deleteAll(_dosisList[index]["serverid"],"Dosis");
                     _getItems();
                   },
                       () async {
-                        await _readWrite.deleteDosis(_dosisList[index]["serverid"]);
+                        await _readWrite.deleteAll(_dosisList[index]["serverid"],"Dosis");
                         _getItems();
                       });
 

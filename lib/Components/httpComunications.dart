@@ -25,4 +25,8 @@ class HTTP{
     final response = await http.post(Uri.parse('http://localhost:8080/RegisterDosis'), body: Dosis.toString());
     return response.body;
   }
+  Future DispensarDosis(String Dosis) async{
+    final response = await http.post(Uri.parse('http://localhost:8080/OpenDispensar'), body: Dosis);
+    return response.body;
+  }
 }
