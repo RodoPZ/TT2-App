@@ -52,27 +52,6 @@ class _NFCState extends State<NFC> {
       );
     }
 
-    Widget _buildIsAdmin() {
-      return StatefulBuilder(builder: (context, setState) {
-        return CheckboxListTile(
-          controlAffinity: ListTileControlAffinity.trailing,
-          activeColor: Theme.of(context).primaryColor,
-          secondary:
-          Icon(Icons.admin_panel_settings, color: Theme.of(context).primaryColor),
-          title: const Text(
-            'Es Administrador',
-            style: TextStyle(
-              fontSize: 15,
-            ),
-          ),
-          value: valuefirst,
-          onChanged: (bool? newValue) {
-            setState(() => valuefirst = newValue!);
-          },
-        );
-      }
-      );
-    }
     
     Widget _buildUid(){
       Widget _errorText() {
@@ -93,7 +72,9 @@ class _NFCState extends State<NFC> {
       return Column(
         children: [
           const Text("Presione el botón de \"registrar tarjetas\" e inmediatamente pase la tarjeta o pulsera que quiere registrar por encima del módulo NFC ubicado frente la carcasa",
+            textAlign: TextAlign.center,
             style: TextStyle(
+
               fontSize: 20,
               fontWeight: FontWeight.bold,
             ),
@@ -107,7 +88,6 @@ class _NFCState extends State<NFC> {
       return Column(
         children: [
           _buildNfcNombre(),
-          _buildIsAdmin(),
           SizedBox(height: 20),
           _buildUid(),
         ],
@@ -115,7 +95,7 @@ class _NFCState extends State<NFC> {
     }
     _registerNfc() async {
       final newNfc =
-        Nfc(uid: _response, isAdmin: valuefirst, nfcNombre: _nfcNombre);
+        Nfc(uid: _response, nfcNombre: _nfcNombre);
       await _readWrite.saveNfc(newNfc);
     }
 
@@ -163,8 +143,8 @@ class _NFCState extends State<NFC> {
             form_items: formItems,
             register: _registerNfc,
             icono: Icons.nfc,
-            title: "NFC",
-            formTitle: "Registrar NFC",
+            title: "RFID",
+            formTitle: "Registrar RFID",
             buttonText: "Registrar tarjetas",
         ),
       ],

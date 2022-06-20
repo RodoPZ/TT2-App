@@ -23,7 +23,7 @@ class SaveRead{
   Future savePastilla(Pastilla pastilla) async{
     var collection = FirebaseFirestore.instance.collection('/Users/2aZ3V4Ik89e9rDSzo4N9/Pastillas/');
     var querySnapshot = await collection.get();
-    //await _http.registerPill(pastilla.contenedor.toString());
+    await _http.registerPill(pastilla.contenedor.toString());
       if (querySnapshot.docs.length < 10){
         await collection.add({
             "contenedor":pastilla.contenedor,
@@ -85,7 +85,6 @@ class SaveRead{
         "tipo": nfc.tipo,
         "nombre": nfc.nfcNombre,
         "uid": nfc.uid,
-        "admin": nfc.isAdmin,
       });
     }
   }
@@ -98,7 +97,6 @@ class SaveRead{
       await collection.add({
         "tipo": faceRecognition.tipo,
         "nombre": faceRecognition.faceRName,
-        "admin": faceRecognition.isAdmin,
       });
     }
   }

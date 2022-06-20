@@ -83,7 +83,7 @@ class _AgregarContactosMain extends State<AgregarContactosMain>
                   left: 20,
                 ),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,

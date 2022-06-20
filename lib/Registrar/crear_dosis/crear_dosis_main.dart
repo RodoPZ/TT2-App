@@ -242,13 +242,11 @@ class _CrearDosisMain extends State<CrearDosisMain> {
                               }
                               for(var horario in _horarioList){
                                 if (horario['serverid'] == _horarioData){
-                                  if(horario['repetir'] == "Una vez"){
                                     final now = DateTime.now();
                                     var ScheduledToday = DateTime(now.year,now.month,now.day,int.parse(horario["hora"].substring(0,2)),int.parse(horario["hora"].substring(3,5)));
                                     var alarm_day = ScheduledToday.isBefore(now)?now.weekday+1:now.weekday;
                                     var time = DateTime(DateTime.now().next(alarm_day).year,DateTime.now().next(alarm_day).month,DateTime.now().next(alarm_day).day,int.parse(horario["hora"].substring(0,2)),int.parse(horario["hora"].substring(3,5))).difference(DateTime.now());
                                     _date = DateTime.now().add(time).toString();
-                                  }
                                 }
                               }
                               if (_isEmpty.every((element) => element == false)) {

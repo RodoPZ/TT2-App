@@ -20,14 +20,17 @@ class OnClickNotificaciones extends StatelessWidget {
               style: TextStyle(
                 fontSize: 30,
                 fontWeight: FontWeight.bold,
-                color: Theme.of(context).primaryColor,
+                color: Colors.black,
               ),
             ),
+              Text("Diríjase al compartimento para recibir su dosis",
+                style: TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).primaryColor,
+                ),
+              ),
               SizedBox(height: 30),
-              ButtonMain(buttonText: "Iniciar dispensación", callback: (){
-              _saveRead.pillSubstraction(payload!);
-              Navigator.pop(context);
-              })
           ],
         ),
       ),

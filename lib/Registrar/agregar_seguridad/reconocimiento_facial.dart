@@ -49,33 +49,10 @@ class _ReconocimientoFacialState extends State<ReconocimientoFacial> {
       );
     }
 
-    Widget _buildIsAdmin() {
-      return StatefulBuilder(builder: (context, setState) {
-        return CheckboxListTile(
-          controlAffinity: ListTileControlAffinity.trailing,
-          activeColor: Theme.of(context).primaryColor,
-          secondary:
-          Icon(Icons.admin_panel_settings, color: Theme.of(context).primaryColor),
-          title: const Text(
-            'Es Administrador',
-            style: TextStyle(
-              fontSize: 15,
-            ),
-          ),
-          value: valuefirst,
-          onChanged: (bool? newValue) {
-            setState(() => valuefirst = newValue!);
-          },
-        );
-      }
-      );
-    }
-
     Widget formItems() {
       return Column(
         children: [
           _buildNombre(),
-          _buildIsAdmin(),
         ],
       );
     }
@@ -83,7 +60,6 @@ class _ReconocimientoFacialState extends State<ReconocimientoFacial> {
     _registerFace() async {
       final newFace = FaceRecognition(
           faceRName: _faceRName,
-          isAdmin: valuefirst,
       );
       await _readWrite.saveFace(newFace);
     }

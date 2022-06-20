@@ -35,6 +35,12 @@ class Instrucciones extends StatelessWidget{
             ],
           ),
         ),
+        Text("Los contactos registrados también serán usados para mandar avisos en caso de que queden pocas pastillas en los compartimentos o estén a punto de caducarse.",
+          textAlign: TextAlign.start,
+          style: TextStyle(
+            fontSize: 16,
+          ),
+        ),
       ],
     );
   }

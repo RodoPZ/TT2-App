@@ -85,23 +85,19 @@ class Nfc{
   final String tipo;
   final String nfcNombre;
   final String uid;
-  final bool isAdmin;
   Nfc({
     this.tipo = "NFC",
     required this.nfcNombre,
     required this.uid,
-    required this.isAdmin,
   });
 }
 
 class FaceRecognition{
   final String tipo;
   final String faceRName;
-  final bool isAdmin;
   FaceRecognition({
     this.tipo = "RECONOCIMIENTO FACIAL",
     required this.faceRName,
-    required this.isAdmin,
   });
 }
 
