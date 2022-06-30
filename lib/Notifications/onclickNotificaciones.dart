@@ -7,9 +7,7 @@ class OnClickNotificaciones extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
-    
-    final _saveRead = SaveRead();
-    
+
     return Scaffold(
       body: Center(
         child: Column(

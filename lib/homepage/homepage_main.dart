@@ -19,7 +19,7 @@ class HomePageMain extends StatelessWidget {
       drawer: Menu("Rodo Pinedo","Inicio"),
       body: Stack(
         children: <Widget>[
-          Center(
+          Container(
             child: ListView(
               scrollDirection: Axis.vertical,
               shrinkWrap: true,
@@ -27,9 +27,6 @@ class HomePageMain extends StatelessWidget {
                 Column(
                   children: [
                     Container(
-                      margin: const EdgeInsets.only(
-                        top: 20,
-                      ),
                       child: const CircleAvatar(
                         backgroundImage: NetworkImage(
                             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTi1pUfwsswzFZlvvooBCWR5tT1tdGLfY2y7oex3YJ7ctK42DVSxsd6s27d7_0JRSEjlr8&usqp=CAU"),
@@ -41,7 +38,6 @@ class HomePageMain extends StatelessWidget {
                           fontSize: 20,
                         )
                     ),
-                    SizedBox(height: 30),
                     const Divider(thickness: 2),
                     Text("Estado actual",
                         style: TextStyle(

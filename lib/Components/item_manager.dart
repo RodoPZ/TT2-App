@@ -35,14 +35,14 @@ class ItemManager extends StatefulWidget {
   State<ItemManager> createState() => _ItemManagerState();
 }
 
+
+
 class _ItemManagerState extends State<ItemManager> {
   bool isFull = false;
   late List items = [];
   late List<bool> _selected;
   bool loaded = false;
-
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
   @override
   void initState() {
     super.initState();
@@ -69,6 +69,7 @@ class _ItemManagerState extends State<ItemManager> {
       });
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -166,6 +167,7 @@ class _ItemManagerState extends State<ItemManager> {
                                 icon: Icons.delete,
                                 callBack: () async {
                                   setState(() => loaded = false);
+
                                   await widget.deleter(items[index]["serverid"],widget.deleterName);
                                   _getItems();
                                 }
@@ -202,7 +204,9 @@ class _ItemManagerState extends State<ItemManager> {
     return subtitle;
   }
 
+
   form() {
+
     return showDialog(
         context: context,
         builder: (BuildContext context) {

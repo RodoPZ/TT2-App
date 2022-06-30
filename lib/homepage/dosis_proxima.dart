@@ -50,7 +50,7 @@ class _DosisProximasState extends State<DosisProximas> {
           textAlign: TextAlign.center,
           style: TextStyle(
             color: Theme.of(context).primaryColor,
-            fontSize: 15,
+            fontSize: 13,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -130,9 +130,17 @@ class _DosisProximasState extends State<DosisProximas> {
     if(widget.historial.containsKey(DateTime.now().toString().substring(0,10))){
       setState(() => isDispensado = true);
     }
-
     setState(() {
-      print(DateTime.now().add(nextDateList[0]));
+      if (isDispensado == true && widget.doseDays.toString() == "Una vez"){
+        FirebaseFirestore.instance.collection('/Users/2aZ3V4Ik89e9rDSzo4N9/Dosis/').doc(widget.id).update({"horario":""});
+      }
+      print(DateTime.now().difference(DateTime.parse(widget.date)).inMinutes);
+      if(isDispensado == true && DateTime.parse(widget.date).isBefore(DateTime.now()) && DateTime.now().difference(DateTime.parse(widget.date)).inMinutes<=(120)){
+        widget.date = DateTime.now().add(nextDateList[0]).toString();
+      }
+      if(DateTime.parse(widget.date).isBefore(DateTime.now()) && DateTime.now().difference(DateTime.parse(widget.date)).inMinutes>=(120)){
+        widget.date = DateTime.now().add(nextDateList[0]).toString();
+      }
       endTime = DateTime.now().add(DateTime.parse(widget.date).difference(DateTime.now())).millisecondsSinceEpoch + 1000*2;
        loaded = true;
     });
@@ -161,6 +169,10 @@ class _DosisProximasState extends State<DosisProximas> {
       child: ButtonMain(buttonText: "Dispensar", callback: () async {
         String _result = await _http.DispensarDosis(encoded);
         if(_result=="True"){
+          print(_result);
+          FirebaseFirestore.instance.collection('/Users/2aZ3V4Ik89e9rDSzo4N9/Dosis/').doc(widget.id).update({"date":DateTime.now().add(nextDateList[0]).toString()});
+          FirebaseFirestore.instance.collection('/Users/2aZ3V4Ik89e9rDSzo4N9/Dosis/').doc(widget.id).set({"historial" : {DateTime.now().toString().substring(0,10) : "true"}},SetOptions(merge: true));
+          widget.date = DateTime.now().add(nextDateList[0]).toString();
           _getItems();
         }
       }),
@@ -169,19 +181,15 @@ class _DosisProximasState extends State<DosisProximas> {
   }
 
   Widget CountDown() {
-    // print(widget.date);
-    // print(DateTime.now().difference(DateTime.parse(widget.date)).inMinutes);
-    // print(isDispensado);
-    // print(DateTime.now().isAfter(DateTime.parse(widget.date)));
-    if(unavez == true){
+    if(unavez == true || (isDispensado == true && widget.doseDays.toString() == "Una vez")){
       return SizedBox();
     }
-    if(isDispensado == false && DateTime.now().isAfter(DateTime.parse(widget.date)) && DateTime.now().difference(DateTime.parse(widget.date)).inMinutes<=(1)){ //En caso de que pase 1 hora despues de la dosis
-      print("caso 5: no es de 1 vez y no han pasado 2 horas y no se ha dispensado");
-      if(kIsWeb) return onWeb(); else return onWeb();
+    if(isDispensado == false && DateTime.now().isAfter(DateTime.parse(widget.date)) && DateTime.now().difference(DateTime.parse(widget.date)).inMinutes<=(120)){ //En caso de que pase 1 hora despues de la dosis
+      print("caso 1:no han pasado 2 horas y no se ha dispensado");
+      if(kIsWeb) return onWeb(); else return onAndroid();
     }
-    else if(isDispensado == false && DateTime.now().isAfter(DateTime.parse(widget.date)) && DateTime.now().difference(DateTime.parse(widget.date)).inMinutes>=(1)){ //En caso de que pase 1 hora despues de la dosis
-      print("caso 6: no es de 1 vez y ya han pasado 2 horas y no se ha dispensado");
+    else if(isDispensado == false && DateTime.now().isAfter(DateTime.parse(widget.date)) && DateTime.now().difference(DateTime.parse(widget.date)).inMinutes>=(120)){ //En caso de que pase 1 hora despues de la dosis
+      print("caso 2:ya han pasado 2 horas y no se ha dispensado");
       if(widget.doseDays.toString() == "Una vez"){
         FirebaseFirestore.instance.collection('/Users/2aZ3V4Ik89e9rDSzo4N9/Dosis/').doc(widget.id).update({"horario":""});
         setState(() => unavez = true);
@@ -240,7 +248,6 @@ class _DosisProximasState extends State<DosisProximas> {
           ]
           )
       ),
-
     );
   }
 }

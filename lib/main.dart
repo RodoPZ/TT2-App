@@ -1,5 +1,3 @@
-import 'package:camera/camera.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'User_Login/login_main.dart';
 import 'package:flutter/services.dart';
