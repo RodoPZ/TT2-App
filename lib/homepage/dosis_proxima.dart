@@ -1,8 +1,6 @@
-import 'dart:async';
 import 'dart:convert';
 import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:flutter/material.dart';
-import 'package:date_count_down/date_count_down.dart';
 import 'package:tt2/Components/datetimeExtension.dart';
 import 'package:tt2/SaveRead.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -16,9 +14,8 @@ class DosisProximas extends StatefulWidget{
   late var doseDays;
   late var id;
   late var date;
-  late Map historial;
 
-  DosisProximas(this.doseName, this.doseTime, this.doseDays,this.id,this.date, this.historial, {Key? key}) : super(key: key);
+  DosisProximas(this.doseName, this.doseTime, this.doseDays,this.id,this.date,  {Key? key}) : super(key: key);
 
   @override
   State<DosisProximas> createState() => _DosisProximasState();
@@ -41,7 +38,7 @@ class _DosisProximasState extends State<DosisProximas> {
   late List httpDosis;
   late bool unavez = false;
   late var _contactos;
-
+  late Map historial;
   Widget onAndroid() {
     return Column(
       children: [
@@ -127,7 +124,9 @@ class _DosisProximasState extends State<DosisProximas> {
         setState(() => dosisMap = dosis);
       }
     }
-    if(widget.historial.containsKey(DateTime.now().toString().substring(0,10))){
+    var history = await FirebaseFirestore.instance.collection('/Users/2aZ3V4Ik89e9rDSzo4N9/Dosis/').doc(widget.id).get();
+    historial = history["historial"];
+    if(historial.containsKey(DateTime.now().toString().substring(0,10))){
       setState(() => isDispensado = true);
     }
     setState(() {
@@ -167,14 +166,18 @@ class _DosisProximasState extends State<DosisProximas> {
       height: 30,
       width: 150,
       child: ButtonMain(buttonText: "Dispensar", callback: () async {
-        String _result = await _http.DispensarDosis(encoded);
-        if(_result=="True"){
-          print(_result);
-          FirebaseFirestore.instance.collection('/Users/2aZ3V4Ik89e9rDSzo4N9/Dosis/').doc(widget.id).update({"date":DateTime.now().add(nextDateList[0]).toString()});
-          FirebaseFirestore.instance.collection('/Users/2aZ3V4Ik89e9rDSzo4N9/Dosis/').doc(widget.id).set({"historial" : {DateTime.now().toString().substring(0,10) : "true"}},SetOptions(merge: true));
-          widget.date = DateTime.now().add(nextDateList[0]).toString();
-          _getItems();
+        await _getItems();
+        if (isDispensado != true){
+          String _result = await _http.DispensarDosis(encoded);
+          if(_result=="True"){
+            print(_result);
+            FirebaseFirestore.instance.collection('/Users/2aZ3V4Ik89e9rDSzo4N9/Dosis/').doc(widget.id).update({"date":DateTime.now().add(nextDateList[0]).toString()});
+            FirebaseFirestore.instance.collection('/Users/2aZ3V4Ik89e9rDSzo4N9/Dosis/').doc(widget.id).set({"historial" : {DateTime.now().toString().substring(0,10) : "true"}},SetOptions(merge: true));
+            widget.date = DateTime.now().add(nextDateList[0]).toString();
+            _getItems();
+          }
         }
+
       }),
     );
 
