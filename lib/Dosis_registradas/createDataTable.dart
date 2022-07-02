@@ -283,9 +283,10 @@ class _CreateDataTable extends State<CreateDataTable>{
         for (var i = 0; i < _contacto.length; i++) Row(
           children: [
             const SizedBox(width: 10),
-            Text(_contacto[i].toString()),
+            Flexible(child: Text(_contacto[i].toString())),
             const SizedBox(width: 20),
-            Text(_numero[i].toString()),
+            Flexible(child: Text(_numero[i].toString())),
+
           ],
         ),
       ],
@@ -347,14 +348,17 @@ class _CreateDataTable extends State<CreateDataTable>{
                       Row(
                         children: [
                           Text("Alertas: ",style: TextStyle(color: Theme.of(context).primaryColor)),
-                          _formAlertas(index),
+                          Flexible(child: _formAlertas(index)),
+
                         ],
                       ),
                       Divider(thickness: 2),
                       Row(
                         children: [
+
                           Text("Seguridad: ",style: TextStyle(color: Theme.of(context).primaryColor)),
-                          _formSeguridad(index),
+                          Flexible(child: _formSeguridad(index)),
+
                         ],
                       ),
                     ],

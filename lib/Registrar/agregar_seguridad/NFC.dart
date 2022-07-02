@@ -71,7 +71,7 @@ class _NFCState extends State<NFC> {
 
       return Column(
         children: [
-          const Text("Presione el botón de \"registrar tarjetas\" e inmediatamente pase la tarjeta o pulsera que quiere registrar por encima del módulo NFC ubicado frente la carcasa",
+          const Text("Presione el botón de \"registrar tarjetas\" e inmediatamente pase la tarjeta o pulsera que quiere registrar por encima del módulo RFID ubicado frente la carcasa",
             textAlign: TextAlign.center,
             style: TextStyle(
 

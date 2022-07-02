@@ -172,7 +172,7 @@ class _DosisProximasState extends State<DosisProximas> {
           if(_result=="True"){
             print(_result);
             FirebaseFirestore.instance.collection('/Users/2aZ3V4Ik89e9rDSzo4N9/Dosis/').doc(widget.id).update({"date":DateTime.now().add(nextDateList[0]).toString()});
-            FirebaseFirestore.instance.collection('/Users/2aZ3V4Ik89e9rDSzo4N9/Dosis/').doc(widget.id).set({"historial" : {DateTime.now().toString().substring(0,10) : "true"}},SetOptions(merge: true));
+            FirebaseFirestore.instance.collection('/Users/2aZ3V4Ik89e9rDSzo4N9/Dosis/').doc(widget.id).set({"historial" : {DateTime.now().toString().substring(0,10) : DateTime.now().toString().substring(10,16)}},SetOptions(merge: true));
             widget.date = DateTime.now().add(nextDateList[0]).toString();
             _getItems();
           }

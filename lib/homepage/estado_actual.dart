@@ -26,7 +26,7 @@ class _EstadoActualState extends State<EstadoActual> {
     });
     _pastillasList = await _readWrite.getPastilla();
     for (var i in _pastillasList){
-      pillName[i["contenedor"]] = i["nombre"];
+      pillName[i["contenedor"]-1] = i["nombre"];
     }
     setState(() {
       loaded = true;
@@ -61,7 +61,7 @@ class _EstadoActualState extends State<EstadoActual> {
                     color: Color(0xFF0844a4),
                   ),
                 ),
-                for(var i = 0; i<= 9; i++)
+                for(var i = 1; i<= 10; i++)
                   Row(
                     children: [
                       Text(
@@ -71,7 +71,7 @@ class _EstadoActualState extends State<EstadoActual> {
                         ),
                       ),
                       Text(
-                        " " + pillName[i],
+                        " " + pillName[i-1],
                         style: const TextStyle(fontSize: 16,
                         ),
                       ),
