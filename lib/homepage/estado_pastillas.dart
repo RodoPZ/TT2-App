@@ -36,7 +36,7 @@ class _EstadoPastillasState extends State<EstadoPastillas> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          for (var i in _pastillasList) Text("["+i["contenedor"].toString()+"]  "+i["nombre"] + " - cantidad:" + i["cantidad"].toString() + " - caducidad: " + i["caducidad"],
+          for (var i in _pastillasList) Text("["+i["contenedor"].toString()+"]  "+i["nombre"] + " - cantidad: " + i["cantidad"].toString() + " - caducidad: " + i["caducidad"],
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 16,

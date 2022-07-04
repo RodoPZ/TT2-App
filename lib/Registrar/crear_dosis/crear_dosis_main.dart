@@ -311,7 +311,7 @@ class _CrearDosisMain extends State<CrearDosisMain> {
         List time = horario['hora'].split(':');
         _dosisId = _dosisId;
         String title = "Es la hora de la Dosis: " + _dosisNombre;
-        String body = "Su Dosis de las " + horario["hora"] + " que se repite: " + horario["repetir"].toString() + " esta lista";
+        String body = "Su Dosis de las " + horario["hora"] + " que se repite: " + horario["repetir"].toString() + " está lista";
 
         if(horario['repetir'] == "Una vez"){
           NotificationPlugin.showNotification(

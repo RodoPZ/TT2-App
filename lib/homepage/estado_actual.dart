@@ -140,7 +140,7 @@ class _EstadoActualState extends State<EstadoActual> {
                               ),
                             ),
                           ),
-                          Text("vacío",style: const TextStyle(fontSize: 16)),
+                          Text(" Vacío",style: const TextStyle(fontSize: 16)),
                         ],
                       ),
                     ],
